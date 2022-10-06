@@ -1,0 +1,173 @@
+<odoo>
+    <data>
+        <record id="view_employee_form_inherit_appscomp_hr" model="ir.ui.view">
+            <field name="name">hr.employee</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='job_title']" position="before">
+                    <div class="oe_title">
+                        <label for="emp_code" style="font-size: 16px ;color:#7C7BAD"/>
+                        <field name="emp_code" placeholder="Employee's ID"
+                               style="font-size: 16px;  margin-right: 100px"/>
+                    </div>
+                </xpath>
+
+                <field name="study_school" position="attributes">
+                    <attribute name="string">College/University</attribute>
+                </field>
+                <field name="parent_id" position="attributes">
+                    <attribute name="string">Reporting Head</attribute>
+                </field>
+                <field name="coach_id" position="attributes">
+                    <attribute name="string">HR Responsible</attribute>
+                </field>
+                <xpath expr="//field[@name='coach_id']" position="after">
+                    <field name="work_type" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='work_email']" position="after">
+                    <field name="contract_employee"/>
+<!--                    <field name="check_in"/>-->
+<!--                    <field name="check_out"/>-->
+                    <field name="check_in_time" invisible="1" required="1" widget="float_time"/>
+                    <field name="check_out_time" invisible="1" required="1" widget="float_time"/>
+
+
+                </xpath>
+                <xpath expr="//field[@name='phone']" position="after">
+                    <field name="pan_card_no"/>
+                    <field name="aadhar_no"/>
+                    <field name="esi_no"/>
+                    <field name="provident_fund_no"/>
+                    <field name="uan_no"/>
+                    <field name="medical_insurance_no"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="before">
+                    <field name="training_end_date"/>
+                </xpath>
+                <xpath expr="//field[@name='country_of_birth']" position="before">
+                    <field name="mother_tongue" widget="many2many_tags"/>
+                    <field name="blood_group"/>
+                    <field name="religion"/>
+                    <field name="caste"/>
+                    <field name="community"/>
+                </xpath>
+                <xpath expr="//field[@name='spouse_birthdate']" position="before">
+                    <field name="spouse_contact"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="action_view_top_management_employees" model="ir.actions.act_window">
+            <field name="name">Top Management</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="res_model">hr.employee</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="groups_id" eval="[(4, ref('hr.group_hr_manager'))]"/>
+        </record>
+
+        <menuitem
+                action="action_view_top_management_employees"
+                id="menu_emp_top_management_root"
+                name="Top Management"
+                parent="hr.menu_hr_root"
+                groups="hr.group_hr_manager"
+                sequence="4"
+        />
+
+        <record id="action_view_contract_employees" model="ir.actions.act_window">
+            <field name="name">Contract Employees</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="res_model">hr.employee</field>
+            <field name="domain">[('contract_employee','=',True)]</field>
+            <field name="groups_id" eval="[(4, ref('hr.group_hr_manager'))]"/>
+        </record>
+
+        <menuitem
+                action="action_view_contract_employees"
+                id="menu_emp_contract_management_root"
+                name="Contract Employees"
+                parent="hr.menu_hr_root"
+                groups="hr.group_hr_manager"/>
+
+
+        <record id="action_view_hr_payslip_form_employee" model="ir.actions.act_window">
+            <field name="name">My Payslip</field>
+            <field name="res_model">hr.payslip</field>
+            <field name="domain">[('employee_id.user_id','=',uid)]</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <menuitem
+                action="action_view_hr_payslip_form_employee"
+                id="menu_emp_payslip_root"
+                name="MyPayslip"
+                parent="om_hr_payroll.menu_hr_payroll_root"
+                sequence="2"
+        />
+
+        <!--		Languages Known -->
+        <record id="language_known_form_view" model="ir.ui.view">
+            <field name="name">languages.known.form</field>
+            <field name="model">languages.known</field>
+            <field name="name">Languages</field>
+            <field name="arch" type="xml">
+                <form string="Languages Known">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="language_known_view_hr_employee_tree" model="ir.ui.view">
+            <field name="name">languages.known.tree</field>
+            <field name="model">languages.known</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_employee_code_form_inherited" model="ir.ui.view">
+            <field name="name">Hr Employee Kanben inherited</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle">
+                        <field name="state" invisible="1"/>
+                        <field name="emp_code"
+                               widget="badge"
+                               decoration-success="state == 'draft'"
+                               decoration-danger="state == 'exit'"
+                               decoration-warning="emp_code == False"
+                        />
+                    </span>
+                </xpath>
+            </field>
+        </record>
+
+        <!--        <menuitem-->
+        <!--                action="action_view_languages_known_form"-->
+        <!--                id="menu_languages_known_root"-->
+        <!--                name="Languages"-->
+        <!--                parent="hr.menu_human_resources_configuration_employee"-->
+        <!--                sequence="4"-->
+        <!--        />-->
+
+        <record id="action_view_languages_known_form" model="ir.actions.act_window">
+            <field name="name">Languages</field>
+            <field name="res_model">languages.known</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+    </data>
+</odoo>

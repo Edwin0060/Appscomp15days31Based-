@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <record id="birthday_template_form" model="ir.ui.view">
+            <field name="name">birthday.sms.template.form</field>
+            <field name="model">birthday.template</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Birthday SMS Template">
+                    <sheet>
+                        <separator string="Template" colspan="4" />
+                        <group>
+                            <field name="birthday_sms_content"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="birthday_template_tree" model="ir.ui.view">
+            <field name="name">birthday.sms.template.tree</field>
+            <field name="model">birthday.template</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Birthday SMS Template">
+                    <field name="birthday_sms_content"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="birthday_sms_template_action">
+            <field name="name">Birthday Sms Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">birthday.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <menuitem id="birth_template" name="Birthday SMS Template" parent="menu_sms_gateway_id" action="birthday_sms_template_action" />
+    </data>
+</odoo>

@@ -1,0 +1,20 @@
+/*  ********* The leftpane contains the order, numpad and paypad ********* */
+
+/*  ********* The product list  ********* */
+.pos .product-list-container .product-list{
+    font-size: 13px;
+    width: 100%;
+    line-height: 40px;
+}
+.pos .product-list-container .product-list th,
+.pos .product-list-container .product-list td {
+    padding: 0px 8px;
+}
+.pos .product-list-container .product-list tr{
+    transition: all 150ms linear;
+    background: rgb(230,230,230);
+}
+.pos .product-list-container .product-list thead > tr,
+.pos .product-list-container .product-list tbody > tr:nth-child(even) {
+    background: rgb(247,247,247);
+}

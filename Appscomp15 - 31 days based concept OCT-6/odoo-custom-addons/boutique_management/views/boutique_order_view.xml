@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="seq_boutique_order" model="ir.sequence">
+            <field name="name">Boutique Order</field>
+            <field name="code">boutique.order</field>
+            <field name="prefix">NB/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+            <field name="implementation">standard</field>
+        </record>
+
+        <record id="view_order_form_sale_boutique_order" model="ir.ui.view">
+            <field name="name">sale.order.form.view.boutique.order</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field [@name='state']" position="replace">
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,sent,sale,done"
+                           statusbar_colors='{"progress":"blue"}'/>
+                </xpath>
+                <xpath expr="//header/button[3]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//header/button[4]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <field name="partner_id" position="before">
+                    <field name="customer_type"/>
+                </field>
+                <field name="partner_id" position="after">
+                    <field name="walk_in_customer_name"
+                           attrs="{'invisible': ['|',('customer_type', '==', 'regular'),
+                           ('generate_walk_in_customer', '!=', False)],
+                           'required': [('customer_type', '!=', 'regular')]}"/>
+                    <field name="customer_phone_number"
+                           attrs="{'invisible': [('customer_type', '!=', 'regular')]}"/>
+                    <field name="walk_in_customer_phone_number"
+                           attrs="{'invisible': [('customer_type', '!=', 'walk_in')]}"/>
+                    <field name="generate_walk_in_customer" widget="boolean_toggle"
+                           attrs="{'invisible': ['|',('customer_type', '!=', 'walk_in'),
+                           ('partner_id', '!=', False)]}"/>
+                </field>
+                <field name="partner_id" position="attributes">
+                    <attribute name="attrs">{'invisible': [('customer_type', '!=', 'regular')],
+                        'required': [('customer_type', '!=', 'walk_in')]}
+                    </attribute>
+                </field>
+                <field name="date_order" position="after">
+                    <field name="booking_date"/>
+                    <field name="duration" required="1"/>
+                    <field name="commitment_date" readonly="1" force_save="1"/>
+                </field>
+                <group name="order_details" position="after">
+                    <group name="sale_info" string="Boutique Invoicing">
+                        <field name="invoice_status" invisible="1"/>
+                        <field name="stock_picking_id" readonly="1" force_save="1"/>
+                        <field name="invoice_id" readonly="1" force_save="1"/>
+                        <field name="remarks"/>
+
+                    </group>
+                    <group string="Tracking" name="sale_reporting" invisible="1">
+                        <group name="technical" colspan="2" class="mb-0">
+                            <field name="origin"/>
+                            <field name="user_id" widget="many2one_avatar_user" readonly="1" force_save="1"/>
+                            <field name="company_id" options="{'no_create': True}"
+                                   groups="base.group_multi_company"/>
+                            <field name="client_order_ref"/>
+                            <field name="tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        </group>
+                    </group>
+                    <group string="Boutique Embroidery">
+                        <field name="embroidery_boolean"/>
+                        <field name="start_date" force_save="1"
+                               attrs="{'required': [('embroidery_boolean', '=', True)]}"/>
+                        <field name="end_date" force_save="1"
+                               attrs="{'required': [('embroidery_boolean', '=', True)]}"/>
+                    </group>
+                </group>
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button type="object"
+                            name="get_boutique_invoice_advance_payment"
+                            class="oe_stat_button"
+                            attrs="{'invisible':['|',('state','=','draft'),('advance_payment_count', '&lt;', 1)]}"
+                            icon="fa-money">
+                        <field name="advance_payment_count" string="Advance Payment" widget="statinfo"/>
+                    </button>
+                </xpath>
+                <xpath expr="//page [@name='order_lines']" position="after">
+                    <page string="Boutique Product Measurement">
+                        <group>
+                            <group></group>
+                            <group>
+                                <label for="onchange_boutique_id">Click for Order</label>
+                                <button name="onchange_boutique_id" icon="fa-arrow-circle-right"
+                                        string="Generate Boutique Order" class="oe_highlight" type="object"
+                                attrs="{'invisible': [('generated_measurement', '=', True)]}"/>
+                                <field name="generated_measurement" readonly="1" force_save="1"/>
+                            </group>
+                        </group>
+                        <field name="boutique_ids" nolabel="0" widget="section_and_note_one2many"
+                               mode="tree,kanban">
+                            <tree editable="bottom" create="0">
+                                <control>
+                                    <create name="add_line_control" string="Add a line"/>
+                                    <create name="add_section_control" string="Add a section"
+                                            context="{'default_display_type': 'line_section'}"/>
+                                    <create name="add_note_control" string="Add a note"
+                                            context="{'default_display_type': 'line_note'}"/>
+                                </control>
+                                <!--                                         <field name="sequence" widget="handle"/>-->
+                                <field name="display_type" invisible="1" readonly="1"/>
+                                <field name="sequence" widget="handle" readonly="1"/>
+                                <field name="product_id" widget="product_configurator"
+                                       optional="hide" readonly="1"/>
+                                <field name="name" widget="section_and_note_text" readonly="1"/>
+                                <field name="boutique_name" readonly="1"/>
+                                <field name="boutique_measurement"/>
+                                <field name="boutique_uom" force_save="1" readonly="1"/>
+                                <field name="remark_notes"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                    <page string="Advance Payment Info">
+                        <group name="advance_payment_info">
+                            <label for="advanced_payment" attrs="{'invisible': [('journal_type', '=', 'no_cash')]}"/>
+                            <div class="o_row no-gutters d-flex" name="manual_ctc">
+                                <field name="advanced_payment" class="oe_inline" nolabel="1"
+                                       attrs="{'readonly': [('payment_id', '!=', False)],'invisible': [('journal_type', '=', 'no_cash')]}"/>
+                                <button name="create_advance_payment" class="oe_highlight"
+                                        string="Generate Advance Payment" type="object"
+                                        attrs="{'invisible': ['|', ('payment_id', '!=', False), ('journal_type', '=', 'no_cash')]}"/>
+                            </div>
+                            <field name="journal_type" required="1"/>
+                            <field name="payment_id" readonly="1" force_save="1"/>
+                            <field name="advanced_payment_date" readonly="1" force_save="1"/>
+                            <field name="journal_id" invisible="1"/>
+                            <field name="received_payment"/>
+                            <field name="balance_payment"/>
+                        </group>
+
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='name']" position="after">
+                    <field name="attached_image_ref" widget="image" style="height:50px; width:50px;"/>
+                </xpath>
+                <xpath expr="//field[@name='tax_totals_json']" position="after">
+                   <field name="advanced_payment" widget="monetary" readonly="1" force_save="1"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']"
+                       position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='other_information']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <page name="optional_products" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </page>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_order_view_search_inherit_quotation_inherited">
+            <field name="name">sale.order.search.view.inherited</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="arch" type="xml">
+                <filter name="my_quotation" position="attributes">
+                    <attribute name="string">My Boutique Entries</attribute>
+                </filter>
+                <filter name="draft" position="attributes">
+                    <attribute name="string">Boutique Quotations</attribute>
+                </filter>
+                <filter name="sales" position="attributes">
+                    <attribute name="string">Boutique Orders</attribute>
+                </filter>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_sales_order_filter_inherited">
+            <field name="name">sale.order.search.view.inherited</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <filter name="my_sale_orders_filter" position="attributes">
+                    <attribute name="string">My Boutique Orders</attribute>
+                </filter>
+            </field>
+        </record>
+
+
+        <record id="boutique_order_view_form" model="ir.ui.view">
+            <field name="name">boutique.order.form</field>
+            <field name="model">boutique.order</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="confirm_boutique"
+                                states="draft"
+                                string="Confirm Order"
+                                type="object"
+                                class="oe_highlight"/>
+                        <button name="action_stock_move"
+                                states="confirm"
+                                string="Generate Boutique Delivery"
+                                type="object"
+                                class="oe_highlight"/>
+                        <!--                        <button name="create_boutique_customer_invoice"-->
+                        <!--                                states="shipped_done"-->
+                        <!--                                string="Generate Invoice"-->
+                        <!--                                type="object"-->
+                        <!--                                class="oe_highlight"/>-->
+                        <button name="reject_boutique"
+                                states="draft"
+                                string="Reject"
+                                type="object"
+                                class="oe_highlight"/>
+                        <button name="cancel_boutique"
+                                states="draft"
+                                string="Cancel"
+                                type="object"/>
+                        <button name="set_draft_boutique"
+                                string="Set to Draft"
+                                type="object"
+                                attrs="{'invisible': [('state','not in',['cancel','reject'])]}"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,confirm,done"
+                               statusbar_colors='{"reject":"red"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object"
+                                    name="get_boutique_picking"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible':['|',('state','=','draft'),('picking_count', '&lt;', 1)]}"
+                                    icon="fa-truck">
+                                <field name="picking_count" string="Delivery" widget="statinfo"/>
+                            </button>
+                            <button type="object"
+                                    name="get_boutique_invoice"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible':['|',('state','=','draft'),('invoice_count', '&lt;', 1)]}"
+                                    icon="fa-file">
+                                <field name="invoice_count" string="Invoice" widget="statinfo"/>
+                            </button>
+                            <button type="object"
+                                    name="get_boutique_invoice_advance_payment"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible':['|',('state','=','draft'),('advance_payment_count', '&lt;', 1)]}"
+                                    icon="fa-money">
+                                <field name="advance_payment_count" string="Advance Payment" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="customer_type" required="1" widget="radio" options="{'horizontal': true}"/>
+                                <field name="partner_id" required="1" widget="res_partner_many2one"
+                                       context="{
+                                     'res_partner_search_mode': 'customer',
+                                     'show_address': 1, 'show_vat': True}"
+                                       options='{"always_reload": True}'/>
+                                <field name="customer_phone_number"/>
+                                <field name="stock_picking_id" widget="badge"
+                                       decoration-danger="state in ('shipped')"
+                                       decoration-success="state in ('shipped_done')"
+                                       readonly="1" force_save="1"/>
+                                <field name="boutique_invoice_id" widget="badge"
+                                       decoration-danger="state in ('payment_due')"
+                                       decoration-success="state in ('payment_done')"
+                                       readonly="1" force_save="1"/>
+                                <!--                                <field name="stock_picking_id" readonly="1" force_save="1"/>-->
+                                <!--                                <field name="boutique_invoice_id" readonly="1" force_save="1"/>-->
+                                <field name="payment_id" readonly="1" force_save="1"/>
+                            </group>
+                            <group>
+                                <field name="received_date"/>
+                                <field name="booking_date"/>
+                                <label for="duration"/>
+                                <div>
+                                    <field name="duration"/>/
+                                    <span>Days</span>
+                                </div>
+                                <field name="delivery_date" readonly="1" force_save="1"/>
+                                <field name="remarks" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Boutique Products">
+                                <group>
+                                    <group>
+                                        <field name="product_id" widget="many2many_checkboxes"/>
+                                    </group>
+                                    <group></group>
+                                    <group>
+                                        <label for="onchange_boutique_id">Click for Order</label>
+                                        <button name="onchange_boutique_id" icon="fa-arrow-circle-right"
+                                                string="Generate Boutique Order" class="oe_highlight" type="object"/>
+                                    </group>
+                                </group>
+                                <seperator string="Boutique Products Measurements List"/>
+                                <field name="boutique_ids" nolabel="0" widget="section_and_note_one2many"
+                                       mode="tree,kanban">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <control>
+                                            <create name="add_line_control" string="Add a line"/>
+                                            <create name="add_section_control" string="Add a section"
+                                                    context="{'default_display_type': 'line_section'}"/>
+                                            <create name="add_note_control" string="Add a note"
+                                                    context="{'default_display_type': 'line_note'}"/>
+                                        </control>
+                                        <!--                                         <field name="sequence" widget="handle"/>-->
+                                        <field name="display_type" invisible="1" readonly="1"/>
+                                        <field name="sequence" widget="handle" readonly="1"/>
+                                        <field name="product_id" widget="product_configurator"
+                                               optional="hide" readonly="1"/>
+                                        <field name="name" widget="section_and_note_text" readonly="1"/>
+                                        <field name="boutique_name" readonly="1"/>
+                                        <field name="boutique_measurement"/>
+                                        <field name="boutique_uom" force_save="1" readonly="1"/>
+                                        <field name="remark_notes"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <group>
+                                        <!--                                        <field name="saree_type" widget="radio" options="{'horizontal': True}"/>-->
+                                    </group>
+                                    <group>
+                                        <field name="start_date"/>
+                                        <field name="end_date"/>
+                                        <field name="notes"/>
+                                        <label for="digital_signature" string="SIGNATURE" class="oe_edit_only"/>
+                                        <h2>
+                                            <field name="digital_signature" widget="signature"/>
+                                        </h2>
+                                    </group>
+                                </group>
+                            </page>
+                            <!--                            <page string="Draw Boutique Design">-->
+                            <!--                                <field name="draw_pattern"/>-->
+                            <!--                            </page>-->
+                            <page string="Payments">
+                                <group>
+                                    <group>
+                                        <label for="advanced_payment"/>
+                                        <div class="o_row no-gutters d-flex" name="manual_ctc">
+                                            <field name="advanced_payment" class="oe_inline" nolabel="1"/>
+                                            <button name="create_advance_payment" class="oe_highlight"
+                                                    string="Generate Advance Payment" type="object"
+                                                    attrs="{'invisible': [('state', '!=', 'draft')]
+                                                }"/>
+                                        </div>
+                                        <field name="payment_id"/>
+                                        <field name="journal_id" invisible="1"/>
+                                        <field name="journal_type"/>
+                                        <field name="received_payment"/>
+                                        <field name="balance_payment"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Others" invisible="1">
+                                <group>
+                                    <group>
+                                    </group>
+                                    <group>
+                                        <field name="move_type" invisible="1"/>
+                                        <field name="warehouse_id" invisible="1"/>
+                                        <field name="picking_type_id" readonly="1"/>
+                                    </group>
+                                    <group>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                        <!--                        <group>-->
+                        <!--                            <field name="notes"/>-->
+                        <!--                            <label for="digital_signature" string="SIGNATURE" class="oe_edit_only"/>-->
+                        <!--                            <h2>-->
+                        <!--                                <field name="digital_signature" widget="signature"/>-->
+                        <!--                            </h2>-->
+                        <!--                        </group>-->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="boutique_order_view_tree" model="ir.ui.view">
+            <field name="name">boutique.order.tree</field>
+            <field name="model">boutique.order</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="booking_date"/>
+                    <field name="delivery_date"/>
+                    <field name="stock_picking_id"/>
+                    <!--                    <field name="state" widget="badge"-->
+                    <!--                           decoration-success="state in ('draft',-->
+                    <!--                           'confirm', 'shipped',-->
+                    <!--                           'shipped_done', 'invoiced',-->
+                    <!--                           'payment_due','payment_done','done',-->
+                    <!--                            'reject','cancel')"/>-->
+                    <field name="state" widget="badge"
+                           decoration-danger="state in ('draft','reject','cancel')"
+                           decoration-success="state in ('shipped','shipped_done',)"
+                           decoration-warning="state in ('confirm','invoiced','payment_due','payment_done','done',)"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_boutique_order" model="ir.actions.act_window">
+            <field name="name">Boutique Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">boutique.order</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="search_boutique_order_line" model="ir.ui.view">
+            <field name="name">Channel Search</field>
+            <field name="model">boutique.order.line</field>
+            <field name="arch" type="xml">
+                <search>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter name="product_id" string="Product" domain="[]"
+                                context="{'group_by':'product_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+            <field name="name">Boutique Quotation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="context">{'search_default_my_quotation': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a New Boutique Quotation, the first step of a new sale!
+                </p>
+                <p>
+                    Once the New Boutique Quotation is confirmed by the customer, it becomes a Boutique Order.
+                    <br/>
+                    You will be able to create an invoice and collect the payment.
+                </p>
+            </field>
+        </record>
+
+        <record id="sale.action_quotations" model="ir.actions.act_window">
+            <field name="name">Boutique Quotation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="context">{'search_default_my_quotation': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a New Boutique Quotation, the first step of a new sale!
+                </p>
+                <p>
+                    Once the New Boutique Quotation is confirmed by the customer, it becomes a Boutique Order.
+                    <br/>
+                    You will be able to create an invoice and collect the payment.
+                </p>
+            </field>
+        </record>
+
+        <record id="sale.action_orders" model="ir.actions.act_window">
+            <field name="name">Boutique Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+            <field name="context">{}</field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new quotation, the first step of a new sale!
+                </p>
+                <p>
+                    Once the quotation is confirmed, it becomes a sales order.
+                    <br/>
+                    You will be able to create an invoice and collect the payment.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_boutique_master"
+                  name="Boutique Order"
+                  parent="stock.menu_stock_inventory_control"
+                  action="action_boutique_order"
+                  sequence="50"/>
+
+        <menuitem id="main_menu_boutique_bill" web_icon="boutique_management,static/description/image15.png"
+                  name="Nachi Bridal Boutique" sequence="70"/>
+
+        <menuitem
+                id="menu_boutique_dashboard_order"
+                name="Boutique Sales"
+                action="action_boutique_dashboard"
+                parent="main_menu_boutique_bill"
+                sequence="3"/>
+        <!--        <menuitem id="menu_boutique_master" action="action_boutique_order" name="Boutique Order"-->
+        <!--                  parent="menu_boutique_dashboard_order" sequence="1"/>-->
+        <menuitem id="menu_boutique_quotation" action="sale.action_quotations" name="Boutique Quotations"
+                  parent="menu_boutique_dashboard_order" sequence="3"/>
+        <!--        <menuitem id="menu_boutique_child" action="action_boutique_order" name="Boutique Order"-->
+        <!--                  parent="menu_boutique_master" sequence="1"/>-->
+        <menuitem id="menu_boutique_orders" action="sale.action_orders" name="Boutique Orders"
+                  parent="menu_boutique_dashboard_order" sequence="4"/>
+        <!--        <menuitem id="menu_boutique_customers" action="account.res_partner_action_customer" name="Boutique Customers"-->
+        <!--                  parent="menu_boutique_master" sequence="2"/>-->
+        <menuitem id="menu_boutique_customers" action="stock.product_template_action_product" name="Boutique Products"
+                  parent="menu_boutique_dashboard_order" sequence="2"/>
+        <menuitem id="menu_boutique_delivery" action="stock.action_picking_tree_ready" name="Boutique Customer Delivery"
+                  parent="menu_boutique_dashboard_order" sequence="5"/>
+        <menuitem id="menu_boutique_invoice" action="account.action_move_out_invoice_type"
+                  name="Boutique Customer Invoice"
+                  parent="menu_boutique_dashboard_order" sequence="6"/>
+        <menuitem id="menu_boutique_payment" action="account.action_account_payments" name="Boutique Customer Payment"
+                  parent="menu_boutique_dashboard_order" sequence="7"/>
+        <menuitem id="menu_boutique_customer" action="account.res_partner_action_customer"
+                  name="Boutique Customers"
+                  parent="menu_boutique_dashboard_order" sequence="1"/>
+        <!--        <menuitem id="menu_boutique_measurement_master"-->
+        <!--                          name="Boutique Measurement"-->
+        <!--                          parent="menu_boutique_dashboard_order"-->
+        <!--                          action="action_boutique_measurement"-->
+        <!--                          sequence="9"/>-->
+        <menuitem id="menu_boutique_feature_master"
+                  name="Boutique Measurement"
+                  parent="menu_boutique_dashboard_order"
+                  action="action_boutique_measurement_features"
+                  sequence="8"/>
+        <menuitem id="stock.menu_stock_root" active="False"/>
+        <menuitem id="account.menu_finance" active="False"/>
+        <menuitem id="mail.menu_root_discuss" active="False"/>
+        <menuitem id="sale.sale_menu_root" active="False"/>
+
+        <record id="sale.action_report_saleorder" model="ir.actions.report">
+            <field name="binding_model_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

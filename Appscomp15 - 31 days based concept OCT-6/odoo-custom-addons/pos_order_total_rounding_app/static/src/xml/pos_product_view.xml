@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="pos_total_round" xml:space="preserve">	
+	<t t-name="OrderSummaryInherit" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('subentry')]" position="before">
+            <t t-if="env.pos.config.is_enable_rounding">           
+                <div class='subentryround' style="font-size: 16px;font-weight: normal;">
+                    Rounding: 
+                    <span class="value">
+                        <t t-esc="props.round"/>
+                    </span>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="OrderWidgetInherit" t-inherit="point_of_sale.OrderWidget" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('order')]" position="replace">
+            <div class="order">
+                <t t-if="orderlinesArray.length === 0">
+                    <div class='order-empty'>
+                        <i class='fa fa-shopping-cart' role="img" aria-label="Shopping cart"
+                           title="Shopping cart"/>
+                        <h1>This order is empty</h1>
+                    </div>
+                </t>
+                <t t-else="">
+                    <ul class="orderlines">
+                        <t t-foreach="orderlinesArray" t-as="orderline" t-key="orderline.id">
+                            <Orderline line="orderline"/>
+                        </t>
+                    </ul>
+                    <OrderSummary total="state.total" tax="state.tax" round="state.round"/>
+                </t>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('pos-receipt-amount')]" position="before">
+            <t t-if="env.pos.config.is_enable_rounding">
+                <div class="pos-receipt-round">
+                    Rounding
+                    <span t-esc="env.pos.format_currency(env.pos.get_order().get_round_amount(env.pos.get_order().get_total_without_tax()+env.pos.get_order().get_total_tax()))"
+                          class="pos-receipt-right-align"/>
+                </div>
+            </t>
+        </xpath>
+    </t>            
+</template>

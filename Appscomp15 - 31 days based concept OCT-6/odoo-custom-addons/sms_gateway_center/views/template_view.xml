@@ -1,0 +1,42 @@
+<odoo>
+    <data>
+        <record id="sms_gateway_template" model="ir.ui.view">
+            <field name="name">customer.template</field>
+            <field name="model">template.sms</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="SMS Templates">
+                    <sheet>
+                        <separator string="Templates" colspan="4" />
+                        <group>
+                            <field name="name" />
+                            <field name="sms_content"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="sms_gateway_template_tree" model="ir.ui.view">
+            <field name="name">customer.template.tree</field>
+            <field name="model">template.sms</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="SMS Templates">
+                    <field name="name" />
+                    <field name="sms_content" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="sms_gateway_template_action">
+            <field name="name">Sms Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">template.sms</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <menuitem id="sms_temp_1" name="SMS Gateway Template" parent="menu_sms_gateway_id" action="sms_gateway_template_action" />
+    </data>
+</odoo>

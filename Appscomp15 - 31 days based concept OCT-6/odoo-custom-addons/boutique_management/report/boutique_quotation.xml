@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="paperformat_quotation_boutique" model="report.paperformat">
+            <field name="name">Boutique paper format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">7</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">3</field>
+            <field name="margin_right">3</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">30</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+                id="action_boutique_quotation_report"
+                model="sale.order"
+                string="Boutique Quotation/ Order"
+                report_type="qweb-pdf"
+                name="boutique_management.quotation_note_template"
+                file="boutique_management.quotation_note_template"
+                paperformat="boutique_management.paperformat_quotation_boutique"
+                print_report_name='"Boutique Quotation Report"'
+                menu="True"
+        />
+
+        <template id="quotation_note_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.basic_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <div class="row">
+                                <div class="col-4" align="left">
+                                    <strong>
+                                        <span t-field="o.company_id.name"/>
+                                    </strong>
+                                    <br/>
+                                    <span t-field="o.company_id.street"/>
+                                    <span t-field="o.company_id.street2"/>,
+                                    <br/>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.state_id"/>
+                                    <span t-field="o.company_id.country_id"/>
+                                    <br/>
+                                    <span t-field="o.company_id.phone"/>
+                                </div>
+                                <div class="col-7" align="right">
+                                    <img src='/web/binary/company_logo' class="img-fluid img-thumbnail"
+                                         style=" max-width:25%;"/>
+                                </div>
+                            </div>
+                            <div class="page" align="center">
+                                <br/>
+                                <br/>
+                                <br/>
+                                <h4>
+                                    <strong>
+                                        Boutique Quotation
+                                    </strong>
+                                </h4>
+                            </div>
+                            <br/>
+                            <table class="table table-sm table-bordered"
+                                   style="border:1px solid black;font-size: 14.5px;">
+                                <tr class="thead-light">
+                                    <th class="padding_all tbottom ttop text-left" width="50%">
+                                        <strong>
+                                            <span class="px-3" t-field="o.name"/>
+                                        </strong>
+                                    </th>
+                                    <th class="padding_all tbottom ttop text-right" width="50%">
+                                        <strong>
+                                            <span class="px-3" t-field="o.state"/>
+                                        </strong>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td class="padding_all tbottom ttop text-left" width="50%">
+                                        <strong>Customer</strong>
+                                        <span t-field="o.partner_id"/>,
+                                        <br/>
+                                        <t t-if="o.partner_id.street">
+                                            <span t-field="o.partner_id.street"/>,
+                                        </t>
+                                        <t t-if="o.partner_id.street2">
+                                            <span t-field="o.partner_id.street2"/>,
+                                        </t>
+
+                                        <t t-if="o.partner_id.city">
+                                            <span t-field="o.partner_id.city"/>,
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_id.state_id">
+                                            <span t-field="o.partner_id.state_id"/>,
+                                        </t>
+                                        <t t-if="o.partner_id.country_id">
+                                            <span t-field="o.partner_id.country_id"/>,
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.customer_phone_number">
+                                            <span t-field="o.customer_phone_number"/>,
+                                        </t>
+
+                                        <!--                                        <span class="px-2" t-field="o.partner_id"-->
+                                        <!--                                              t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>-->
+                                    </td>
+                                    <td class="padding_all tbottom ttop text-left" width="50%">
+                                        <strong>Received Date:</strong>
+                                        <span class="px-3" t-field="o.validity_date"/>
+                                        <br/>
+                                        <strong>Booking Date :</strong>
+                                        <span class="px-3" t-field="o.booking_date"/>
+                                        <br/>
+                                        <strong>Delivery Date :</strong>
+                                        <span class="px-3" t-field="o.commitment_date"/>
+                                        <br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Invoice Ref :</strong>
+                                        <span class="px-2" t-field="o.invoice_ids.name"/>
+                                    </td>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Delivery Ref :</strong>
+                                        <span class="px-2" t-field="o.stock_picking_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Payment Referenc :</strong>
+                                        <span class="px-2" t-field="o.payment_term_id"/>
+                                    </td>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Delivery Remarks :</strong>
+                                        <span class="px-2" t-field="o.remarks"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="table table-sm table-bordered"
+                                   style="border:1px solid black;font-size: 14px;">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th width="3%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Sl.No.</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Product</strong>
+                                        </th>
+                                        <th width="25%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Description</strong>
+                                        </th>
+                                        <th width="13%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Image</strong>
+                                        </th>
+                                        <th width="7%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Qty</strong>
+                                        </th>
+                                        <th width="7%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Delivered</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Invoiced</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Uom</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Unit price</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Subtotal</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.order_line" t-as="l">
+                                        <td width="3%" class="padding_all tbottom ttop text-center">
+                                            <span t-esc="l_index+1"/>
+                                        </td>
+                                        <t>
+                                            <t t-if="l.product_template_id">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-left">
+                                                    <span t-field="l.product_template_id"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span>-</span>
+                                                </td>
+                                            </t>
+                                            <t>
+                                                <t t-if="l.name">
+                                                    <td width="25%" class="padding_all tleft tbottom ttop text-left">
+                                                        <span t-field="l.name"/>
+                                                    </td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span>-</span>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <t>
+                                            <t t-if="l.attached_image_ref">
+                                                <td width="13%" class="padding_all tleft tbottom ttop text-center">
+                                                    <img
+                                                            style="height:50;width:50%;" class="image"
+                                                            t-att-src="image_data_uri(l.attached_image_ref)"
+                                                    />
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td width="7%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span>-</span>
+                                                </td>
+                                            </t>
+                                        </t>
+                                        <t>
+                                            <t t-if="l.product_uom_qty">
+                                                <td width="7%" class="padding_all tleft tbottom ttop text-right">
+                                                    <span t-field="l.product_uom_qty"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td width="7%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span>-</span>
+                                                </td>
+                                            </t>
+                                        </t>
+                                        <t>
+                                            <t t-if="l.qty_delivered">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                    <span t-field="l.qty_delivered"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span>-</span>
+                                                </td>
+                                            </t>
+                                        </t>
+                                        <t>
+                                            <t t-if="l.qty_invoiced">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                    <span t-field="l.qty_invoiced"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span>-</span>
+                                                </td>
+                                            </t>
+                                        </t>
+                                        <t>
+                                            <t t-if="l.product_uom">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                    <span t-field="l.product_uom"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span>-</span>
+                                                </td>
+                                            </t>
+                                        </t>
+                                        <t>
+                                            <t t-if="l.price_unit">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                    <span t-field="l.price_unit"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span>-</span>
+                                                </td>
+                                            </t>
+                                        </t>
+
+                                        <t>
+                                            <t t-if="l.price_subtotal">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                    <span t-field="l.price_subtotal"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                    <span>-</span>
+                                                </td>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="9"
+                                            class="padding_all table-active tleft tbottom ttop text-right">
+                                            <strong>TOTAL</strong>
+                                        </td>
+                                        <td class="padding_all table-active tleft tbottom ttop text-right">
+                                            <span t-field="o.amount_total"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="page-break-inside: avoid">
+                                <div class="row">
+                                    <div align="left" class="col-5">
+                                        <u>
+                                            <strong style="font-size: 14.5px;">Advance Payment Info
+                                            </strong>
+                                        </u>
+                                        <br/>
+                                        <strong style="font-size: 14.5px;">Payment Type :</strong>
+                                        <span style="font-size: 14.5px;" class="px-3" t-field="o.journal_type"/>
+                                        <br/>
+                                        <strong style="font-size: 14.5px;">Advanced Amount :</strong>
+                                        <span style="font-size: 14.5px;" class="px-3" t-field="o.advanced_payment"/>
+                                        <br/>
+                                        <strong style="font-size: 14.5px;">Payment Reference :</strong>
+                                        <span style="font-size: 14.5px;" class="px-3" t-field="o.payment_id"/>
+                                        <br/>
+                                        <strong style="font-size: 14.5px;">Received Amount :</strong>
+                                        <span style="font-size: 14.5px;" class="px-3" t-field="o.received_payment"/>
+                                        <br/>
+                                        <strong style="font-size: 14.5px;">Open Balance Amount :</strong>
+                                        <span style="font-size: 14.5px;" class="px-3" t-field="o.balance_payment"/>
+                                    </div>
+                                    <t t-if="o.start_date">
+                                        <div align="right" class="col-6">
+                                            <span>
+                                                <u>
+                                                    <strong style="font-size: 14.5px;">Boutique Embroidery Date</strong>
+                                                </u>
+                                                <br/>
+                                                <strong style="font-size: 14.5px;">Start Date :</strong>
+                                                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                                                <span t-field="o.start_date"/>
+                                                <br/>
+                                                <strong style="font-size: 14.5px;">End Date :</strong>
+                                                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                                                <span t-field="o.end_date"/>
+                                            </span>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            <br/>
+                            <t t-if="o.note">
+                                <div style="page-break-inside: avoid">
+                                    <div align="left">
+                                        <t t-if="o.note">
+                                            <strong style="font-size: 14.5px;">Note :</strong>
+                                        </t>
+                                        <span style="font-size: 14.5px;" class="px-3" t-field="o.note"/>
+                                    </div>
+                                </div>
+                            </t>
+                            <br/>
+                            <br/>
+                            <div style="page-break-inside: avoid">
+                                <div align="right">
+                                    <t t-if="o.signature">
+                                        <img style="height:30;width:30%;" class="image"
+                                             t-att-src="image_data_uri(o.signature)"/>
+                                    </t>
+                                </div>
+                                <div class="row">
+                                    <div class="col-1">
+                                        <span></span>
+                                    </div>
+                                    <div class="col-4">
+                                        <strong style="font-size: 14.5px;">Authorized by</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span></span>
+                                    </div>
+                                    <div class="col-3">
+                                        <strong style="font-size: 14.5px;">Signature</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

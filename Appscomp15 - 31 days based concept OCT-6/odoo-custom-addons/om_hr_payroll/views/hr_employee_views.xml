@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payroll_hr_employee_view_form" model="ir.ui.view">
+        <field name="name">payroll.hr.employee.view.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="%(om_hr_payroll.act_hr_employee_payslip_list)d" class="oe_stat_button"
+                        icon="fa-money" type="action" string="Payslip">
+                    <field name="payslip_count" widget="statinfo"/>
+                </button>
+            </xpath>
+
+            <field name="parent_id" position="attributes">
+                <attribute name="string">Reporting Manager</attribute>
+            </field>
+
+            <xpath expr="//field[@name='emergency_contact']" position="replace">
+                <field name="emergency_contact_one"/>
+            </xpath>
+
+            <xpath expr="//field[@name='emergency_phone']" position="replace">
+                <field name="emergency_phone_one"/>
+            </xpath>
+
+            <xpath expr="//field[@name='emergency_phone_one']" position="after">
+                <field name="emergency_contact_two"/>
+            </xpath>
+            <xpath expr="//field[@name='birthday']" position="after">
+                <field name="age"/>
+            </xpath>
+            <xpath expr="//field[@name='emergency_contact_two']" position="after">
+                <field name="emergency_phone_two"/>
+            </xpath>
+            <xpath expr="//field[@name='employee_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <!--            <xpath expr="//group[@name='active_group']" position="after">-->
+            <!--                <label for="employee_first_contract_date"/>-->
+            <!--                <field name="employee_first_contract_date" readonly="1" force_save="1"/>-->
+            <!--                <field name="user_id" string="Related User" domain="[('share', '=', False)]"/>-->
+            <!--            </xpath>-->
+            <xpath expr="//group[@name='active_group']" position="replace">
+                <group string="Status" name="active_group">
+                    <field name="employee_type"/>
+                    <field name="employee_first_contract_date" readonly="1" force_save="1"/>
+                    <field name="user_id" string="Related User" domain="[('share', '=', False)]"/>
+                </group>
+            </xpath>
+            <!--            <xpath expr="//group[@name='active_group']//field[@name='joining_date']" position="attributes">-->
+            <!--                <attribute name="invisible">1</attribute>-->
+            <!--            </xpath>-->
+            <field name="department_id" position="after">
+                <field name="joining_date" invisible="1"/>
+                <field name="date_of_joining" invisible="0"/>
+                <!--                <field name="eligible_period"/>-->
+                <label for="employee_eligible_period"/>
+                <div class="o_row" name="employee_eligible_period">
+                    <field name="employee_eligible_period" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <field name="leave_eligible_date" readonly="1" force_save="1"/>
+                <field name="rl_leave_eligible_date" readonly="1" force_save="1"/>
+            </field>
+            <xpath expr="//field[@name='coach_id']" position="replace">
+                <field name="coach_id" options='{"no_open": True}'/>
+            </xpath>
+            <field name="first_contract_date" position="replace">
+                <field name="date_of_joining" readonly="1"/>
+            </field>
+         <!--   <xpath expr="//field[@name='work_email']" position="after">
+                <label for="hour"></label>
+                <div class="o_row" name="hour">
+                    <field name="hour" force_save="1" placeholder="Hour"/>
+                    <span>:</span>
+                    <field name="minute" force_save="1" placeholder="Minute"/>
+                    <span>:</span>
+                    <field name="second" force_save="1" placeholder="Sec"/>
+                    <span>Hours</span>
+                </div>
+
+                <label for="check_out_hour"></label>
+                <div class="o_row" name="check_out_hour">
+                    <field name="check_out_hour" force_save="1" placeholder="Hour"/>
+                    <span>:</span>
+                    <field name="check_out_minute" force_save="1" placeholder="Minute"/>
+                    <span>:</span>
+                    <field name="check_out_second" force_save="1" placeholder="Sec"/>
+                    <span>Hours</span>
+                </div>
+            </xpath>-->
+            <field name="company_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+
+            <field name="coach_id" position="after">
+                <field name="carry_over" readonly="1" invisible="1"/>
+            </field>
+            <xpath expr="//page[@name='personal_information']" position="after">
+                <page string="Carry Over Information" attrs="{'invisible':[('carry_over','=',False)]}">
+                    <group string="Annual Leave Carry Over Information">
+                        <group>
+                            <field name="actual_carry_over_leave"/>
+                            <field name="approved_leave"/>
+                            <field name="internal_leave_deduction"/>
+                        </group>
+                        <group>
+                            <field name="actual_carry_over_remarks"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']" position="after">
+                <page string="Optional Holiday Info">
+                    <group string="Optional Holiday Info">
+                        <field name="optional_holiday" invisible="1"/>
+                        <field name="optional_holiday_limit"/>
+                        <field name="optional_holiday_utilised" readonly="1" force_save="1"/>
+                        <field name="cl_three_days_consumed" invisible="1"/>
+                        <field name="rl_three_days_consumed" invisible="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_payroll_employee"
+              name="Employees"
+              parent="om_hr_payroll.menu_hr_payroll_root"
+              sequence="15"/>
+
+    <menuitem id="menu_hr_employee"
+              name="Employees"
+              action="hr.open_view_employee_list_my"
+              parent="menu_payroll_employee"
+              sequence="10"/>
+
+    <menuitem id="hr_menu_contract"
+              name="Contracts"
+              action="hr_contract.action_hr_contract"
+              parent="menu_payroll_employee"
+              sequence="20"
+              groups="hr_contract.group_hr_contract_manager"/>
+
+
+</odoo>

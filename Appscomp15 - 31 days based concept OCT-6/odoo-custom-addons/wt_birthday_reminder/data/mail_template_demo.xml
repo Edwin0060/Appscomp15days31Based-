@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Mail Template for a reminder to others -->
+
+        <record id="mail_template_birthday_reminder" model="mail.template">
+            <field name="name">Birthday Reminder</field>
+            <field name="model_id" ref="wt_birthday_reminder.model_hr_employee"/>
+            <field name="partner_to">{{object.id}}</field>
+            <field name="email_from">{{ (object.company_id.email) }}</field>
+            <field name="subject">Today is {{ object.name }} Birthday.</field>
+            <field name="email_to">{{ (object.work_email) }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0"
+                       style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                                                   style="background-color: white; padding: 0; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Birthday Wishes</span>
+                                                        <br/>
+                                                        <span style="font-size: 20px; font-weight: bold;"
+                                                              t-out="object.name"></span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                             style="padding: 0px; margin: 0px; height: 48px;"
+                                                             t-att-alt="object.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            <div class="text-center">
+                                                                <img src="/wt_birthday_reminder/static/src/img/warlock_technologies.gif"
+                                                                     class="img" style="width: 23%;"/>
+                                                            </div>
+                                                        </div>
+                                                        <br/>
+                                                        <div>
+                                                            Hi Appscomp Family,
+                                                            <br/>
+                                                            <br/>
+                                                            Today is
+                                                            <strong>
+                                                                <t t-out="object.name or ''"></t>
+                                                            </strong>
+                                                            Birthday.
+                                                            <br/>
+                                                            <br/>
+                                                            give him/her best wishes on his birthday.
+                                                            <br/>
+                                                            <br/>
+                                                            Kind Regards,
+                                                            <br/>
+                                                            <t t-out="object.company_id.name or ''"></t>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center"
+                                            style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
+                                            <b t-out="object.company_id.name or ''"></b>
+                                            <br/>
+                                            <div style="color: #999999;">
+                                                <t t-out="object.company_id.phone or ''"></t>
+                                                <t t-if="object.company_id.email">
+                                                    |
+                                                    <a t-attf-href="'mailto:%s' % {{ object.company_id.email }}"
+                                                       style="text-decoration:none; color: #999999;"
+                                                       t-out="object.company_id.email or ''"></a>
+                                                </t>
+                                                <t t-if="object.company_id.website">
+                                                    |
+                                                    <a t-attf-href="'%s' % {{ object.company_id.website }}"
+                                                       style="text-decoration:none; color: #999999;"
+                                                       t-out="object.company_id.website or ''">http://www.appscomp.com
+                                                    </a>
+                                                </t>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr><td align="center" style="min-width: 590px;">
+                        Powered by <a target="_blank" href="https://appscomp.com" style="color: #875A7B;">Appscomp Widgets Pvt. Ltd</a>
+                    </td></tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">{{object.lang}}</field>
+        </record>
+
+
+        <!-- Mail Template for a birthday person -->
+
+        <record id="mail_template_birthday_wish" model="mail.template">
+            <field name="name">Birthday Wish</field>
+            <field name="model_id" ref="wt_birthday_reminder.model_hr_employee"/>
+            <field name="partner_to">{{object.id}}</field>
+            <field name="email_from">{{ (object.company_id.email) }}</field>
+            <field name="subject">{{ object.name }}: Birthday wishes from Appscomp Widgets Pvt. Ltd.</field>
+            <field name="email_to">{{ (object.work_email) }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0"
+                       style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                                                   style="background-color: white; padding: 0; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <span style="font-size: 10px;">Birthday Wishes</span>
+                                                        <br/>
+                                                        <span style="font-size: 20px; font-weight: bold;"
+                                                              t-out="object.name"></span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}"
+                                                             style="padding: 0px; margin: 0px; height: 48px;"
+                                                             t-att-alt="object.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            <div class="text-center">
+                                                                <img src="/wt_birthday_reminder/static/src/img/warlock_technologies.gif"
+                                                                     class="img" style="width: 23%;"/>
+                                                            </div>
+                                                        </div>
+                                                        <br/>
+                                                        <div>
+                                                            Hi
+                                                            <strong>
+                                                                <t t-out="object.name or ''"></t>
+                                                            </strong>
+                                                            ,
+                                                            <br/>
+                                                            <br/>
+                                                            Wish you very Happy Birthday from <t
+                                                                t-out="object.company_id.name or ''"></t>.
+                                                            You are one of the most valuable employee of
+                                                            <t t-out="object.company_id.name or ''"></t>
+                                                            <t t-out="object.user_id.name or ''"></t>
+                                                            On your precious day we wish nothing but the all good luck
+                                                            and successfull year ahead.
+                                                            <br/>
+                                                            Party Hard Stay Safe.
+                                                            <br/>
+                                                            <br/>
+                                                            Best Wishes
+                                                            <br/>
+                                                            <t t-out="object.company_id.name or ''"></t>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center"
+                                            style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
+                                            <hr width="100%"
+                                                style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
+                                            <b t-out="object.company_id.name or ''"></b>
+                                            <br/>
+                                            <div style="color: #999999;">
+                                                <t t-out="object.company_id.phone or ''"></t>
+                                                <t t-if="object.company_id.email">
+                                                    |
+                                                    <a t-attf-href="'mailto:%s' % {{ object.company_id.email }}"
+                                                       style="text-decoration:none; color: #999999;"
+                                                       t-out="object.company_id.email or ''"></a>
+                                                </t>
+                                                <t t-if="object.company_id.website">
+                                                    |
+                                                    <a t-attf-href="'%s' % {{ object.company_id.website }}"
+                                                       style="text-decoration:none; color: #999999;"
+                                                       t-out="object.company_id.website or ''">http://www.appscomp.com
+                                                    </a>
+                                                </t>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- POWERED BY -->
+                    <tr><td align="center" style="min-width: 590px;">
+                        Powered by <a target="_blank" href="https://appscomp.com" style="color: #875A7B;">Appscomp Widgets Pvt. Ltd</a>
+                    </td></tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">{{object.lang}}</field>
+        </record>
+
+    </data>
+</odoo>

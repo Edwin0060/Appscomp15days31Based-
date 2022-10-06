@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <record id="single_sms_gateway_tree" model="ir.ui.view">
+            <field name="name">customer.sms.single.history.tree</field>
+            <field name="model">customer.sms.single</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="9"/>
+            <field name="arch" type="xml">
+                <tree string="History" create="false">
+                    <field name="multi_customer" string="Customer" widget="many2many_tags"/>
+                    <field name="select_account" string="Account" widget="many2many_tags"/>
+                    <field name="text" string="Message Text"/>
+                    <field name="to_number"/>
+                    <field name="state" string="Status" decoration-success="state == 'sent'"
+                           decoration-warning="state == 'draft'" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_single_customer_tree_sms">
+            <field name="name">Sms History Single</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">customer.sms.single</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <menuitem id="single_sms_tree" name="Single SMS History" parent="menu_sms_gateway_id"
+                  action="action_single_customer_tree_sms"/>
+    </data>
+</odoo>

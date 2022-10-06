@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="my_profile_view_appscomp_hr_view" model="ir.ui.view">
+		<field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+                <form string="Employee" class='o_employee_form'>
+                    <sheet>
+						<div name="button_box" class="oe_button_box">
+							<button name="%(om_hr_payroll.act_hr_employee_payslip_list)d"
+									icon="fa-money" type="action" string="Payslip">
+								<field name="payslip_count" widget="statinfo"/>
+							</button>
+						</div>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
+                        <div class="oe_title">
+                            <h1 class="d-flex">
+                                <field name="name" placeholder="Employee's Name" required="True"/>
+                               
+                            </h1>
+                            <h2>
+                                <field name="job_title" placeholder="Job Position" />
+                            </h2>
+                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="hr.group_hr_manager"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="mobile_phone" widget="phone"/>
+                                <field name="work_phone" widget="phone"/>
+                                <field name="work_email" widget="email"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="department_id"/>
+                                <field name="parent_id"/>
+                                <field name="coach_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="public" string="Work Information">
+                                <div id="o_work_employee_container"> <!-- These two div are used to position org_chart -->
+                                    <div id="o_work_employee_main">
+                                        <group string="Location">
+                                            <field name="address_id"
+                                                context="{'show_address': 1}"
+                                                options='{"always_reload": True, "highlight_first_line": True}'/>
+<!--                                            <field name="work_location"/>-->
+                                        </group>
+                                    </div>
+                                </div>
+                            </page>
+                            <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
+                                <group>
+                                    <group string="Private Contact">
+                                        <field name="address_home_id"
+                                            context="{
+                                                'show_address': 1,
+                                                'default_type': 'private',
+                                                'form_view_ref': 'base.res_partner_view_form_private'}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="private_email" string="Email"/>
+                                        <field name="phone" class="o_force_ltr" groups="hr.group_hr_user" string="Phone" readonly="True"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
+                                        <label for="km_home_work"/>
+                                        <div class="o_row" name="div_km_home_work">
+                                            <field name="km_home_work" groups="hr.group_hr_user"/>
+                                            <span>Km</span>
+                                        </div>
+
+                                    </group>
+                                    <group string="Citizenship">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id" groups="hr.group_hr_user"/>
+                                        <field name="passport_id" groups="hr.group_hr_user"/>
+                                        <field name="gender"/>
+                                        <field name="birthday"/>
+                                        <field name="place_of_birth" groups="hr.group_hr_user"/>
+                                        <field name="country_of_birth" groups="hr.group_hr_user"/>
+                                    </group>
+                                    <group string="Marital Status">
+                                        <field name="marital"/>
+                                        <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
+                                        <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
+                                    </group>
+                                    <group string="Dependant">
+                                        <field name="children"/>
+                                    </group>
+                                    <group string="Emergency">
+                                        <field name="emergency_contact"/>
+                                        <field name="emergency_phone" class="o_force_ltr"/>
+                                    </group>
+                                    <group string="Work Permit" name="work_permit">
+                                        <field name="visa_no"/>
+                                        <field name="permit_no"/>
+                                        <field name="visa_expire"/>
+                                    </group>
+                                    <group string="Education">
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
+                                        <field name="study_school"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+        </field>
+	</record>
+	
+	 <record id="my_profile_view_appscomp_hr_employee_tree" model="ir.ui.view">
+            <field name="name">hr.employee.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Employees" multi_edit="1" sample="1">
+                    <field name="name" readonly="1"/>
+                    <field name="work_phone" class="o_force_ltr" readonly="1"/>
+                    <field name="work_email"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="parent_id"/>
+<!--                    <field name="work_location" optional="hide"/>-->
+                    <field name="coach_id" invisible="1"/>
+                </tree>
+            </field>
+      </record>
+	
+	<record id="my_profile_view_appscomp_hr_action" model="ir.actions.act_window">
+            <field name="name">My Profile</field>
+            <field name="res_model">hr.employee</field>
+	        <field name="view_mode">form</field>
+	        <field name="domain">[('user_id','=',uid)]</field>
+			<field name="view_ids"
+				eval="[(5, 0, 0),
+					(0, 0, {'view_mode': 'tree', 'view_id': ref('appscomp_hr.my_profile_view_appscomp_hr_employee_tree')}),
+     				(0, 0, {'view_mode': 'form', 'view_id': ref('appscomp_hr.my_profile_view_appscomp_hr_view')})]" /> 
+			 <field name="context">{'emp_profile':True,'emp_name_ctrl':True}</field>
+			 <field name="groups_id" eval="[(4, ref('appscomp_hr.group_my_profile_for_emp'))]"/>
+    </record> 
+	
+	<menuitem
+            action="my_profile_view_appscomp_hr_action"
+            id="menu_emp_profile_root"
+            name="MyProfile"
+            parent="hr.menu_hr_root"
+            sequence="3"
+            />
+
+	
+	
+	</odoo>

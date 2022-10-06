@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_employee_form_inherited_sms_template" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherited</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+<!--                <div name="button_box" class="oe_button_box" position="inside">-->
+<!--                    <button name="get_employee_login_alert"-->
+<!--                            icon="fa-money" type="object" string="Payslip">-->
+<!--                    </button>-->
+<!--                </div>-->
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button name="get_employee_login_alert" class="oe_stat_button"
+                            icon="fa-envelope" type="object" string="Send Sms">
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

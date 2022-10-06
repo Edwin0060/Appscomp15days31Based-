@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--sale estimation -->
+        <record id="sale_estimation_rajandco_sequence" model="ir.sequence">
+            <field name="name">Sale Estimation</field>
+            <field name="code">sale.estimation</field>
+            <field name="prefix">SALE/EST/22-23/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <record id='view_sale_estimation_tree' model='ir.ui.view'>
+            <field name="name">sale.estimation.tree</field>
+            <field name="model">sale.estimation</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Estimation">
+                    <field name="name"/>
+                    <field name="partner_name"/>
+                    <field name="date"/>
+                    <field name="estimated_cate_id"/>
+                    <field name="estimation_pricelist_id"/>
+                    <field name="description"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Sale Estimation Form View -->
+        <record id='view_sale_estimation_form' model='ir.ui.view'>
+            <field name="name">sale.estimation.form</field>
+            <field name="model">sale.estimation</field>
+            <field name="arch" type="xml">
+                <form string="Sale Estimation">
+                    <header>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,confirm,"
+                               statusbar_colors='{"reject":"red"}'/>
+                        <button name="sale_estimation_confirm" type="object" states="draft" class="oe_highlight"
+                                string="Estimation Confirm"/>
+<!--                        <button name="sale_estimation_quote_create" type="object" states="confirm" class="oe_highlight"-->
+<!--                                string="Create Quotation"/>-->
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_name" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="date"/>
+                                <field name="estimation_date"/>
+                                <field name="description" required="0"
+                                       attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="company_id"/>
+                            </group>
+                            <group>
+                                <field name="estimation_pricelist_id" required="1"
+                                       attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="estimated_cate_id" required="1"
+                                       attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="product_id" domain="[('categ_id', '=',estimated_cate_id)]"
+                                       attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <label for="product_price" string="Product Qty / Price"/>
+                                <div class="o_row no-gutters d-flex">
+                                    <field name="product_qty" class="oe_inline"
+                                           attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                    <field name="product_price" class="oe_inline" readonly="1" force_save="1"
+                                           attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                    <button string="+" name="button_product_update" type="object"
+                                            class="oe_highlight" attrs="{'invisible': [('state', '=', 'confirm')]}"/>
+                                </div>
+                                <field name="estimation_tax" widget="radio" options="{'horizontal': true}"
+                                       attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="estimation_tax_id" widget="many2many_tags" readonly="1" force_save="1"
+                                       attrs="{'invisible': [('estimation_tax', '!=', 'exc')], 'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="estimation_tax_value"
+                                       attrs="{'invisible': [('estimation_tax', '!=', 'exc')], 'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="product_unit_subtotal" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="currency_field" required="1"/>
+                            </group>
+                            <!--                            <group>-->
+                            <!--                                <footer>-->
+                            <!--                                    <field name="product_qty"/>-->
+                            <!--                                    <field name="product_price"/>-->
+                            <!--                                    <field name="total"/>-->
+                            <!--                                    <field name="inclusive_tax"/>-->
+                            <!--                                    <field name="exclusive_tax"/>-->
+                            <!--                                </footer>-->
+
+                            <!--                            </group>-->
+                        </group>
+                        <notebook>
+                            <page string="Sale Estimation Products">
+                                <field name="product_lines" readonly="1">
+                                    <tree string="Products" editable="bottom" create="0">
+                                        <field name="products_id"/>
+                                        <field name="prod_qty"/>
+                                        <field name="prod_price"/>
+                                        <field name="prod_subtotal"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Estimation Tax Description"
+                                  attrs="{'invisible': [('estimation_tax', '!=', 'exc')]}">
+                                <group>
+                                    <group>
+                                        <field name="taxes" nolabel="1" readonly="1">
+                                            <tree>
+                                                <field name="name"/>
+                                                <field name="account_id"/>
+                                                <field name="amount" sum="TOTAL"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                    <div class="oe_clear"/>
+                                </group>
+                            </page>
+                        </notebook>
+                        <group class="oe_subtotal_footer oe_right">
+                            <!--                                    <div class="oe_subtotal_footer_separator oe_inline">-->
+                            <!--                                        <label for="amount_total"/>-->
+                            <!--                                    </div>-->
+                            <!--                            <label for="sub_total"/>-->
+                            <!--                            <field name="sub_total" nolabel="1"/>-->
+                            <field name="total_tax" widget="monetary" options="{'currency_field': 'currency_field'}"
+                                   readonly="0"
+                                   attrs="{'invisible': [('estimation_tax', '!=', 'exc')]}"/>
+                            <label for="total"/>
+                            <field name="total" nolabel="1" class="oe_subtotal_footer_separator"
+                                   widget="monetary" options="{'currency_field': 'currency_field'}" readonly="1"
+                                   force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="note" required="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Indent Window Action -->
+        <record id='action_sale_estimation_calucation' model='ir.actions.act_window'>
+            <field name="name">Sale Estimation</field>
+            <field name="res_model">sale.estimation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a Sale Estimation.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_sale_estimation_calucation" name="Sale Estimation"
+                  parent="sale.sale_order_menu" id="menu_sale_estimation" sequence="1"/>
+
+
+    </data>
+</odoo>

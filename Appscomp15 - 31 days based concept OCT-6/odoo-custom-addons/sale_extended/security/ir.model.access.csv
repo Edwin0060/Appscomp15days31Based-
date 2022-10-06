@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_estimation,sale.estimation,model_sale_estimation,,1,1,1,1
+access_sale_estimation_product_line,sale.estimation.product.line,model_sale_estimation_product_line,,1,1,1,1
+access_sale_estimation_tax,sale.estimation.tax,model_sale_estimation_tax,,1,1,1,1
+

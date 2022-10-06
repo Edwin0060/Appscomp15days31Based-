@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_leave_description_master_form">
+            <field name="name">Leave Description Master</field>
+            <field name="model">leave.description.master</field>
+            <field name="arch" type="xml">
+                <form string="Leave Master">
+                    <sheet>
+                        <group string="Leave Master">
+                            <group>
+                                <field name="name" required="1" placeholder="Enter Leave Description"/>
+                            </group>
+                            <group>
+                                <field name="date" required="1" placeholder="Enter Leave Description Date"/>
+                            </group>
+                            <group>
+                                <field name="days" required="1" placeholder="Enter Leave Description Date"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_leave_description_master_tree">
+            <field name="name">Leave Description Master</field>
+            <field name="model">leave.description.master</field>
+            <field name="arch" type="xml">
+                <tree string="Leave Master">
+                    <field name="name"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='leave_description_master_action'>
+            <field name="name">Leave Master</field>
+            <field name="res_model">leave.description.master</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem id="hr_holidays.hr_holidays_public_time_off_menu_configuration" active="False"/>
+
+
+        <!--        <menuitem id="menu_leave_description_master"-->
+        <!--                  name="Leave Master"-->
+        <!--                  parent="hr_holidays.menu_hr_holidays_configuration"-->
+        <!--                  action="leave_description_master_action"-->
+        <!--                  sequence="5"-->
+        <!--        />-->
+        <record id="hr_public_leave_form_inherit" model="ir.ui.view">
+            <field name="name">hr.public.holidays.inherit</field>
+            <field name="model">hr.public.holidays</field>
+            <field name="inherit_id" ref="sky_public_holidays.view_public_holidays_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="year_id" string="Year" options='{"no_open": True}'/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

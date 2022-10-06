@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+        <record id="view_partner_tree" model="ir.ui.view">
+            <field name="name">Customer Tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field" position="after">
+                    <button name="%(action_customer_sms)d" string="SMS" type="action" class="oe_highlight" groups="sms_gateway_center.enable_sms_feature"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">Customer Form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <group>
+                    <header>
+                        <button name="%(action_customer_sms)d" string=" Send SMS" type="action" class="oe_highlight" groups="sms_gateway_center.enable_sms_feature"/>
+                    </header>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

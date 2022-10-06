@@ -1,0 +1,5 @@
+<odoo>
+    <record id="enable_sms_feature" model="res.groups">
+        <field name="name">Enable SMS Feature </field>
+    </record>
+</odoo>

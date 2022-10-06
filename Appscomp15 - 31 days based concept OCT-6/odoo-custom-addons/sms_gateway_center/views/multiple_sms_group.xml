@@ -1,0 +1,42 @@
+<odoo>
+    <data>
+        <record id="multiple_sms_group_template" model="ir.ui.view">
+            <field name="name">multiple.sms</field>
+            <field name="model">multiple.sms.group</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Create Group of Multiple Customers">
+                    <sheet>
+                        <separator string="Templates" colspan="4" />
+                        <group>
+                            <field name="name" />
+                            <field name="add_people" string='Add People' widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="multiple_sms_group_template_tree" model="ir.ui.view">
+            <field name="name">multiple.sms.tree</field>
+            <field name="model">multiple.sms.group</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Multiple SMS Group">
+                    <field name="name" />
+                    <field name="add_people" string='Members' widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="multiple_sms_template_action">
+            <field name="name">Multiple Customer</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">multiple.sms.group</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <menuitem id="multiple_grp_template" name="Multiple Customer Group" parent="menu_sms_gateway_id" action="multiple_sms_template_action" />
+    </data>
+</odoo>

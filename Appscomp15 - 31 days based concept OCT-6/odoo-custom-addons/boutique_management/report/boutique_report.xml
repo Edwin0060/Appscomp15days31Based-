@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="paperformat_boutique" model="report.paperformat">
+            <field name="name">Boutique paper format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">7</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">3</field>
+            <field name="margin_right">3</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">30</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+                id="boutique_report_menu"
+                model="sale.order"
+                string="Boutique Measurement"
+                report_type="qweb-pdf"
+                name="boutique_management.boutique_note_template"
+                file="boutique_management.boutique_note_template"
+                paperformat="boutique_management.paperformat_boutique"
+                print_report_name='"Boutique Report"'
+                menu="True"
+        />
+
+        <template id="boutique_note_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.basic_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <div class="row">
+                                <div class="col-4" align="left">
+                                    <strong>
+                                        <span t-field="o.company_id.name"/>
+                                    </strong>
+                                    <br/>
+                                    <span t-field="o.company_id.street"/>
+                                    <span t-field="o.company_id.street2"/>,
+                                    <br/>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.state_id"/>
+                                    <span t-field="o.company_id.country_id"/>
+                                    <br/>
+<!--                                    <span t-field="o.company_id.phone"/>-->
+                                </div>
+                                <div class="col-7" align="right">
+                                    <img src='/web/binary/company_logo' class="img-fluid img-thumbnail"
+                                         style=" max-width:25%;"/>
+                                </div>
+                            </div>
+                            <div class="page" align="center">
+                                <br/>
+                                <br/>
+                                <br/>
+
+                                <h4>
+                                    <strong>
+                                        Boutique Measurement
+                                    </strong>
+                                </h4>
+                            </div>
+                            <br/>
+                            <table class="table table-sm table-bordered">
+                                <tr class="thead-light">
+                                    <th class="padding_all tbottom ttop text-left" width="50%">
+                                        <strong>
+                                            <span class="px-3" t-field="o.name"/>
+                                        </strong>
+                                    </th>
+                                    <th class="padding_all tbottom ttop text-right" width="50%">
+                                        <strong>
+                                            <span class="px-3" t-field="o.state"/>
+                                        </strong>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td class="padding_all tbottom ttop text-left" width="50%">
+                                        <strong>Customer</strong>
+                                        <span t-field="o.partner_id"/>,
+                                        <br/>
+                                        <t t-if="o.partner_id.street">
+                                            <span t-field="o.partner_id.street"/>,
+                                        </t>
+                                        <t t-if="o.partner_id.street2">
+                                            <span t-field="o.partner_id.street2"/>,
+                                        </t>
+
+                                        <t t-if="o.partner_id.city">
+                                            <span t-field="o.partner_id.city"/>,
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_id.state_id">
+                                            <span t-field="o.partner_id.state_id"/>,
+                                        </t>
+                                        <t t-if="o.partner_id.country_id">
+                                            <span t-field="o.partner_id.country_id"/>,
+                                        </t>
+                                        <br/>
+<!--                                        <t t-if="o.customer_phone_number">-->
+<!--                                            <span t-field="o.customer_phone_number"/>,-->
+<!--                                        </t>-->
+                                    </td>
+                                    <td class="padding_all tbottom ttop text-left" width="50%">
+                                        <strong>Received Date:</strong>
+                                        <span class="px-3" t-field="o.received_date"/>
+                                        <br/>
+                                        <strong>Booking Date :</strong>
+                                        <span class="px-3" t-field="o.booking_date"/>
+                                        <br/>
+                                        <strong>Delivery Date :</strong>
+                                        <span class="px-3" t-field="o.commitment_date"/>
+                                        <br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Invoice Ref :</strong>
+                                        <span class="px-2" t-field="o.invoice_ids.name"/>
+                                    </td>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Delivery Ref :</strong>
+                                        <span class="px-2" t-field="o.stock_picking_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Payment Referenc :</strong>
+                                        <span class="px-2" t-field="o.payment_term_id"/>
+                                    </td>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Delivery Remarks :</strong>
+                                        <span class="px-2" t-field="o.remarks"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-sm table-bordered">
+                                <tr class="thead-light">
+                                    <th width="10%" valign="middle" align="center"
+                                        class="padding_all tbottom ttop text-center">
+                                        <strong>Name</strong>
+                                    </th>
+                                    <th width="20%" valign="middle" align="center"
+                                        class="padding_all tbottom ttop text-center">
+                                        <strong>Boutique name</strong>
+                                    </th>
+                                    <th width="10%" valign="middle" align="center"
+                                        class="padding_all tbottom ttop text-center">
+                                        <strong>Measurement</strong>
+                                    </th>
+                                    <th width="10%" valign="middle" align="center"
+                                        class="padding_all tbottom ttop text-center">
+                                        <strong>UOM</strong>
+                                    </th>
+                                    <th width="10%" valign="middle" align="center"
+                                        class="padding_all tbottom ttop text-center">
+                                        <strong>Patterns</strong>
+                                    </th>
+                                </tr>
+                                <tbody style="border: 1px solid color;">
+                                    <tr t-foreach="o.boutique_ids" t-as="l">
+                                        <t>
+                                            <t t-if="l.name">
+                                                <td width="10%" colspan="5"
+                                                    class="padding_all table-active tleft tbottom ttop text-left">
+                                                        <span t-field="l.name"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-if="l.boutique_measurement >0">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span></span>
+                                                    </td>
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-left">
+                                                        <span t-field="l.boutique_name"/>
+                                                    </td>
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                        <span t-field="l.boutique_measurement"/>
+                                                    </td>
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-left">
+                                                        <span t-field="l.boutique_uom"/>
+                                                    </td>
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-left">
+                                                        <span t-field="l.remark_notes"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">
+                                            <strong>Notes:</strong>
+                                            <span t-field="o.note"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-1">
+                                    <span></span>
+                                </div>
+                                <div class="col-4">
+                                    <strong>Authorized by</strong>
+                                </div>
+                                <div class="col-3">
+                                    <span></span>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Signature</strong>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

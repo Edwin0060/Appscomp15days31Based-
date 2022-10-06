@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sms_partner_bulk_form" model="ir.ui.view">
+            <field name="name">customer.sms.bulk.form</field>
+            <field name="model">customer.sms</field>
+            <field name="type">form</field>
+            <field name="priority" eval="10" />
+            <field name="arch" type="xml">
+                <form string="SMS" edit="false" delete="false">
+                    <sheet>
+                        <group>
+                            <field name="multi_customer" widget="many2many_tags" style="margin-bottom:20px;" attrs="{'invisible': [('select_group','=',True)]}"/>
+                            <field name="select_group" style="margin-bottom:20px;"/>
+                            <field name="group" string="Groups" attrs="{'invisible': [('select_group','=',False)]}"
+                                   widget="many2many_tags" style="margin-bottom:20px;"/>
+                            <field name="select_template" string="Use Predefined Templates" style="margin-bottom:30px;"/>
+                            <field name="templates" string="Templates" attrs="{'invisible': [('select_template','=',False)]}"/>
+                            <field name="text" style="margin-bottom:20px;"/>
+                            <field name="select_account" widget="many2many_tags" options="{'no_create_edit':'1'}" />
+                        </group>
+                        <footer>
+                            <field name="state" invisible="1" />
+                            <button string="SEND" class="oe_highlight" type="object" name="submit_bulk" attrs="{'invisible': [('state', 'in', ('resend','sent'))]}" />
+                            <button string="Resend" class="oe_highlight" type="object" name="submit_bulk" attrs="{'invisible': [('state', 'in', ('draft'))]}" />
+                            <button string="_Cancel" class="btn-default" special="cancel" />
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_bulk_customer_sms">
+            <field name="name"> Bulk Sms </field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">customer.sms</field>
+            <field name="view_mode">form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <menuitem id="bulk_sms" name="Bulk SMS" parent="menu_sms_gateway_id" action="action_bulk_customer_sms" />
+    </data>
+</odoo>

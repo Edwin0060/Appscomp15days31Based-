@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="sale_estimation_order_report"
+                model="sale.estimation"
+                string="Sale Estimation "
+                report_type="qweb-pdf"
+                name="sale_extended.report_sale_extend_document"
+                file="sale_extended.report_sale_extend_document"
+                print_report_name='"Sale Estimation"'
+                menu="True"
+
+        />
+
+        <template id="report_sale_extend_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.basic_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <div align="left" style="width: 100%;height: 100% float: top;">
+                                <img src='/web/binary/company_logo' style="width:30%"/>
+                            </div>
+                            <div class="page" align="center">
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <td colspan="2" style="border:1px solid white;border-bottom:1px solid #143980;text-align:center;
+                        padding:1px;color:#143980;">
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col-4" style="font-size:12px;">
+                                                </div>
+                                                <div class="text-center col-4">
+                                                    <h2>Sale Estimation</h2>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <table class="table table-sm table-bordered">
+                                        <tr>
+                                            <td width="50%">
+                                                <strong>Company Address:</strong>
+                                                <br/>
+                                                <span t-field="o.company_id.name"/>
+                                                <br/>
+                                                <strong>Street:</strong>
+                                                <span t-field="o.company_id.partner_id.street"/>
+                                                <br/>
+                                                <span t-field="o.company_id.partner_id.street2"/>
+                                                <br/>
+                                                <strong>City:</strong>
+                                                <span t-field="o.company_id.partner_id.city"/>
+                                                <br/>
+                                                <strong>Pin code:</strong>
+                                                <span t-field="o.company_id.partner_id.zip"/>
+                                                <br/>
+                                                <strong>Ph.no:</strong>
+                                                <span t-field="o.company_id.partner_id.phone"/>
+                                                <br/>
+                                                <strong>Email:</strong>
+                                                <span t-field="o.company_id.partner_id.email"/>
+
+                                            </td>
+                                            <td width="50%">
+                                                <strong>Customer Address:</strong>
+                                                <br/>
+                                                <strong>Name:</strong>
+                                                <span t-field="o.partner_name.name"/>
+                                                <br/>
+                                                <strong>Street :</strong>
+                                                <span t-field="o.partner_name.street"/>
+                                                <span t-field="o.partner_name.street2"/>
+                                                <br/>
+                                                <strong>City :</strong>
+                                                <span t-field="o.partner_name.city"/>
+                                                <br/>
+                                                <strong>Pin code:</strong>
+                                                <span t-field="o.partner_name.zip"/>
+                                                <br/>
+                                                <strong>Ph.no :</strong>
+                                                <span t-field="o.partner_name.phone"/>
+                                                <br/>
+                                                <strong>Email :</strong>
+                                                <span t-field="o.partner_name.email"/>
+                                                <br/>
+                                                <strong>VAT Number :</strong>
+                                                <span t-field="o.partner_name.vat"/>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    <br/>
+                                    <table class="table table-sm table-bordered">
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Estimation ID</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.name"/>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Date</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.date"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Tax Type</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.estimation_tax"/>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <strong>Description</strong>
+                                            </td>
+                                            <td style='text-align:left; vertical-align:middle'>
+                                                <span t-field="o.description"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br/>
+                                    <br/>
+                                    <div align="left">
+                                        <strong style="font-size:20px;margin-left:50px;">Sale Estimation Products
+                                        </strong>
+                                    </div>
+                                    <br/>
+                                    <div class="row col-xs-14">
+                                        <table class="table table-sm table-bordered" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th width="10%" valign="middle" align="center"
+                                                        class="padding_all tbottom ttop text-center">
+                                                        <strong>Sl.No.</strong>
+                                                    </th>
+                                                    <th width="10%" valign="middle" align="center"
+                                                        class="padding_all tbottom ttop text-center">
+                                                        <strong>Product</strong>
+                                                    </th>
+                                                    <th width="20%" valign="middle" align="center"
+                                                        class="padding_all tleft tbottom ttop text-center">
+                                                        <strong>Quantity</strong>
+                                                    </th>
+                                                    <th width="20%" valign="middle" align="center"
+                                                        class="padding_all tleft tbottom ttop text-center">
+                                                        <strong>Price</strong>
+                                                    </th>
+                                                    <th width="20%" valign="middle" align="center"
+                                                        class="padding_all tleft tbottom ttop text-center">
+                                                        <strong>Subtotal</strong>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr t-foreach="o.product_lines" t-as="l">
+                                                    <td width="10%" class="padding_all tbottom ttop text-center">
+                                                        <span t-esc="l_index+1"/>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span t-field="l.products_id.display_name"/>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span t-field="l.prod_qty"/>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span t-field="l.prod_price"/>
+                                                    </td>
+                                                    <td width="20%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span t-field="l.prod_subtotal"/>
+                                                    </td>
+                                                </tr>
+                                                <t t-if="o.estimation_tax =='exc'">
+                                                    <tr>
+                                                        <td width="10%" class="padding_all tbottom ttop"></td>
+                                                        <td width="20%" class="padding_all tbottom ttop"></td>
+                                                        <td width="20%" class="padding_all tbottom ttop"></td>
+                                                        <td width="20%"
+                                                            class="padding_all tleft tbottom ttop text-right">
+                                                            <strong>
+                                                                <h5>Tax</h5>
+                                                            </strong>
+                                                        </td>
+                                                        <td width="20%"
+                                                            class="padding_all tleft tbottom ttop text-center"
+                                                            align="right">
+                                                            <span t-field="o.total_tax"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-if="o.total">
+                                                    <tr>
+                                                        <td width="10%" class="padding_all tbottom ttop"></td>
+                                                        <td width="20%" class="padding_all tbottom ttop"></td>
+                                                        <td width="20%" class="padding_all tbottom ttop"></td>
+                                                        <td width="20%"
+                                                            class="padding_all tleft tbottom ttop text-right">
+                                                            <strong>
+                                                                <h5>Total</h5>
+                                                            </strong>
+                                                        </td>
+                                                        <td width="20%"
+                                                            class="padding_all tleft tbottom ttop text-center"
+                                                            align="right">
+                                                            <span t-field="o.total"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </table>
+                                <br/>
+                                <br/>
+                                <div align="left">
+                                    <tr>
+                                        <td>
+                                            <span>
+                                                <strong>Terms And Conditions :</strong>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.note"/>
+                                        </td>
+                                    </tr>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+</odoo>
+

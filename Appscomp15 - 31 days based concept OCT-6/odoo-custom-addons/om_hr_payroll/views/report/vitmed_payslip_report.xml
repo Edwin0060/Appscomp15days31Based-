@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="vitalmed_payslip_management_report"
+                model="hr.payslip"
+                string="Payslip"
+                report_type="qweb-pdf"
+                name="om_hr_payroll.vitalmed_payslip_report_template"
+                file="om_hr_payroll.vitalmed_payslip_report_template"
+                print_report_name="'Payslip Report - %s' % (object.name)"
+                menu="True"
+
+        />
+        <template id="vitalmed_payslip_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.basic_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <div class="row">
+                                <div class="col-5" align="left">
+                                    <span t-field="o.company_id.name"/>
+                                </div>
+                                <div class="col-5" align="right">
+                                    <img src='/web/binary/company_logo' style="width:50%"/>
+                                </div>
+                            </div>
+                            <div class="page" align="center">
+                                <table class="table table-condensed">
+                                    <table class="table table-sm table-bordered">
+                                        <tr align="left" style="font-size:14px; float: top;"
+                                            class="padding_all tleft tbottom ttop text-center">
+                                            <td colspan="4">
+                                                <span t-field="o.company_id.partner_id.street"/>
+                                                <span t-field="o.company_id.partner_id.street2"/>
+                                                <br/>
+                                                <span t-field="o.company_id.partner_id.city"/>
+                                                <span t-field="o.company_id.partner_id.zip"/>
+                                                <span t-field="o.company_id.partner_id.phone"/>
+                                                <span t-field="o.company_id.partner_id.email"/>
+                                            </td>
+                                        </tr>
+                                        <tr align="left" style="font-size:14px; float: top;"
+                                            class="padding_all tleft tbottom ttop text-center">
+                                            <td colspan="2">
+                                                <h3>
+                                                    <span t-field="o.name"/>
+                                                </h3>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="50%">
+                                                <strong>Employee Pay Summary</strong>
+                                            </td>
+                                            <td rowspan="4" width="50%" style=" float: bottom;"
+                                                class="padding_all tleft tbottom ttop text-center">
+                                                <strong>Employee Net Pay - Rs ,</strong>
+
+                                                <span t-esc="'%.2f'% o.total_amount"/>/-
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Employee Name:</strong>
+                                                <span t-field="o.employee_id"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Employee Code:</strong>
+                                                <span t-field="o.employee_id.emp_code"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Designation:</strong>
+                                                <span t-field="o.employee_id.job_id"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Date of Joining:</strong>
+                                                <span t-field="o.employee_id.first_contract_date"/>
+                                            </td>
+                                            <td>
+                                                <div class="padding_all tleft tbottom ttop text-center row"
+                                                     style="margin-left:5px">
+                                                    <strong>Work Days :</strong>
+                                                    <span t-field="o.number_working_of_days"/>
+                                                    <t t-esc="days"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Pay Period :</strong>
+                                                <span t-field="o.date_from"/>-
+                                                <span t-field="o.date_to"/>
+                                            </td>
+
+                                            <td>
+                                                <div class="padding_all tleft tbottom ttop text-center row"
+                                                     style="margin-left:5px">
+                                                    <strong>Pay Days :</strong>
+                                                    <span t-field="o.employee_final_present_days"/>
+                                                    |
+                                                    <strong>LOP Days :</strong>
+                                                    <span t-field="o.employee_loptotal_days"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Pay Date :</strong>
+                                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <strong>Location :</strong>
+                                                <span t-field="o.employee_id.address_id.street"/>,
+                                                <span t-field="o.employee_id.address_id.street2"/>,
+                                                <span t-field="o.employee_id.address_id.city"/>,
+                                                <span t-field="o.employee_id.address_id.state_id"/>,
+                                                <span t-field="o.employee_id.address_id.country_id"/>
+                                            </td>
+                                        </tr>
+                                        <table class="table table-sm table-bordered"
+                                               style="text-align:center;font-size:15px;">
+                                            <tr>
+                                                <td width="50%">
+                                                    <table class="table table-sm table-bordered"
+                                                           style="text-align:center;font-size:15px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th valign="middle" align="center"
+                                                                    class="padding_all tbottom ttop text-center">
+                                                                    <strong>Name</strong>
+                                                                </th>
+                                                                <th valign="middle" align="center"
+                                                                    class="padding_all tleft tbottom ttop text-center">
+                                                                    <strong>Total</strong>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="sale_t body">
+                                                            <t t-foreach="o.line_ids" t-as="l">
+                                                                <t t-if="l.category_id.name != 'Deduction'
+                                                     and l.category_id.name != 'Net' and l.category_id.name != 'Gross'
+                                                     and l.category_id.name != 'TDeduction' and l.category_id.name != 'Company Contribution'">
+                                                                    <tr>
+                                                                        <td class="padding_all tleft tbottom ttop text-left">
+                                                                            <span t-esc="l.name"/>
+                                                                        </td>
+                                                                        <td class="padding_all tleft tbottom ttop text-right">
+                                                                            <span t-esc="'%.2f'% l.total"/>
+                                                                        </td>
+                                                                    </tr>
+                                                                </t>
+                                                            </t>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                                <td width="50%">
+                                                    <table class="table table-sm table-bordered"
+                                                           style="text-align:center;font-size:15px;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th valign="middle" align="center"
+                                                                    class="padding_all tbottom ttop text-center">
+                                                                    <strong>Name</strong>
+                                                                </th>
+                                                                <th valign="middle" align="center"
+                                                                    class="padding_all tleft tbottom ttop text-center">
+                                                                    <strong>Total</strong>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="sale_t body">
+                                                            <t t-foreach="o.line_ids" t-as="l">
+                                                                <t t-if="l.category_id.name == 'Deduction'">
+                                                                    <tr>
+                                                                        <td class="padding_all tleft tbottom ttop text-left">
+                                                                            <span t-esc="l.name"/>
+                                                                        </td>
+                                                                        <td class="padding_all tleft tbottom ttop text-right">
+                                                                            <span t-esc="'%.2f'% abs(l.total)"/>
+                                                                        </td>
+                                                                    </tr>
+                                                                </t>
+                                                            </t>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Gross Earnings</strong>
+                                                </td>
+                                                <td align="right">
+                                                    <t t-foreach="o.line_ids" t-as="l">
+                                                        <t t-if="l.category_id.name == 'Gross'">
+                                                            <span t-field="o.company_id.currency_id.symbol"/>
+                                                            <span t-esc="'%.2f'% l.total"/>
+                                                        </t>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Total Deductions</strong>
+                                                </td>
+                                                <td align="right">
+                                                    <span t-field="o.company_id.currency_id.symbol"/>
+                                                    <span t-esc="'%.2f'% o.amount_deduction"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Net Pay</strong>
+                                                </td>
+                                                <td align="right">
+                                                    <span t-field="o.company_id.currency_id.symbol"/>
+                                                    <span t-esc="'%.2f'% o.total_amount"/>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td class="padding_all tleft tbottom ttop text-center">
+                                                    <strong>Amount in Words</strong>
+                                                </td>
+                                                <td align="right">
+                                                    <span t-esc="o.amount_words"/>
+                                                    <span t-field="o.company_id.currency_id.currency_unit_label"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </table>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

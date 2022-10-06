@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../addons/.idea/addons.iml" filepath="$PROJECT_DIR$/../../addons/.idea/addons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/boutique_management.iml" filepath="$PROJECT_DIR$/.idea/boutique_management.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../web_digital_sign/.idea/web_digital_sign.iml" filepath="$PROJECT_DIR$/../web_digital_sign/.idea/web_digital_sign.iml" />
+    </modules>
+  </component>
+</project>

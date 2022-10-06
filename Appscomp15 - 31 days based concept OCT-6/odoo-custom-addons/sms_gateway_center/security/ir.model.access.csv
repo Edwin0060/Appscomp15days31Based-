@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_customer_sms,access_customer_sms,model_customer_sms,enable_sms_feature,1,1,1,1
+access_api_configure,access_api_configure,model_api_configure,enable_sms_feature,1,1,1,1
+access_template_sms,access_template_sms,model_template_sms,enable_sms_feature,1,1,1,1
+access_customer_sms_single,access_customer_sms_single,model_customer_sms_single,enable_sms_feature,1,1,1,1
+access_multiple_sms_group,access_multiple_sms_group,model_multiple_sms_group,enable_sms_feature,1,1,1,1
+access_birthday_template,access_birthday_template,model_birthday_template,enable_sms_feature,1,1,1,1

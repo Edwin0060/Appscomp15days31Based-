@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_payslip_form_inherit_appscomp_payroll" model="ir.ui.view">
+            <field name="name">hr.payslip.form.inherit</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group[2]" position="after">
+                    <group string="Extras">
+                        <group>
+                            <field name="total_amount" string="Total Payable Amount" force_save="1"/>
+                            <field name="amount_deduction" string="Total Deduction" force_save="1"/>
+                            <field name="amount_net_total" invisible="1"/>
+                            <field name="amount_words" string="Amount in Words"/>
+                            <field name="contract_amount_sub" readonly="1"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

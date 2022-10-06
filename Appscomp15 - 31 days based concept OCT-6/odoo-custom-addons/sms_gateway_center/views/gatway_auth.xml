@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+        <record id="sms_gateway_form" model="ir.ui.view">
+            <field name="name">api.configure.form</field>
+            <field name="model">api.configure</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Api Connection">
+                    <sheet>
+                        <separator string="Configuration" colspan="4" />
+                        <group>
+                            <field name="gateway_name" />
+                            <field name="name" />
+                            <field name="sid" attrs="{'invisible': [('gateway_name','==','msg_91')]}" />
+                            <field name="auth_key" />
+                            <field name="from_no" attrs="{'invisible': [('gateway_name','==','msg_91')]}" />
+                            <field name="sender_id_msg91" attrs="{'invisible': [('gateway_name','==','twilio')]}" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="sms_gateway_action">
+            <field name="name">Sms Gateway</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">api.configure</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem id="sms_gateway_parent_menu" name="SMS Gateway"/>
+        <menuitem id="menu_sms_gateway_id" name="SMS" parent="sms_gateway_parent_menu" sequence="1" />
+        <menuitem id="sms_gateway_id0" name="SMS Gateway" parent="menu_sms_gateway_id" action="sms_gateway_action" />
+    </data>
+</odoo>

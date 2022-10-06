@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_employee_resume_report" model="ir.actions.report">
+        <field name="name">Empoyee Resume</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_resume_report.report_employee_resume_data</field>
+        <field name="report_file">hr_resume_report.report_employee_resume_data</field>
+        <field name="print_report_name">'%s - Resume' % (object.name)</field>
+        <field name="binding_model_id" ref="model_hr_employee"/>
+    </record>
+
+</odoo>

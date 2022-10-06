@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="hr_payroll_excel_report_wizard_form" model="ir.ui.view">
+            <field name="name">hr.payroll.excel.report.wizard.form</field>
+            <field name="model">hr.payroll.excel.report.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Hr Payroll Excel Report">
+                    <group attrs="{'invisible':[('report_printed','=',True)]}">
+                        <group>
+                            <label for="by_date_range_year_month"></label>
+                            <div class="o_row" widget="radio" options="{'horizontal': true}">
+                                <field name="by_date_range_year_month" widget="radio" options="{'horizontal': true}"
+                                       readonly="0"/>
+                                <!--                                <field name="by_month_year"/>-->
+                                <!--                                <field name="by_date_range"/>-->
+                            </div>
+                            <!--                            <field name="by_month_year" widget='radio' options="{'horizontal': true}"/>-->
+                            <!--                            <field name="by_date_range" widget='radio' options="{'horizontal': true}"/>-->
+
+                            <label for="selct_month"
+                                   attrs="{'invisible':[('by_date_range_year_month','!=','by_month_year')]}"></label>
+                            <div class="o_row" name="selct_month"
+                                 attrs="{'invisible':[('by_date_range_year_month','!=','by_month_year')],
+                                                             'required':[('by_date_range_year_month','==','by_month_year')]}">
+                                <field name="selct_month"/>
+                                <field name="year_master" options="{'no_open': True, 'no_create': True}"/>
+                            </div>
+                            <!--                            <field name="selct_month" required="1"/>-->
+                            <field name="start_date" required="0" invisible="0"
+                                   attrs="{'invisible':[('by_date_range_year_month','==','by_month_year')] ,
+                                   'required':[('by_date_range_year_month','!=','by_month_year')]}"/>
+                            <field name="end_date" invisible="0"
+                                   attrs="{'invisible':[('by_date_range_year_month','==','by_month_year')] ,
+                                   'required':[('by_date_range_year_month','!=','by_month_year')]}"/>
+                            <!--                            attrs="{'invisible':[('condition_select','!=','range')], 'required':[('condition_select','=','range')]}"-->
+                            <field name="employee_boolean"/>
+                            <field name="employee_id" widget="many2many_tags"
+                                   attrs="{'invisible': [('employee_boolean', '=', True)]}" options='{"no_open": False, "no_create": True}'/>
+                        </group>
+                        <group>
+                            <field name="person_count" attrs="{'invisible': [('employee_boolean', '=', True)]}"  readonly="1"/>
+                            <field name="department_id" widget="many2many_tags" options='{"no_open": False, "no_create": True}' attrs="{'invisible': [('employee_boolean', '=', True)]}"  />
+                            <field name="salary_strut_id" options='{"no_open": False, "no_create": True}' attrs="{'invisible': [('employee_boolean', '=', True)]}" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="report_printed" invisible="1"/>
+                        <group attrs="{'invisible':[('report_printed','=',False)]}">
+                            <field name="file_name" invisible="1"/>
+                            <field name="summary_file" readonly="1" filename="file_name"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string='Download' name="action_get_hr_payroll_excel_report"
+                                type="object" class="oe_highlight" icon="fa-download"
+                                attrs="{'invisible':[('report_printed','=',True)]}"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_hr_payroll_excel_report">
+            <field name="name">Hr Payroll Excel Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.payroll.excel.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_payroll_excel_report_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_hr_payroll_excel_report" id="menu_action_hr_payslip_excel_report"
+                  name="HR Payroll Report"
+                  parent="om_hr_payroll.menu_hr_payroll_configuration" sequence="2"/>
+    </data>
+</odoo>

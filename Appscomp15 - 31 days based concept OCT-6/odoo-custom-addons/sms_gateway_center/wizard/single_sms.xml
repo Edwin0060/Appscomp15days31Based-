@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_customer_sms_form" model="ir.ui.view">
+            <field name="name">customer.sms.form</field>
+            <field name="model">customer.sms.single</field>
+            <field name="arch" type="xml">
+                <form string="SMS Details" edit="false" delete='false'>
+                    <group>
+                        <field name="select_template" string= 'Use Predefined Templates'/>
+                        <field name="templates" string= 'Templates' attrs="{'invisible': [('select_template','=',False)]}"/>
+                        <field name="to_number" placeholder="ex.+919773358439" />
+                        <field name="text" />
+                        <field name="select_account" widget="many2many_tags" options="{'no_create_edit':'1'}" />
+                    </group>
+                    <footer>
+                        <field name='state' invisible="1"/>
+                        <button string="SEND" class="oe_highlight" type="object" name="submit" attrs="{'invisible': [('state', 'in', ('resend','sent'))]}"/>
+                        <button string="Resend" class="oe_highlight" type="object" name="submit" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
+                        <button string="_Cancel" class="btn-default" special="cancel" />
+                    </footer>                    
+                </form>
+            </field>
+        </record>
+        <record id="action_customer_sms" model="ir.actions.act_window">
+            <field name="name">Customer SMS</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">customer.sms.single</field>
+            <field name="view_mode">form</field>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_customer_sms_form" />
+        </record>
+    </data>
+</odoo>

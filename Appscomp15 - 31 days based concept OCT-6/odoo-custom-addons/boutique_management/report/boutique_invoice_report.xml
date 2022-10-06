@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="paperformat_invoice_boutique" model="report.paperformat">
+            <field name="name">Boutique paper format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">7</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">3</field>
+            <field name="margin_right">3</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">30</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+                id="boutique_invoice_report_menu"
+                model="account.move"
+                string="Invoice Boutique Report"
+                report_type="qweb-pdf"
+                name="boutique_management.boutique_invoice_note_template"
+                file="boutique_management.boutique_invoice_note_template"
+                paperformat="boutique_management.paperformat_invoice_boutique"
+                print_report_name='"Invoice Boutique Report"'
+                menu="True"
+        />
+
+
+        <template id="boutique_invoice_note_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.basic_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <div class="row">
+                                <div class="col-4" align="left">
+                                    <strong>
+                                        <span t-field="o.company_id.name"/>
+                                    </strong>
+                                    <br/>
+                                    <span t-field="o.company_id.street"/>
+                                    <span t-field="o.company_id.street2"/>,
+                                    <br/>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.state_id"/>
+                                    <span t-field="o.company_id.country_id"/>
+                                    <br/>
+                                    <span t-field="o.company_id.phone"/>
+                                </div>
+                                <div class="col-7" align="right">
+                                    <img src='/web/binary/company_logo' class="img-fluid img-thumbnail"
+                                         style=" max-width:25%;"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="page" align="center">
+                                <h4>
+                                    <strong>
+                                        BOUTIQUE INVOICE REPORT
+                                    </strong>
+                                </h4>
+                            </div>
+                            <br/>
+                            <table class="table table-sm table-bordered">
+                                <tr>
+                                    <th class="padding_all tbottom ttop text-left" width="50%">
+                                        <strong>
+                                            <span class="px-3" t-field="o.name"/>
+                                        </strong>
+                                    </th>
+                                    <th class="padding_all tbottom ttop text-right" width="50%">
+                                        <strong>
+                                            <span class="px-3" t-field="o.payment_state"/>
+                                        </strong>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td class="padding_all tbottom ttop text-left" width="50%">
+                                        <strong>Customer</strong>
+                                        <span t-field="o.partner_id"/>,
+                                        <br/>
+                                        <t t-if="o.partner_id.street">
+                                            <span t-field="o.partner_id.street"/>,
+                                        </t>
+                                        <t t-if="o.partner_id.street2">
+                                            <span t-field="o.partner_id.street2"/>,
+                                        </t>
+
+                                        <t t-if="o.partner_id.city">
+                                            <span t-field="o.partner_id.city"/>,
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_id.state_id">
+                                            <span t-field="o.partner_id.state_id"/>,
+                                        </t>
+                                        <t t-if="o.partner_id.country_id">
+                                            <span t-field="o.partner_id.country_id"/>,
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.partner_id.phone">
+                                            <span t-field="o.partner_id.phone"/>,
+                                        </t>
+                                    </td>
+
+                                    <td class="padding_all tbottom ttop text-left" width="50%">
+                                        <strong>Invoice Date:</strong>
+                                        <span class="px-3" t-field="o.invoice_date"/>
+                                        <br/>
+                                        <strong>Due Date :</strong>
+                                        <span class="px-3" t-field="o.invoice_payment_term_id.name"/>
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Payment Reference :</strong>
+                                        <span class="px-2" t-field="o.payment_reference"/>
+                                    </td>
+                                    <td class="padding_all tbottom ttop text-left">
+                                        <strong>Boutique Reference:</strong>
+
+                                        <span class="px-2" t-field="o.boutique_id.name"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="table table-sm table-bordered" style="font-size:14px;">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th width="3%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>S.NO</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Product</strong>
+                                        </th>
+                                        <th width="20%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Quantity</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>UOM</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Price</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Subtotal</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.invoice_line_ids" t-as="l">
+                                        <t t-set="print_with_payments" t-value="True"/>
+                                        <td width="3%" class="padding_all tbottom ttop text-center">
+                                            <span t-esc="l_index+1"/>
+                                        </td>
+                                        <td width="30%" class="padding_all tleft tbottom ttop text-left">
+                                            <span t-field="l.product_id"/>
+                                        </td>
+                                        <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                            <span t-field="l.quantity"/>
+                                        </td>
+                                        <td width="10%" class="padding_all tleft tbottom ttop text-left">
+                                            <span t-field="l.product_uom_id"/>
+                                        </td>
+                                        <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                            <span t-field="l.price_unit"/>
+                                        </td>
+                                        <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                            <span t-field="l.price_subtotal"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5"
+                                            class="padding_all table-active tleft tbottom ttop text-right">
+                                            <strong>TOTAL</strong>
+                                        </td>
+                                        <td
+                                                class="padding_all table-active tleft tbottom ttop text-right">
+                                            <span t-field="o.amount_total"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!--Payments-->
+                                        <td colspan="6" align="right">
+                                            <t t-if="print_with_payments">
+                                                <t t-set="payments_vals"
+                                                   t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                                                <t t-foreach="payments_vals" t-as="payment_vals">
+                                                    <b>
+                                                        <i class="oe_form_field text-right oe_payment_label">Paid on
+                                                            <t t-esc="payment_vals['date']"
+                                                               t-options='{"widget": "date"}'/>
+                                                        </i>
+                                                    </b>
+                                                    <span t-esc="payment_vals['amount']"
+                                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                    <br/>
+
+                                                </t>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <!--                                        <td class="padding_all table-active tleft tbottom ttop text-right">-->
+                                        <!--                                         -->
+                                        <!--                                        </td>-->
+                                        <td colspan='2' class="padding_all table-active tleft tbottom ttop text-right">
+                                            <span t-field="o.boutique_id.payment_id.name"/>
+                                            <strong class="px-2">Advance Received</strong>
+                                            <span t-field="o.sale_advance_amount"/>
+                                            <span t-field="o.boutique_id.advanced_payment_date"/>
+                                            <span t-field="o.boutique_id.advanced_payment_date"/>
+                                        </td>
+                                        <td class="padding_all table-active tleft tbottom ttop text-right">
+                                            <strong>Advance Balance</strong>
+                                        </td>
+                                        <td class="padding_all table-active tleft tbottom ttop text-right">
+                                            <t t-if="print_with_payments">
+                                                <t t-set="payments_vals"
+                                                   t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                                                <t t-foreach="payments_vals" t-as="payment_vals">
+                                                    <span t-esc="abs(payment_vals['amount'] - o.sale_advance_amount)"
+                                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                </t>
+                                            </t>
+                                        </td>
+
+                                        <td class="padding_all table-active tleft tbottom ttop text-right">
+                                            <strong>Balance</strong>
+                                        </td>
+                                        <td
+                                                class="padding_all table-active tleft tbottom ttop text-right">
+                                            <span t-field="o.amount_residual"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-1">
+                                    <span></span>
+                                </div>
+                                <div class="col-4">
+                                    <strong>Authorized by</strong>
+                                </div>
+                                <div class="col-3">
+                                    <span></span>
+                                </div>
+                                <div class="col-3">
+                                    <strong>Signature</strong>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <!-- Hide the Invoice report menu in from base-->
+        <record id="account.account_invoices" model="ir.actions.report">
+            <field name="binding_model_id" eval="False"/>
+        </record>
+        <!-- Hide the Invoice without payment report menu in from base-->
+        <record id="account.account_invoices_without_payment" model="ir.actions.report">
+            <field name="binding_model_id" eval="False"/>
+        </record>
+    </data>
+
+</odoo>

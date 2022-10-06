@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_boutique_measurement,boutique.measurement,model_boutique_measurement,,1,1,1,1
+access_boutique_measurement_features,boutique.measurement.features,model_boutique_measurement_features,,1,1,1,1
+access_boutique_order,boutique.order,model_boutique_order,,1,1,1,1
+access_boutique_order_line,boutique.order.line,model_boutique_order_line,,1,1,1,1
+access_boutique_dashboard_design,boutique.dashboard.design,model_boutique_dashboard_design,,1,1,1,1
+

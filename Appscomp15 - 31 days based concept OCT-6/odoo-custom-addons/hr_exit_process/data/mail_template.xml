@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="employee_exit_reject_mail_template" model="mail.template">
+            <field name="name">Employee Exit Request Rejection Notification</field>
+            <field name="model_id" ref="hr_exit_process.model_hr_exit"/>
+            <field name="subject">Employee Exit Request Rejection Notification</field>
+            <field name="email_from">{{(object.env.user.email) }}</field>
+            <field name="email_to">{{ (object.employee_id.work_email) }}</field>
+            <field name="email_cc">{{ (object.employee_id.coach_id.work_email) }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <br/>
+                    <br/>
+                    <p>Dear Mr/Mrs,<t t-out="object.employee_id.name or ''"/>,
+                        <p>
+                            <t t-out="object.employee_id.name or ''"/>
+                        </p>
+                        your Exit Request has been rejected by Department Manager of Mr/Mrs<t
+                                t-out="object.manager_id.name or ''"/>,
+                    </p>
+                    <br/>
+                    <p>Thank you</p>
+                    <p>AppsComp Widgets Pvt Ltd</p>
+                    <p>
+                        <img src='/web/binary/company_logo' widget="image" style="width: 130px;height: 60px;"/>
+                    </p>
+
+                </div>
+            </field>
+        </record>
+
+
+        <record id="employee_exit_reject__two_mail_template" model="mail.template">
+            <field name="name">Employee Exit Request Rejection Notification</field>
+            <field name="model_id" ref="hr_exit_process.model_hr_exit"/>
+            <field name="subject">Employee Exit Request Rejection Notification</field>
+            <field name="email_from">{{ (object.env.user.email) }}</field>
+            <field name="email_to">{{ (object.employee_id.work_email) }}</field>
+            <field name="email_cc">{{ (object.manager_id.work_email) }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <br/>
+                    <br/>
+                    <p>Dear Mr/Mrs,<t t-out="object.employee_id.name or ''"/>,
+                    </p>
+                    <p>Employee exit Request has been rejected by HR Manager of Mr/Mrs
+                        <t t-out="object.employee_id.coach_id.name or ''"/>
+                    </p>
+                    ,
+                    <br/>
+                    <p>Thank you</p>
+                    <p>AppsComp Widgets Pvt Ltd</p>
+                    <p>
+                        <img src='/web/binary/company_logo' widget="image" style="width: 130px;height: 60px;"/>
+                    </p>
+
+                </div>
+            </field>
+        </record>
+
+        <record id="employee_exit_approved_process_mail_template" model="mail.template">
+            <field name="name">Employee Exit Request Approved Notification</field>
+            <field name="model_id" ref="hr_exit_process.model_hr_exit"/>
+            <field name="subject">Employee Exit Request Approved Notification</field>
+            <field name="email_from">{{ (object.env.user.email) }}</field>
+            <field name="email_to">{{ (object.employee_id.coach_id.work_email) }}</field>
+            <field name="email_cc">{{ (object.employee_id.work_email) }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <br/>
+                    <br/>
+                    <p>Dear Mr/Mrs,<t t-out="object.employee_id.name or ''"/>,
+                    </p>
+                    <p>Employee Exit Request has been Approved by Department Manager of Mr/Mrs
+                        <t t-out="object.manager_id.name or ''"/>,
+                    </p>
+                    <br/>
+                    <p>Thank you</p>
+                    <p>AppsComp Widgets Pvt Ltd</p>
+                    <p>
+                        <img src='/web/binary/company_logo' widget="image" style="width: 130px;height: 60px;"/>
+                    </p>
+
+                </div>
+            </field>
+        </record>
+
+        <record id="employee_exit_approved_two_process_mail_template" model="mail.template">
+            <field name="name">Employee Exit Approve Request Notification</field>
+            <field name="model_id" ref="hr_exit_process.model_hr_exit"/>
+            <field name="subject">Employee Exit Approve Request Notification</field>
+            <field name="email_from">{{ (object.env.user.email) }}</field>
+            <field name="email_to">{{ (object.manager_id.work_email) }}</field>
+            <field name="email_cc">{{ (object.employee_id.work_email) }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <br/>
+                    <br/>
+                    <p>Dear Mr/Mrs,<t t-out="object.employee_id.name or ''"/>,
+                    </p>
+                    your Exit Request has been Approved by Hr Manager of Mr/Mrs
+                    <t t-out="object.employee_id.coach_id.name or ''"/>,
+                    <br/>
+                    <p>Thank you</p>
+                    <p>AppsComp Widgets Pvt Ltd</p>
+                    <p>
+                        <img src='/web/binary/company_logo' widget="image" style="width: 130px;height: 60px;"/>
+                    </p>
+
+                </div>
+            </field>
+        </record>
+
+
+        <record id="employee_exit_approved_general_manager_process_mail_template" model="mail.template">
+            <field name="name">Employee Exit Approve Request Notification</field>
+            <field name="model_id" ref="hr_exit_process.model_hr_exit"/>
+            <field name="subject">Employee Exit Approve Request Notification</field>
+            <field name="email_from">{{ (object.env.user.email) }}</field>
+            <field name="email_to">{{ (object.employee_id.work_email) }}</field>
+            <field name="email_cc">{{ (object.employee_id.coach_id.work_email)}} {{ (object.manager_id.work_email)}}
+            </field>
+            <field name="body_html" type="html">
+                <div>
+                    <br/>
+                    <br/>
+                    <p>Dear Mr/Mrs,<t t-out="object.employee_id.name or ''"/>,
+                    </p>
+                    your Exit Request has been Approved
+                    <!--                    by Hr Manager of Mr/Mrs -->
+                    <!--                      <t t-out="object.employee_id.coach_id.name or ''"/>,-->
+                    <br/>
+                    <p>Thank you</p>
+                    <p>AppsComp Widgets Pvt Ltd</p>
+                    <p>
+                        <img src='/web/binary/company_logo' widget="image" style="width: 130px;height: 60px;"/>
+                    </p>
+                </div>
+            </field>
+        </record>
+
+        <record id="employee_exit_confirm_process_mail_template" model="mail.template">
+            <field name="name">Employee Exit Request</field>
+            <field name="model_id" ref="hr_exit_process.model_hr_exit"/>
+            <field name="subject">Employee Exit Request Notification</field>
+            <field name="email_from">{{(object.env.user.email) }}</field>
+            <field name="email_to">{{(object.manager_id.work_email) }}</field>
+            <field name="email_cc">{{ (object.employee_id.coach_id.work_email) }}</field>
+            <field name="body_html" type="html">
+                <div>
+                    <p>Dear Mr/Mrs,
+                        <t t-out="object.manager_id.name or ''"/>
+                    </p>
+                    <br/>
+                    <p>I am writing This Letter to resign formally for the post of
+                        <t t-out="object.department_id.name or ''"/>
+                        at
+                        <t t-out="object.company_id.name or ''"/>,
+                    </p>
+                    <p>The Effective date of my resignation will be from
+                        <span t-esc="datetime.datetime.now().strftime('%d-%m-%Y')"></span>
+                    </p>
+                    <p>I would like to thank you for giving me an opportunity to work for
+                        <t t-out="object.company_id.name or ''"/>
+                        <br/>
+                        and grow as a professional special thanks for the support you have provides me
+                        and the opportunities you have given me to enhance my skills.
+                    </p>
+                    <p>Kindly let me know my last working Day</p>
+                    <br/>
+
+                    <p>Thank you</p>
+                    <p>AppsComp Widgets Pvt Ltd</p>
+                    <p>
+                        <img src='/web/binary/company_logo' widget="image" style="width: 130px;height: 60px;"/>
+                    </p>
+
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
