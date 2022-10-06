@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_employee_attendance">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h1 style="text-align: center; font-size:35px; font-family: 'Times New Roman' ">Attendance Of Employees</h1><br></br>
+                    <div class="oe_structure">
+                        <div class="row">
+                            <table class="table table-bordered ">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th scope="col">Employee</th>
+                                        <th scope="col">Check In</th>
+                                        <th scope="col">Check Out</th>
+                                        <th scope="col">Work Hours</th>
+                                    </tr>
+                                </thead>
+                                <t t-foreach="docs" t-as="o">
+                                    <tr>
+                                        <t t-if="not o.employee_id">
+                                            <td>
+                                                <span> </span>
+                                            </td>
+                                        </t>
+                                        <t t-if="o.employee_id">
+                                            <t t-if="o.worked_hours &lt; 8">
+                                                <td class="table-warning">
+                                                    <span t-field="o.employee_id"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.worked_hours &gt; 9.9999999999999999999">
+                                                <td class="table-danger">
+                                                    <span t-field="o.employee_id"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.worked_hours &gt; 8">
+                                                <t t-if="o.worked_hours &lt; 10">
+                                                    <td >
+                                                        <span t-field="o.employee_id"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </t>
+
+
+                                        <t t-if="not o.check_in">
+                                            <td>
+                                                <span> </span>
+                                            </td>
+                                        </t>
+
+
+                                        <t t-if="o.check_in">
+                                            <t t-if="o.worked_hours &lt; 8">
+                                                <td class="table-warning">
+                                                    <span t-field="o.check_in"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.worked_hours &gt; 9.9">
+                                                <td class="table-danger">
+                                                    <span t-field="o.check_in"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.worked_hours &gt; 8">
+                                                <t t-if="o.worked_hours &lt; 10">
+                                                    <td >
+                                                        <span t-field="o.check_in"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </t>
+
+
+                                        <t t-if="not o.check_out">
+                                            <td>
+                                                <span> </span>
+                                            </td>
+                                        </t>
+
+
+                                        <t t-if="o.check_out">
+                                            <t t-if="o.worked_hours &lt; 8">
+                                                <td class="table-warning">
+                                                    <span t-field="o.check_out"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.worked_hours &gt; 9.9">
+                                                <td class="table-danger">
+                                                    <span t-field="o.check_out"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.worked_hours &gt; 8">
+                                                <t t-if="o.worked_hours &lt; 10">
+                                                    <td >
+                                                        <span t-field="o.check_out"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </t>
+
+
+                                        <t t-if="not o.worked_hours">
+                                            <td>
+                                                <span> </span>
+                                            </td>
+                                        </t>
+
+
+                                        <t t-if="o.worked_hours">
+                                            <t t-if="o.worked_hours &lt; 8">
+                                                <td class="table-warning">
+                                                    <span t-field="o.worked_hours"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.worked_hours &gt; 9.9">
+                                                <td class="table-danger">
+                                                    <span t-field="o.worked_hours"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="o.worked_hours &gt; 8">
+                                                <t t-if="o.worked_hours &lt; 10">
+                                                    <td >
+                                                        <span t-field="o.worked_hours"/>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_employee_education_form_inherited" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherited</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='hr_settings']" position="before">
+                    <page name="education_history" string="Education History">
+                        <field name="employee_wrk_hist_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="level_id" widget="handle"/>
+                                <field name="institute_id"/>
+                                <field name="degree_id"/>
+                                <field name="department_id"/>
+<!--                                <field name="detail"/>-->
+                                <field name="from_date"/>
+                                <field name="to_date"/>
+<!--                                <field name="detail"/>-->
+                                <field name="detail"/>
+                                <field name="attachment" filename="attachment_name"/>
+                                <field name="attachment_name" invisible="1"/>
+                            </tree>
+                        </field>
+
+                        <field name="attachment" widget="many2many_binary"/>
+                    </page>
+                </xpath>
+
+                <xpath expr="//page[@name='personal_information']" position="before">
+                    <page name="salary_revision" string="Salary Revision">
+                        <field name="salary_revision_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="new_salary_from"/>
+                                <field name="new_salary_amount"/>
+                                <field name="old_salary_amount"/>
+                                <field name="salary_hike"/>
+                                <field name="new_salary_id" readonly="1"/>
+                                <field name="job_position_id"/>
+                                <field name="department_id" optional="hide"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="resume_line_view_form_inherited" model="ir.ui.view">
+            <field name="name">hr.resume.line.form.inherited</field>
+            <field name="model">hr.resume.line</field>
+            <field name="inherit_id" ref="hr_skills.resume_line_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_type']" position="after">
+                    <field name="expertise_in"/>
+                    <field name="relieved_reason"/>
+                </xpath>
+                <xpath expr="//field[@name='date_end']" position="after">
+                    <field name="salary"/>
+                    <field name="experience"/>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

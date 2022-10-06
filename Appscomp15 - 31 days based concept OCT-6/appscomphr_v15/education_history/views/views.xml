@@ -1,0 +1,82 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+<!--        <record model="ir.ui.view" id="education_history_list">-->
+<!--            <field name="name">EMS View</field>-->
+<!--            <field name="model">hr.employee</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree>-->
+<!--                    <field name="employee_name"/>-->
+
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record model="ir.actions.act_window" id="education_history_action_window">-->
+<!--            <field name="name">EMS View</field>-->
+<!--            <field name="res_model">education.history</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--        </record>-->
+
+
+<!--        <record model="ir.ui.view" id="pettycash_form_view_list">-->
+<!--            <field name="name">EMS View</field>-->
+<!--            <field name="model">hr.employee</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form>-->
+<!--                    <sheet>-->
+<!--                        <group>-->
+<!--                            <group>-->
+<!--                                <field name="employee_name"/>-->
+<!--                            </group></group>-->
+<!--                        &lt;!&ndash;                        <notebook>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <page string="Education">&ndash;&gt;-->
+
+<!--                        <field name="relation" nolabel="1">-->
+<!--                            <tree editable="bottom">-->
+<!--                                <field name="level" widget="handle"/>-->
+<!--                                <field name="institute"/>-->
+<!--                                <field name="department"/>-->
+<!--                                <field name="degree"/>-->
+<!--                                <field name="detail"/>-->
+<!--                                <field name="from_date"/>-->
+<!--                                <field name="to_date"/>-->
+<!--                            </tree>-->
+<!--                        </field>-->
+
+<!--                        &lt;!&ndash;                            </page>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </notebook>&ndash;&gt;-->
+<!--                    </sheet>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+
+        <record id="hr_employee_view_form_inherit_expense_hunain" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.expense</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr = "//page[@name='hr_settings']" position="before">
+                    <page name="educaion_history" string="Education History">
+                       <field name="relation" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="level" widget="handle"/>
+                                <field name="institute"/>
+                                <field name="department"/>
+                                <field name="degree"/>
+                                <field name="detail"/>
+                                <field name="from_date"/>
+                                <field name="to_date"/>
+                            </tree>
+                        </field>
+                        
+                            <field name="attachment" widget="many2many_binary" strint="Attachments"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

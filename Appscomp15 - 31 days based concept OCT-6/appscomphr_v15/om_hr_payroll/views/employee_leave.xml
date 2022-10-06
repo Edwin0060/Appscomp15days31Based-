@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="hr_leave_form_inherited" model="ir.ui.view">
+            <field name="name">hr.leave.inherited</field>
+            <field name="model">hr.leave</field>
+            <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="replace">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+                </xpath>
+                <xpath expr="//field[@name='holiday_type']" position="after">
+                    <field name="is_eligible" readonly="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_confirm']" position="after">
+                    <button string='Continous Leave' name="employee_continous_leave"
+                            type="object" class="btn-primary"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_employee_leave_eligible_form">
+            <field name="name">Employee Leave Eligible</field>
+            <field name="model">employee.leave.eligible</field>
+            <field name="arch" type="xml">
+                <form string="Leave Eligible">
+                    <sheet>
+                        <group string="Leave Eligible">
+                            <group>
+                                <field name="employee_id" required="1" placeholder="Select an Employee"/>
+                                <field name="leave_eligible"/>
+                            </group>
+                            <group>
+                                <field name="leave_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Employee Leave Types" name="extra"
+                                  attrs="{'invisible':[('leave_eligible','=',False)]}">
+                                <group>
+                                    <group>
+                                        <field name="annual_leave"/>
+                                        <field name="bereavement_leave"/>
+                                        <field name="sick_time_off"/>
+                                        <field name="compensatory_leave"/>
+                                    </group>
+                                    <group>
+                                        <field name="study_leave"/>
+                                        <field name="casual_leave"/>
+                                        <field name="maternity_leave"/>
+                                        <field name="parental_leave"/>
+                                    </group>
+
+                                </group>
+
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_employee_leave_eligible_tree">
+            <field name="name">Employee Leave Eligible</field>
+            <field name="model">employee.leave.eligible</field>
+            <field name="arch" type="xml">
+                <tree string="Leave Eligible">
+                    <field name="employee_id"/>
+                    <field name="leave_eligible" invisible="1"/>
+                    <field name="annual_leave" optional="hide"/>
+                    <field name="bereavement_leave" optional="hide"/>
+                    <field name="sick_time_off" optional="hide"/>
+                    <field name="compensatory_leave" optional="hide"/>
+                    <field name="study_leave" optional="hide"/>
+                    <field name="casual_leave" optional="hide"/>
+                    <field name="maternity_leave" optional="hide"/>
+                    <field name="parental_leave" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model='ir.actions.act_window' id='action_employee_leave_eligible'>
+            <field name="name">Employee Leave Eligible</field>
+            <field name="res_model">employee.leave.eligible</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+<!--        <menuitem id="menu_employee_leave_eligible"-->
+<!--                  name="Leave Eligible"-->
+<!--                  parent="hr_holidays.menu_hr_holidays_approvals"-->
+<!--                  action="action_employee_leave_eligible"-->
+<!--                  sequence="5"-->
+<!--        />-->
+
+
+        <record id="hr_leave_allocation_form_inherited_id" model="ir.ui.view">
+            <field name="name">hr.leave.allocation.inherited</field>
+            <field name="model">hr.leave.allocation</field>
+            <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form_manager"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="is_eligible" readonly="1" invisible="0"/>
+                </xpath>
+                <!--                <button name="action_confirm" position="after">-->
+                <!--                    <button string='Joining' name="employee_dates"-->
+                <!--                            type="object" class="btn-primary" />-->
+                <!--                </button>-->
+            </field>
+        </record>
+    </data>
+</odoo>

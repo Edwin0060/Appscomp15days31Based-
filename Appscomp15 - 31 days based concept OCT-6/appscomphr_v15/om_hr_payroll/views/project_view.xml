@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="project_project_view_form_inherited" model="ir.ui.view">
+            <field name="name">project.project.view.form.inherited</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="project_team_leader"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

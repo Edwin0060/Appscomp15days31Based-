@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<report 
+		id="report_public_holidays_qweb" 
+		string="Public holidays"
+		model="hr.public.holidays" 
+		name="sky_public_holidays.report_public_holidays"
+		report_type="qweb-pdf"/>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="report_public_holidays">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="o">
+					<div class="page">
+						<t t-if="o.holidays_ids">
+						<center>
+							<h3>Public Holidays</h3>
+						</center>
+						<table class="table table-condensed" style="text-align:center"
+							width="100%">
+							<tr style="font-weight:bold;">
+								<td>Start Date</td>
+								<td><span t-esc="o.start_date"/></td>
+							</tr>
+							<tr style="font-weight:bold;">
+								<td>End Date</td>
+								<td><span t-esc="o.end_date"/></td>
+							</tr>
+						</table>
+						<table class="table table-bordered table-condensed" style="text-align:center"
+							width="100%">
+							<thead>
+								<tr style="font-weight:bold;background-color:#D3D3D3">
+									<td style="border:1px solid black">Date</td>
+									<td style="border:1px solid black">Day</td>
+									<td style="border:1px solid black">Name</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr t-foreach="o.holidays_ids" t-as="line">
+									<td style="border:1px solid black">
+										<span t-esc="line.date"/>
+									</td>
+									<td style="border:1px solid black">
+										<span t-esc="dict(line._fields['week_day'].selection).get(line.week_day)"/>
+									</td>
+									<td style="border:1px solid black">
+										<span t-esc="line.name" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						</t>
+					</div>
+				</t>
+			</t>
+		</t>
+	</template>
+</odoo>

@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_call_achievment,access_call_achievment,model_call_achievment,base.group_user,1,1,1,1
+access_hr_employee_profile_base,access_hr_employee_profile_base,model_hr_employee,base.group_user,1,0,,
+access_hr_payslip_base,access_hr_payslip_base,om_hr_payroll.model_hr_payslip,base.group_user,1,0,,
+access_hr_employee_profile_base_user,access_hr_employee_profile_base_user,base.model_res_users,base.group_user,1,1,,
+access_hr_payslip_worked_days_user,access_hr_payslip_worked_days_user,om_hr_payroll.model_hr_payslip_worked_days,base.group_user,1,0,,
+access_hr_payslip_line_user,access_hr_payslip_line_user,om_hr_payroll.model_hr_payslip_line,base.group_user,1,0,,
+access_hr_payslip_input_user_base,access_hr_payslip_input_user_base,om_hr_payroll.model_hr_payslip_input,base.group_user,1,0,,
+access_hr_attendance_dept_manager,access_hr_attendance_dept_manager,hr_attendance.model_hr_attendance,group_employee_department_manager,1,1,1,1
+access_hr_attendance_team_lead,access_hr_attendance_team_lead,hr_attendance.model_hr_attendance,group_employee_team_leader,1,1,1,1
+access_languages_known,access_languages_known,model_languages_known,,1,1,1,1

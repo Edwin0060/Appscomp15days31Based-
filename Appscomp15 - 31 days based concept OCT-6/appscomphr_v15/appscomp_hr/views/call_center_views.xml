@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="call_center_tree_view" model="ir.ui.view">
+			<field name="name">hr.employee.tree</field>
+            <field name="model">call.achievment</field>
+            <field name="arch" type="xml">
+				<tree string="Call center Acheivements" multi_edit="1" editable="top">
+					<field name="name" />
+					<field name="employee_id" />
+					<field name="emp_code" />
+					<field name="agent" />
+					<field name="date" />
+					<field name="target" />
+					<field name="achieved_count" />
+					<field name="y_beat" />
+					<field name="p_day" />
+					<field name="work_type" readonly="1" invisible="1"/>
+					<field name="approved" />
+					<field name="rejection" />
+					<field name="drop" />
+				</tree>
+            </field>
+		</record>
+		
+		
+		<record id="call_center_form_view" model="ir.ui.view">
+			<field name="name">call.achievment.form</field>
+            <field name="model">call.achievment</field>
+            <field name="arch" type="xml">
+				<form string="Call Achievement">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="employee_id" />
+								<field name="agent" />
+								<field name="target" />
+								<field name="y_beat" />
+								<field name="p_day" />
+							</group>
+							<group>
+								<field name="work_type" readonly="1" invisible="1"/>
+								<field name="approved" />
+								<field name="rejection" />
+								<field name="drop" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+            </field>
+		</record>
+		
+		<record id="call_center_view_search" model="ir.ui.view">                                
+		  <field name="name">call.achievment.search</field>                                
+		  <field name="model">call.achievment</field>                                
+		  <field name="arch" type="xml">                                    
+			<search string="Search contacts">                                        
+			  <field name="name"></field>                                        
+			  <group expand="0" string="Group By">                                            
+				<filter string="Employee" name="employee_id" context="{'group_by': 'employee_id'}"></filter>                                                                                    
+			  </group>                                    
+			</search>                                
+		  </field>                            
+		</record>
+		
+		
+		<record id="action_view_call_achievement" model="ir.actions.act_window">
+            <field name="name">Call Achievements</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="call_center_view_search"></field>                                
+            <field name="res_model">call.achievment</field>
+        </record>
+		
+			<menuitem
+            action="action_view_call_achievement"
+            id="menu_call_achieve_root"
+            name="Call Achievement"
+            parent="hr.menu_hr_root" 
+            groups="hr.group_hr_manager"/>
+		
+	</data>
+</odoo>
