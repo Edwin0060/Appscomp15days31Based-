@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+         <record id="company_direct_delivery_sequence" model="ir.sequence">
+            <field name="name">Direct Delivery Sequence</field>
+            <field name="code">direct.delivery.indent</field>
+            <field name="prefix">TPN/D-STOCK/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <record id="view_direct_delivery_indent_form" model="ir.ui.view">
+            <field name="name">direct.delivery.indent.form</field>
+            <field name="model">direct.delivery.indent</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="set_submit" type="object" string="Submit"
+                                attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+                        <button name="set_delivery" type="object" string="Delivery"
+                                 attrs="{'invisible': [('state', 'not in', ['submitted'])]}"/>
+                        <field name="state" widget="statusbar" clickable="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="direct_delivery_back_order"
+                                    class="oe_stat_button"
+                                    icon="fa-book"
+                                    attrs="{'invisible': [('direct_delivery_backorder_count', '=', 0)]}"
+                                    type="object">
+                                <field name="direct_delivery_backorder_count" widget="statinfo"
+                                       options="{'reload_on_button': true}"/>
+                            </button>
+                            <button type="object"
+                                    name="direct_delivery_view_picking" states="open,paid"
+                                    class="oe_stat_button"
+                                    attrs="{'invisible': [('direct_delivery_picking_count', '=', 0)]}"
+                                    icon="fa-truck">
+                                <field name="direct_delivery_picking_count" string="Shipment" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="delivery_type" widget="radio" options="{'horizontal': true}" required="1"/>
+<!--                                <field name="direct_delivery_request_type" widget="radio"-->
+<!--                                       options="{'horizontal': true}"/>-->
+                                <field name="delivery_responsible" readonly="1"/>
+                                <field name="department_id"/>
+                                <field name="current_job_id"/>
+                                <field name="current_reporting_manager" />
+<!--                                <field name="ho_department" required="1"-->
+<!--                                       attrs="{'readonly':[('state','!=','draft')]}"/>-->
+                            </group>
+                            <group>
+                                <field name="purpose" required="1"
+                                       attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="picking_type_id" domain="[('name', '=', 'Direct Delivery')]"
+                                       options='{"no_open": False, "no_create": True}'
+                                       attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="origin" readonly="1" force_save="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Product">
+                                <field name="delivery_product_lines" readonly="0">
+                                    <tree editable="bottom" create="1" delete="1"
+                                          decoration-danger="product_available == 0"
+                                          decoration-success="product_available > 0">
+                                        <field name="product_id"/>
+                                        <field name="product_required_qty"/>
+                                        <field name="qty_shipped" invisible="1"/>
+                                        <field name="product_uom"/>
+                                        <field name="product_available"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Others" invisible="1">
+                                <group>
+                                    <group>
+
+                                    </group>
+                                    <group>
+                                        <field name="move_type" invisible="1"/>
+                                        <field name="warehouse_id" invisible="1"/>
+                                        <field name="approved_by"/>
+                                        <field name="verified_date"/>
+                                        <field name="po_approved_by"/>
+                                        <field name="issued_date"/>
+                                        <field name="inward_date"/>
+                                        <field name="store_incharge"/>
+                                        <field name="stock_picking_id"/>
+                                    </group>
+                                    <group>
+
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_direct_delivery_tree" model="ir.ui.view">
+            <field name="name">direct.delivery.indent.tree</field>
+            <field name="model">direct.delivery.indent</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="delivery_type"/>
+                    <field name="origin"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='action_direct_delivery_indent_product' model='ir.actions.act_window'>
+            <field name="name">Drug Indent</field>
+            <field name="res_model">direct.delivery.indent</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_direct_delivery_indent_product" id="menu_action_direct_delivery_external"
+                  parent="basic_hms.main_menu_patient_drug_request" sequence="1"/>
+    </data>
+</odoo>

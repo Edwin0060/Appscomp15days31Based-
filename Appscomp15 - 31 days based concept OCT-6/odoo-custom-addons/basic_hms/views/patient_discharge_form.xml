@@ -1,0 +1,87 @@
+<odoo>
+    <record id="view_patient_discharge_form" model="ir.ui.view">
+        <field name="name">patient.discharge.form</field>
+        <field name="model">patient.discharge</field>
+        <field name="arch" type="xml">
+            <form string="Patient Discharge Ward">
+                <sheet>
+                    <group>
+                        <group string="Patient Information ">
+                            <field name="partner_id" widget="res_partner_many2one"
+                                   context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
+                                   options="{&quot;always_reload&quot;: True}"/>
+
+                        </group>
+                        <group>
+                            <field name="physician_approved" widget="radio" options="{'horizontal': true}"/>
+                            <field name="reason_discharge" widget="radio" options="{'horizontal': true}"/>
+                            <field name="client_consent" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                    </group>
+
+
+                    <notebook>
+                        <page string="Patient Admission Summary">
+                            <group>
+                                <field name="admitted_date" required="1"/>
+                                <field name="reason_admittance" required="1"/>
+                                <field name="diagnosis_admittance" required="1"/>
+                                <field name="treatment_summary" required="1"/>
+                            </group>
+                        </page>
+                        <page string="Patient  Discharge Summary">
+                            <group>
+                                <field name="date_discharged" required="1"/>
+                                <field name="further_treatment_plan" required="1"/>
+                                <field name="next_checkup_date" required="1"/>
+                            </group>
+                        </page>
+                        <page string="Medication Prescribed">
+
+                            <field name="patient_discharge_line_ids" mode="tree">
+                                <tree editable="top" decoration-muted="dosage_quantity==0">
+                                    <field name="product_id"/>
+                                    <field name="dosage_quantity"/>
+                                    <field name="amount"/>
+                                    <field name="end_date"/>
+                                    <field name="frequency"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <group>
+                                <field name="notes"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_discharge_patient_tree" model="ir.ui.view">
+        <field name="name">patient.discharge.tree</field>
+        <field name="model">patient.discharge</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id"/>
+                <field name="admitted_date"/>
+                <field name="date_discharged"/>
+                <field name="next_checkup_date"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_patient_discharge" model="ir.actions.act_window">
+        <field name="name">Patients Discharge</field>
+        <field name="res_model">patient.discharge</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_patient_discharge_form" action="action_patient_discharge"
+              parent="main_menu_patient_reporting" sequence="1"/>
+
+
+</odoo>

@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- ======== Reservation ======== -->
+    <!-- Form view of hotel reservation -->
+    <record id="view_hotel_reservation_form" model="ir.ui.view">
+        <field name="name">hotel.reservation.form</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <form string="Reservation">
+                <header>
+                    <button
+                            name="action_send_reservation_mail"
+                            type="object"
+                            string="Send Reservation Email"
+                            states="confirm"
+                            class="oe_highlight"
+                    />
+                    <button
+                            name="confirmed_reservation"
+                            string="Confirm"
+                            states="draft"
+                            class="oe_highlight"
+                            type="object"
+                    />
+                    <button
+                            name="create_folio"
+                            string="Create Folio"
+                            states="confirm"
+                            class="oe_highlight"
+                            type="object"
+                    />
+                    <button
+                            name="hotel_management_cancel_remarks"
+                            string="Cancel Reservation"
+                            states="draft,confirm"
+                            class="oe_highlight"
+                            type="object"
+                    />
+                    <button
+                            name="set_to_draft_reservation"
+                            string="Set to Draft"
+                            states="cancel"
+                            class="oe_highlight"
+                            type="object"
+                    />
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box">
+                        <button
+                                name="open_folio_view"
+                                type="object"
+                                icon="fa-file-text-o"
+                                class="oe_stat_button"
+                                attrs="{'invisible': [('no_of_folio', '=', 0)]}"
+                        >
+                            <field
+                                    name="no_of_folio"
+                                    widget="statinfo"
+                                    string="Folio"
+                            />
+                        </button>
+                    </div>
+                    <label for='reservation_no' string="Reservation No"/>
+                    <h1>
+                        <field name="reservation_no" class="oe_inline"/>
+                    </h1>
+                    <group>
+                        <group colspan="4" col="4">
+                            <field name="date_order"/>
+                            <field name="company_id"/>
+                        </group>
+                        <separator/>
+                        <group colspan="4" col="4">
+                            <field
+                                    name="partner_id"
+                                    context="{'default_customer_rank': 1}"
+                            />
+                            <field name="pricelist_id" col="2" required="0"
+                                   attrs="{'required': [('partner_id', '!=', False)]}"/>
+                            <field
+                                    name="partner_order_id"
+                                    domain="[('parent_id','=',partner_id)]"/>
+                            <field name="reservation_hrs_selection" readonly="1"/>
+                            <newline/>
+                            <field
+                                    name="partner_invoice_id"
+                                    domain="[('parent_id','=',partner_id)]"
+                            />
+                            <field
+                                    name="advance_payment" readonly="1"/>
+                            <field
+                                    name="partner_shipping_id"
+                                    domain="[('parent_id','=',partner_id)]"
+                                    invisible="True"
+                            />
+                        </group>
+                        <group colspan="4" col="4">
+                            <field name="checkin"/>
+                            <field name="checkout"/>
+                            <field name="adults" required="1"/>
+                            <field name="children"/>
+                            <field name="booking_hrs" force_save="1"/>
+                            <field name="guest_type_nation" force_save="1"  readonly="1"/>
+                            <field name="booking_source" force_save="1"  readonly="1"/>
+                            <field name="days" force_save="1" readonly="1"/>
+                            <field name="amount_Receive" force_save="1" readonly="1"/>
+                            <field name="proof_type" force_save="1" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="reservation_line" string='Reservation Line'>
+                            <field name="reservation_line" colspan="4" nolabel="1">
+                                <form string="Reservation Line">
+                                    <separator string="Room Type"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="categ_id" colspan="4" nolabel="1"/>
+                                    <newline/>
+                                    <separator string="Select Room"/>
+                                    <field
+                                            name="reserve"
+                                            colspan="4"
+                                            string="Room Number"
+                                            nolabel="1"
+                                    />
+                                </form>
+                                <tree>
+                                    <field
+                                            name="reserve"
+                                            string="Rooms"
+                                            widget="many2many_tags"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="checkin_line" string='Check In List'>
+                             <field name="checkin_checklist_line" readonly="1" force_save="1">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="name" invisible="1"/>
+                                    <field name="product_id"/>
+                                    <field name="checklist_image" widget="image" style="height:50px; width:50px;"/>
+                                    <field name="qty"/>
+                                    <field name="things_selection"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="history" string='History'>
+                            <field name='folio_id' readonly='1'/>
+                        </page>
+                        <page name="reservation_cancel_remarks" string='Cancel Remarks'>
+                            <group>
+                                <field name='reservation_cancel_remarks' readonly="1" force_save="1"
+                                       attrs="{'invisible': [('reservation_cancel_remarks', '=', False)]}"/>
+                                <field name='reservation_cancel_remarks2' readonly="1" force_save="1"
+                                       attrs="{'invisible': [('reservation_cancel_remarks2', '=', False)]}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of hotel reservation -->
+    <record id="view_hotel_reservation_tree" model="ir.ui.view">
+        <field name="name">hotel.reservation.tree</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <tree decoration-bf="state == 'draft'"
+                  decoration-info="state == 'done'"
+                  decoration-muted="state=='cancel'" default_order='reservation_no desc'>
+                <field name="reservation_no"/>
+                <field name="partner_id"/>
+                <field name="checkin"/>
+                <field name="checkout"/>
+                <field name="days"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!--    kanban view for Hotel Reservation-->
+
+    <record id="view_reservation_kanban" model="ir.ui.view">
+        <field name="name">hotel.reservation.kanban</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <!--                    <field name="day"-->
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="reservation_no"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <!--                                                                <widget name="web_ribbon" title="3 DAYS" bg_color="bg-danger">-->
+                                <div t-attf-class="ribbon ribbon-top-right">
+                                    <span t-attf-class="ribbon-{{ record.state.raw_value }}">
+                                        <t t-esc="record.state.raw_value"/>
+                                    </span>
+                                </div>
+                                <!--                                </widget>-->
+                                <h4>
+                                    <field name="partner_id"/>
+                                </h4>
+                                <br/>
+                                <b>Adults:</b>
+                                <field name="adults"/>
+                                <br/>
+                                <b>Children:</b>
+                                <field name="children"/>
+                                <br/>
+                                <t t-if="record.reservation_hrs_selection.raw_value">
+                                    <span class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success"
+                                          style="font-size:15px;">
+                                        <field name="reservation_hrs_selection"/>
+                                    </span>
+                                </t>
+                                <t t-if="record.days.raw_value">
+                                    <span class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-warning"
+                                          style="font-size:15px;">
+                                        <field name="days"/>
+                                    </span>
+                                </t>
+                                <t t-elif="record.booking_hrs.raw_value">
+                                    <span class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-warning"
+                                          style="font-size:15px;">
+                                        <field name="booking_hrs"/>
+                                        <span>Hrs/Mints</span>
+                                    </span>
+                                </t>
+                                <span>
+                                    <field name="state" invisible="1"/>
+                                </span>
+                                <br/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- Search view of hotel reservation -->
+    <record id="view_hotel_reservation_search" model="ir.ui.view">
+        <field name="name">hotel.reservation.search</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <search string="Reservation">
+                <filter
+                        name='current_reservations'
+                        string="Current Reservations"
+                        domain="[('checkout','&gt;=',datetime.datetime.now().replace(hour=0, minute=0, second=0)),('checkin','&lt;=',datetime.datetime.now().replace(hour=23, minute=59, second=59))]"
+                        help="Current Reservations"
+                />
+                <filter name='draft' domain="[('state','=','draft')]" string="Draft"/>
+                <filter
+                        name='confirm'
+                        domain="[('state','=','confirm')]"
+                        string="Confirm"
+                />
+                <filter
+                        name='cancel'
+                        domain="[('state','=','cancel')]"
+                        string="Cancel"
+                />
+                <filter name='done' domain="[('state','=','done')]" string="Done"/>
+                <field name="partner_id"/>
+                <field name="reservation_no"/>
+                <field name="checkin"/>
+                <field name="checkout"/>
+                <field name="state"/>
+                <newline/>
+                <group expand="0" string="Group By">
+                    <filter
+                            name="partner_id"
+                            string="Guest Name"
+                            icon="terp-personal"
+                            domain="[]"
+                            context="{'group_by':'partner_id'}"
+                    />
+                    <filter
+                            name='order_by_month'
+                            string="Order By Month"
+                            domain="[]"
+                            context="{'group_by':'date_order'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Graph view of hotel reservation -->
+    <record id="view_hotel_reservation_graph" model="ir.ui.view">
+        <field name="name">hotel.reservation.graph</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <graph string="Reservation" type="pie">
+                <field name="state"/>
+                <field name="reservation_no"/>
+            </graph>
+        </field>
+    </record>
+
+    <!--     Calendar view of hotel reservation -->
+    <record id="hotel_calendar_view" model="ir.ui.view">
+        <field name="name">Room Reservation</field>
+        <field name="model">hotel.reservation</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar
+                    string="Current Reservation"
+                    date_start="checkin"
+                    date_stop="checkout"
+                    color="partner_id"
+            >
+                <field name="partner_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action of hotel reservation -->
+    <record id="action_hotel_reservation_tree_all" model="ir.actions.act_window">
+        <field name="name">Reservations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hotel.reservation</field>
+        <field name="view_mode">kanban,tree,form,calendar,graph</field>
+    </record>
+<!--    <menuitem-->
+<!--            id="menu_hotel_reservation"-->
+<!--            name="Reservtaion"-->
+<!--            parent="hotel.hotel_management_menu"-->
+<!--            sequence="1"-->
+<!--    />-->
+<!--    <menuitem-->
+<!--            name="Reservations"-->
+<!--            id="menu_action_hotel_reservation_tree_all"-->
+<!--            action="action_hotel_reservation_tree_all"-->
+<!--            parent="menu_hotel_reservation"-->
+<!--            sequence="1"-->
+<!--    />-->
+    <record id="view_hotel_room_form_inherited" model="ir.ui.view">
+        <field name="name">view.hotel.room.form.inherited</field>
+        <field name="model">hotel.room</field>
+        <field name="inherit_id" ref="hotel.view_hotel_room_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='information_hotel_room']" position="after">
+                <page name="room_reservation" string="Room Reservation">
+                    <separator colspan='4' string="Room Reservation Line"/>
+                    <field
+                            name="room_reservation_line_ids"
+                            colspan="4"
+                            nolabel='1'
+                            string="Room Reservation Line">
+                        <form string=" Room line">
+                            <group colspan='4' col='4'>
+                                <field name="room_id"/>
+                                <field name="check_in"/>
+                                <field name="state"/>
+                                <field name="check_out"/>
+                                <field name="reservation_id"/>
+                                <field name="status"/>
+                            </group>
+                        </form>
+                        <tree>
+                            <field name="room_id"/>
+                            <field name="check_in"/>
+                            <field name="check_out"/>
+                            <field name="state"/>
+                            <field name="reservation_id"/>
+                            <field name="status"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_hotel_folio_form_inherited" model="ir.ui.view">
+        <field name="name">hotel.folio.form.inherited</field>
+        <field name="model">hotel.folio</field>
+        <field name="inherit_id" ref="hotel.view_hotel_folio_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position='after'>
+                <field name="reservation_id" readonly='1'/>
+            </field>
+            <xpath expr="//field[@name='invoice_status']" position="after">
+                    <field name="room_num_floor" readonly='1'/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_hotel_folio_tree_inherited" model="ir.ui.view">
+        <field name="name">hotel.folio.tree.inherited</field>
+        <field name="model">hotel.folio</field>
+        <field name="inherit_id" ref="hotel.view_hotel_folio_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position='after'>
+                <field name="reservation_id"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_hotel_folio1_search_inherited" model="ir.ui.view">
+        <field name="name">hotel.folio.search.inherited</field>
+        <field name="model">hotel.folio</field>
+        <field name="inherit_id" ref="hotel.view_hotel_folio_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position='after'>
+                <field name="reservation_id"/>
+            </field>
+        </field>
+    </record>
+
+    <!--     Form view of room reservation summary -->
+    <record id="room_reservation_summary_form_view" model="ir.ui.view">
+        <field name="name">room.reservation.summary.form</field>
+        <field name="model">room.reservation.summary</field>
+        <field name="arch" type="xml">
+            <form string="Reservation Summary">
+                <header>
+                    <separator string="Room Reservation Summary" colspan="4"/>
+                </header>
+                <sheet>
+                    <group colspan="4" col="4">
+                        <div>
+                            <label for="date_from" string="Summary Period"/>
+                            <field name="date_from" class="oe_inline"
+                                   widget="daterange" options="{'related_end_date': 'date_to'}"/>
+                            to
+                            <field name="date_to" class="oe_inline"
+                                   widget="daterange" options="{'related_start_date': 'date_to'}"/>
+                            <br/>
+                            <button name="button_room_summary_refresh" string="Refresh" type="object" icon="fa-refresh" class="btn_highlight"/>
+                        </div>
+                    </group>
+                    <group colspan="4" col="4">
+                        <field name="room_categ_id" widget="many2many_tags"/>
+                        <field name="room_name" widget="many2many_tags"/>
+                    </group>
+                    <notebook>
+                        <page name="room_summary" string="Room Summary">
+                            <field name="summary_header" colspan="4" invisible="1"/>
+                            <field
+                                    name="room_summary"
+                                    colspan="4"
+                                    invisible="0"
+                                    widget="Room_Reservation"
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Form view of quick room reservation -->
+    <record id="quick_room_reservation_form_view" model="ir.ui.view">
+        <field name="name">quick.room.reservation.form</field>
+        <field name="model">quick.room.reservation</field>
+        <field name="arch" type="xml">
+            <form string="Quick Reservation">
+                <header>
+                    <separator string="Quick Reservation" colspan="4"/>
+                </header>
+                <sheet>
+                    <field name="guest_creation" widget="statusbar" options="{'horizontal': True, 'clickable': '1',}"
+                           required="1"/>
+                    <field name="active" invisible="1"/>
+                    <br/>
+                    <group>
+                        <field name="room_image" widget='image' class="oe_avatar" nolabel="1"
+                               attrs="{'invisible': [('guest_creation', '=', 'new')]}"/>
+                    </group>
+                    <div class="row" attrs="{'invisible': [('guest_creation', '=', 'new')]}">
+                        <div class="col-8"></div>
+                        <diV align="right" class="col-3">
+                            <field name="room_amenities_ids" widget="many2many_tags"/>
+                        </diV>
+                    </div>
+                    <group attrs="{'invisible': [('guest_creation', '=', 'new')]}">
+                        <group>
+                            <field name="room_image" widget='image' class="oe_avatar"/>
+                            <field name="remaining_time"
+                                   widget="badge" decoration-success="remaining_time != '00:00:00'"
+                                   readonly="1"/>
+
+                        </group>
+                        <group>
+                            <field name="room_id" readonly="1"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <field name="room_no" readonly="1"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <label for="room_price"/>
+                            <div>
+                                <field name="room_price" class="oe_inline"
+                                       widget="badge" decoration-success="room_price != 0 "
+                                       readonly="1"/>/
+                                <field name="company_currency" force_save="1"/>
+
+                            </div>
+
+                            <field name="room_category" readonly="1"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                            <field name="room_floor_id" readonly="1"
+                                   options="{'no_open': True, 'no_create': True}"/>
+
+                            <field name="room_capacity" readonly="1"
+                                   options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <separator/>
+                        <group>
+                            <field name="search_mobile"/>
+                            <field name="date_today" readonly="1"/>
+
+                            <field name="partner_id" readonly="1" force_save="1"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <field name="partner_invoice_id" readonly="1" force_save="1"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <field name="booking_source"  force_save="1"
+                                   placeholder="e.g.WalkIn OR Online"
+                                   attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <field name="guest_type_nation"  force_save="1"
+                                   placeholder="e.g.Domestic"
+                                   attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <field name="partner_order_id" readonly="1" force_save="1" invisible="1"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <field name="partner_shipping_id" readonly="1" force_save="1" invisible="1"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <field name="journal" invisible="1" attrs="{'required': [('guest_creation', '=', 'exist')]}"
+                                   options="{'no_create': True}"/>
+                            <field name="add_proof_type" readonly="1" force_save="1"/>
+                            <field name="pricelist_id"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                        </group>
+                        <group>
+                            <field name="adults" attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <field name="children" attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <label for="hrs_selection"  attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <div class="o_row no-gutters d-flex">
+                                <field name="hrs_selection" class="oe_inline"
+                                       attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                                <field name="manuly_enter_hrs" placeholder="Enter Time"
+                                       attrs="{'invisible': [('hrs_selection', '!=', 'short')]}"/>
+                            </div>
+                            <field name="check_in_time" attrs="{'invisible': [('active', '!=', True)]}"/>
+                            <field name="check_out_time" attrs="{'invisible': [('active', '!=', True)]}"/>
+                            <field name="check_in"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'invisible': [('active', '==', True)]}"/>
+                            <field name="check_out"
+                                   readonly="1"
+                                   force_save="1"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'invisible': [('active', '==', True)]}"/>
+                            <field name="advance_amt" attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                            <label for="choose_payment_mode"
+                                   attrs="{'invisible': [('guest_creation', '!=', 'exist')]}"/>
+                            <div class="o_row no-gutters d-flex">
+
+                                <field name="choose_payment_mode" class="oe_inline"
+                                       attrs="{'required': [('guest_creation', '=', 'exist')]}"
+                                       options="{'no_create': True}"/>
+                                <field name="payment_mode_img" widget='image' class="oe_avatar oe_inline"
+                                       attrs="{'invisible': [('guest_creation', '=', 'new')]}"/>
+                            </div>
+                            <field name="add_proof" attrs="{'required': [('guest_creation', '=', 'exist')]}"/>
+                        </group>
+                    </group>
+                    <group colspan="4" col="4" attrs="{'invisible': [('guest_creation', '=', 'exist')]}">
+                        <field name="guest_type" widget="radio" options="{'horizontal': True, 'clickable': '1',}"
+                               attrs="{'required': [('guest_creation', '=', 'new')]}"/>
+                        <field name="mobile" attrs="{'required': [('guest_creation', '=', 'new')]}"/>
+                        <field name="name"
+                               options="{'no_open': True, 'no_create': True}"
+                               attrs="{'required': [('guest_creation', '=', 'new')]}"/>
+                        <field name="priority" widget="priority"/>
+                        <field name="email"
+                               options="{'no_open': True, 'no_create': True}"
+                               attrs="{'required': [('guest_creation', '=', 'new')]}"/>
+                        <field name="valid_proof"/>
+                    </group>
+                    <notebook>
+                        <page name="room_summary" string="Time Room Summary"
+                              attrs="{'invisible': [('guest_creation', '=', 'new')]}">
+                            <field name="summary_header" colspan="4" invisible="1"/>
+                            <field
+                                    name="room_summary"
+                                    colspan="4"
+                                    invisible="0"
+                                    widget="TimeDashboard"
+                            />
+                        </page>
+                    </notebook>
+                    <notebook>
+                        <page name="checklist" string="CheckIn CheckList"
+                             attrs="{'invisible': [('guest_creation', '=', 'new')]}">
+                            <field name="checkin_checklist_line" readonly="0" force_save="1">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="name" invisible="1"/>
+                                    <field name="product_id"/>
+                                    <field name="checklist_image" widget="image" style="height:50px; width:50px;"/>
+                                    <field name="qty"/>
+                                    <field name="things_selection"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <footer>
+                    <group>
+                        <button
+                                string="Reserve"
+                                name="room_reserve"
+                                type="object"
+                                class="btn-primary"
+                                attrs="{'invisible': [('guest_creation', '!=', 'exist')]}"
+                        />
+                        <button string="Cancel"
+                                special="cancel"
+                                class="btn-primary"
+                                attrs="{'invisible': [('guest_creation', '!=', 'exist')]}"/>
+                        <field name="create_guest" widget="boolean_toggle"
+                               attrs="{'invisible': [('guest_creation', '!=', 'new')]}"/>
+                    </group>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Room Reservation Summary -->
+    <record id="action_hotel_reservation_summary" model="ir.actions.act_window">
+        <field name="name">Reservation Summary</field>
+        <field name="res_model">room.reservation.summary</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <!--    <menuitem id="hotel_reservation_menu" web_icon="hotel,static/src/img/hotel_booking.png"-->
+    <!--              name="Hotel Dashboard" sequence="1"/>-->
+
+    <!--    <menuitem-->
+    <!--            id="menu_action_hotel_reservation_summary"-->
+    <!--            name="Reservation Summary"-->
+    <!--            action="action_hotel_reservation_summary"-->
+    <!--            parent="hotel_reservation_menu"-->
+    <!--            sequence="1"/>-->
+
+    <record id="view_action_booking_source" model="ir.actions.act_window">
+        <field name="name">Booking Source</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hotel.booking.source</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_hotel_booking_source_form" model="ir.ui.view">
+        <field name="name">hotel.booking.source.form</field>
+        <field name="model">hotel.booking.source</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hotel_booking_source_tree" model="ir.ui.view">
+        <field name="name">hotel.booking.source.tree</field>
+        <field name="model">hotel.booking.source</field>
+        <field name="arch" type="xml">
+            <tree default_order='name desc'>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="hotel_booking_source"
+              name="Booking Source"
+              parent="hotel.hotel_configuration_menu"
+              sequence="15"/>
+
+    <menuitem id="menu_open_hotel_booking_source"
+              name="Booking Source"
+              action="view_action_booking_source"
+              parent="hotel_booking_source"
+              sequence="15"/>
+
+    <record id="action_guest_type" model="ir.actions.act_window">
+        <field name="name">Guest Type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hotel.guest.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_hotel_guest_type_form" model="ir.ui.view">
+        <field name="name">hotel.guest.type.form</field>
+        <field name="model">hotel.guest.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hotel_guest_type_tree" model="ir.ui.view">
+        <field name="name">hotel.guest.type.tree</field>
+        <field name="model">hotel.guest.type</field>
+        <field name="arch" type="xml">
+            <tree default_order='name desc'>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="hotel_guest_type"
+              name="Guest Type"
+              parent="hotel.hotel_configuration_menu"
+              sequence="17"/>
+
+    <menuitem id="menu_open_hotel_guest_type"
+              name="Guest type"
+              action="action_guest_type"
+              parent="hotel_guest_type"
+              sequence="17"/>
+
+</odoo>

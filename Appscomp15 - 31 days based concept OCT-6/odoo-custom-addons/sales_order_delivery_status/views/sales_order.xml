@@ -22,7 +22,15 @@
                        decoration-warning="delivery_status == 'to_deliver' or delivery_status == 'processing'"
                        decoration-info="delivery_status == 'partial'"
                        decoration-success="delivery_status == 'delivered'"/>
+                <field name="payment_status" widget="badge"
+                           decoration-danger="payment_status == 'not_paid'"
+                           decoration-warning="payment_status in ('partial', 'Partially Paid')"
+                           decoration-success="payment_status in ('paid', 'Paid')"
+                           decoration-info="payment_status == 'False'"/>
 
+            </xpath>
+            <xpath expr="//field[@name='invoice_status']" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
         </field>
     </record>

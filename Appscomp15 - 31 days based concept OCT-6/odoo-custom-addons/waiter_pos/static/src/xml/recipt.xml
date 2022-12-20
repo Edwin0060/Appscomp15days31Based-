@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="pos_kot.template" xml:space="preserve">
+    <t t-name="WaiterNameSelectionBtn" owl="1">
+        <span class="control-button" t-att-class="is_available()? 'highlight' : ''">
+            <i class="fa fa-user-plus" aria-hidden="true"/>
+            <span> </span>
+            <span>Add Waiter</span>
+        </span>
+    </t>
+
+    <t t-name="KotOrderReceipt" t-inherit="pos_kot.KotOrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('cashier')]" position="replace">
+            <div style="margin-bottom:10px">
+                <t t-if="receipt.ni_customer_contact">
+                    <div>Waiter:<t t-esc="receipt.ni_customer_contact" /></div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('cashier')]" position="after">
+            <div style="margin-bottom:10px">
+                <t t-if="receipt.ni_customer_contact">
+                    <br/>
+                    <div>Waiter:<t t-esc="receipt.ni_customer_contact" /></div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>
+

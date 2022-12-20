@@ -1,0 +1,36 @@
+<odoo>
+	<template id="account_move_report_inherit_report"
+		inherit_id="account.report_invoice_document">
+		<xpath expr="//table[1]/thead/tr/th[4]" position="after">
+			<t t-foreach="o.invoice_line_ids" t-as="l">
+				<span t-if="l.sale_id">
+					<th class="text-right">Sale Price</th>
+					<th class="text-right">Difference</th>
+				</span>
+			</t>
+			<th class="text-right">User</th>
+		</xpath>
+		<xpath expr="//table[1]/tbody/tr/td[4]" position="replace">
+			<td class="text-right">
+				<span t-field="l.price_unit"
+					t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
+			</td>
+		</xpath>
+		<xpath expr="//table[1]/tbody/tr/td[4]" position="after">
+			<t t-if="l.sale_id">
+				<td class="text-right">
+					<span t-field="l.sale_price_unit"
+						t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
+				</td>
+
+				<td class="text-right">
+					<span t-field="l.diff"
+						t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
+				</td>
+			</t>
+			<td class="text-right">
+				<span t-field="o.user_id.name" />
+			</td>
+		</xpath>
+	</template>
+</odoo>

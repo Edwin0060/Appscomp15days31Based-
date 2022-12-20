@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+system_access_deleted_records,system_access_deleted_records,model_deleted_records,base.group_system,1,1,1,1
+other_users_deleted_records,other_users_deleted_records,model_deleted_records,,1,1,1,0
+access_delete_records_upto,access_delete_records_upto,model_delete_records_upto,,1,1,1,1

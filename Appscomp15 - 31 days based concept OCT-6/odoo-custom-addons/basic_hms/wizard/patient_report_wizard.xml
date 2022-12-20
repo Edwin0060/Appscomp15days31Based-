@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- create a wizard for get supplier and value of order lines-->
+    <record id="view_create_patient_fitness_form" model="ir.ui.view">
+        <field name="name">patient.fitness.certificate.report.form</field>
+        <field name="model">patient.fitness.certificate.report</field>
+        <field name="arch" type="xml">
+            <form string="Patient Fitness Report">
+                <group>
+                    <field name="name" readonly="1" force_save="1"/>
+                    <field name="patient_age" readonly="1" force_save="1"/>
+                    <field name="patient_gender" readonly="1" force_save="1"/>
+                    <field name="doctor" readonly="1" force_save="1"/>
+                </group>
+                <group>
+                    <field name="patient_image" widget="image" width="25%" readonly="1" force_save="1"/>
+                </group>
+
+                <div class="row">
+                    <div class="col-4">
+                        <field name="fitness_remark1"/>
+                    </div>
+                    <div class="col-3">
+                        <field name="fitness_remark2" readonly="1" force_save="1"/>
+                    </div>
+                    <div class="col-4">
+                        <field name="fitness_remark3"/>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+
+                <div class="row" width="100%">
+                    <div class="col-3">
+                        <field name="fitness_remark4" readonly="1" force_save="1"/>
+                    </div>
+                    <div class="col-3">
+                        <field name="fitness_remark5" readonly="1" force_save="1"/>
+                    </div>
+                    <div class="col-5">
+                        <field name="fitness_remark6"/>
+                    </div>
+                </div>
+
+                <seperator string="Patient Fitness Certificate"/>
+                <group width="100%">
+                    <field name="final_remark" readonly="1" force_save="1"/>
+                </group>
+                <group>
+                    <field name="place" required="1"/>
+                </group>
+
+                <footer>
+                    <button name="patient_fitness_report_print" string="PDF"
+                            type="object" default_focus="1" class="oe_highlight" icon="fa-print"/>
+                    <button string="Cancel" class="btn-default" special="cancel" icon="fa-times"/>
+
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_fitness_action_report" model="ir.actions.act_window">
+        <field name="name">Patient Fitness Certificate Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">patient.fitness.certificate.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_create_patient_fitness_form"/>
+    </record>
+
+
+</odoo>
+
+
+

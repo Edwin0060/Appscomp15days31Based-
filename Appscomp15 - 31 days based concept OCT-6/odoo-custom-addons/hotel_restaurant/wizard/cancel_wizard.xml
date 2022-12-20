@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!--        Table cancel Wizard-->
+        <record id="hotel_management_table_cancel_remarks_wizard" model="ir.ui.view">
+            <field name="name">hotel.management.table.cancel.view</field>
+            <field name="model">hotel.management.table.cancel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="remarks" required="1" placeholder="Please enter the Cancellation remarks..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <footer>
+                        <button name="tick_ok" type='object' string="Submit" class="oe_highlight"
+                                icon="fa-check-circle"/>
+                        <button name="tick_cancel" type='object' string="Cancel" class="oe_highlight" special="cancel"
+                                icon="fa-times-circle"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+<!--        Order cancel Wizard-->
+         <record id="hotel_management_order_cancel_remarks_wizard" model="ir.ui.view">
+            <field name="name">hotel.management.order.cancel.view</field>
+            <field name="model">hotel.management.order.cancel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="remarks" required="1" placeholder="Please enter the Cancellation remarks..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <footer>
+                        <button name="order_tick_ok" type='object' string="Submit" class="oe_highlight"
+                                icon="fa-check-circle"/>
+                        <button name="tick_cancel" type='object' string="Cancel" class="oe_highlight" special="cancel"
+                                icon="fa-times-circle"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+<!--        Table Order Cancel-->
+         <record id="hotel_management_order_cancel_remarks_wizard" model="ir.ui.view">
+            <field name="name">table.order.cancel.view</field>
+            <field name="model">table.order.cancel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="remarks" required="1" placeholder="Please enter the Cancellation remarks..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <footer>
+                        <button name="tick_ok" type='object' string="Submit" class="oe_highlight"
+                                icon="fa-check-circle"/>
+                        <button name="tick_cancel" type='object' string="Cancel" class="oe_highlight" special="cancel"
+                                icon="fa-times-circle"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

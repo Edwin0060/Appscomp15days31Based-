@@ -170,8 +170,8 @@ class HrPayrollyear(models.Model):
             day += single_day
         for line in self.day_and_month:
             if line.select_month:
-                line.number_of_days = line.year_monthnumber_of_days - (line.sunday + line.public_holiday_count)
-                line.total_number_of_days = line.year_monthnumber_of_days
+                line.number_of_days = 30 - (line.sunday + line.public_holiday_count)
+                line.total_number_of_days = 30
 
     def get_number_of_working_days(self):
         num_of_days = self.env['hr.payslip'].search([('date_year', '=', self.name)])

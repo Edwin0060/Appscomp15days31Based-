@@ -144,21 +144,6 @@ class StockPicking(models.Model):
         # self.update_sale_price()
         return True
 
-    # def update_sale_price(self):
-    #     sale_price_picking = self.env['stock.picking'].search([('sale_id', '=', True)])
-    #     prices = []
-    #     for unit in sale_price_picking.sale_id.order_line:
-    #         vals = (0, 0, {
-    #             'price_unit': unit.price_unit
-    #         })
-    #         prices.append(vals)
-    #         print("The price values are", prices)
-    #         for price in sale_price_picking.move_ids_without_package:
-    #             vals = (0, 0, {
-    #                 'price_unit': prices
-    #             })
-    #         print("Stage 2=======================================", unit.price_unit)
-
     def create_invoice(self):
         """This is the function for creating customer invoice
         from the picking"""
@@ -171,18 +156,25 @@ class StockPicking(models.Model):
                 if not customer_journal_id:
                     raise UserError(_("Alert!, Please configure the journal from settings"))
                 invoice_line_list = []
-                for move_ids_without_package in picking_id.move_ids_without_package:
-                    vals = (0, 0, {
-                        'name': move_ids_without_package.description_picking,
-                        'product_id': move_ids_without_package.product_id.id,
-                        'price_unit': move_ids_without_package.price_unit,
-                        'account_id': move_ids_without_package.product_id.property_account_income_id.id if move_ids_without_package.product_id.property_account_income_id
-                        else move_ids_without_package.product_id.categ_id.property_account_income_categ_id.id,
-                        # 'tax_ids': [(6, 0, [picking_id.company_id.account_sale_tax_id.id])],
-                        'quantity': move_ids_without_package.quantity_done,
-                    })
-                    picking_id.create_qty()
-                    invoice_line_list.append(vals)
+                sale_sr = self.env['sale.order'].search([('name', '=', self.origin)])
+                for sale in sale_sr.order_line:
+                    for move_ids_without_package in picking_id.move_ids_without_package:
+                        if move_ids_without_package.product_id.display_name == sale.name:
+                            vals = (0, 0, {
+                                'name': move_ids_without_package.description_picking,
+                                'product_id': move_ids_without_package.product_id.id,
+                                'price_unit': sale.price_unit,
+                                'account_id': move_ids_without_package.product_id.property_account_income_id.id
+                                if move_ids_without_package.product_id.property_account_income_id
+                                else move_ids_without_package.product_id.categ_id.property_account_income_categ_id.id,
+                                # 'tax_ids': [(6, 0, [picking_id.company_id.account_sale_tax_id.id
+                                #                     if sale.tax_id else 0])],
+                                'tax_ids': [(6, 0, [sale.tax_id.id
+                                                    if sale.tax_id else 0])],
+                                'quantity': move_ids_without_package.quantity_done,
+                            })
+                            picking_id.create_qty()
+                            invoice_line_list.append(vals)
                 invoice = picking_id.env['account.move'].create({
                     'move_type': 'out_invoice',
                     'invoice_origin': picking_id.name,
@@ -195,9 +187,8 @@ class StockPicking(models.Model):
                     'l10n_in_gst_treatment': 'consumer',
                     'picking_id': picking_id.id,
                     'boutique_id': picking_id.sale_id.id,
-                    'invoice_line_ids': invoice_line_list
+                    'invoice_line_ids': invoice_line_list,
                 })
-                sale_sr = self.env['sale.order'].search([('name', '=', self.origin)])
                 sale_sr.write({
                     'invoice_id': invoice.id,
                 })
@@ -207,6 +198,7 @@ class StockPicking(models.Model):
         sale_sr = self.env['sale.order'].search([('name', '=', self.origin)])
         del_obj = self.env['stock.picking'].search([('origin', '=', self.origin), ('state', '=', 'done')])
         added_qty = 0.0
+        boutique_inv_qty = 0.00
         for line in sale_sr.order_line:
             added_qty = 0.0
             for val in del_obj:
@@ -214,10 +206,10 @@ class StockPicking(models.Model):
                     if qty.product_id.id == line.product_id.id:
                         added_qty += qty.quantity_done
                         product_id = qty.product_id
-                if product_id.id == line.product_id.id:
-                    line.update({
-                        'qty_invoiced': added_qty,
-                    })
+                        if product_id.id == line.product_id.id:
+                            line.update({
+                                'qty_invoiced': added_qty,
+                            })
         return True
 
     def create_bill(self):

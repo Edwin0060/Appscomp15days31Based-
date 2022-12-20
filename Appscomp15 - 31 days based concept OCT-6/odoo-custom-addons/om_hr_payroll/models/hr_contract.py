@@ -76,7 +76,9 @@ class HrContract(models.Model):
     current_employee = fields.Char(string='Employee  User', compute='_onchange_employee_user')
     approved_by = fields.Many2one('res.users', compute='_get_current_user', string='Current User')
     salary_hike_enabled = fields.Boolean(string='Salary Hike?')
-    start_date_doj = fields.Date(string="Start Date",related='employee_id.date_of_joining')
+    start_date_doj = fields.Date(string="Start Date", related='employee_id.date_of_joining')
+    health_insurance_deduction = fields.Float(string="Health Insurance Deduction")
+    other_deduction = fields.Float(string="Other Deduction")
 
 
     def _get_current_user(self):
@@ -132,7 +134,7 @@ class HrContract(models.Model):
     @api.onchange('amount_settlment_diff', 'wage', 'house_rent_allowance',
                   'convenyance_allowance', 'special_allowance',
                   'travel_incentives', 'health_insurance', 'contract_amount_settlement',
-                  'tds','professional_tax', 'esi', 'esi_second')
+                  'tds',)
     def _onchange_amount_settlment_diff(self):
         total_calculation = 0.00
         if self.ctc:
@@ -142,10 +144,8 @@ class HrContract(models.Model):
                                               self.special_allowance + \
                                               self.travel_incentives + \
                                               self.health_insurance
-            self.contract_deduction_settlement = self.esi + \
-                                                 self.esi_second + \
-                                                 self.tds + \
-                                                 self.professional_tax
+            self.contract_deduction_settlement = self.tds
+
             total_calculation = self.contract_amount_settlement + self.contract_deduction_settlement
             self.amount_settlment_diff = self.ctc - total_calculation
 
@@ -195,15 +195,15 @@ class HrContract(models.Model):
                     leave.write({'state': 'refuse'})
 
     @api.onchange('pf_amount', 'pf_type', 'pf_basic_percentage', 'pf_amount_second',
-                          'pf_basic_percentage_second', 'esi_basic_percentage')
+                  'pf_basic_percentage_second', 'esi_basic_percentage')
     def pf_type_amount(self):
         if self.pf_type == 'dynamic' and self.pf_basic_percentage <= 0 and self.pf_basic_percentage_second <= 0:
-           self.pf_amount = False
-           self.pf_amount_second = False
-           self.pf_basic_percentage = False
+            self.pf_amount = False
+            self.pf_amount_second = False
+            self.pf_basic_percentage = False
         if self.pf_type != 'dynamic':
-           self.pf_basic_percentage = False
-           self.pf_basic_percentage_second = False
+            self.pf_basic_percentage = False
+            self.pf_basic_percentage_second = False
 
     # @api.onchange('date_start','employee_id')
     # def set_employee_doj_to_contract_date(self):
@@ -213,8 +213,8 @@ class HrContract(models.Model):
 
     @api.onchange('wage', 'hra_percentage', 'basic_percentage',
                   'ctc', 'pf_basic_percentage', 'pf_amount',
-                  'pf_type','esi','esi_basic_percentage','esi_second',
-                  'esi_basic_percentage_second','pf_amount_second',
+                  'pf_type', 'esi', 'esi_basic_percentage', 'esi_second',
+                  'esi_basic_percentage_second', 'pf_amount_second',
                   'pf_basic_percentage_second')
     def hra_allowance(self):
         for record in self:

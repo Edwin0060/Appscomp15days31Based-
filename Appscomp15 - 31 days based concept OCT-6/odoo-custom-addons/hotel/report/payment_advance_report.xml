@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_payment_report_format" model="report.paperformat">
+            <field name="name">Paper payment Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">135</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">0</field>
+        </record>
+
+        <report
+                id="payment_hotel_report_action"
+                model="account.payment"
+                string="Advance Payment"
+                report_type="qweb-pdf"
+                name="hotel.payment_hotel_report_template"
+                file="hotel.payment_hotel_report_template"
+                paperformat="hotel.paperformat_payment_report_format"
+                print_report_name='"Advance Payment"'
+                menu="True"
+        />
+
+        <template id="payment_hotel_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.basic_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <br/>
+                            <div class="row">
+                                <div class="col-4" align="left">
+                                    <strong>
+                                        <span t-field="res_company.partner_id.name"/>
+                                    </strong>
+                                    <br/>
+                                    <span t-field="res_company.partner_id.street"/>
+                                    <span t-field="res_company.partner_id.street2"/>,
+                                    <br/>
+                                    <span t-field="res_company.partner_id.city"/>
+                                    <span t-field="res_company.partner_id.state_id.name"/>
+                                    <span t-field="res_company.partner_id.country_id.name"/>
+                                    <br/>
+                                    <span t-field="res_company.partner_id.phone"/>
+                                </div>
+                                <div class="col-8" align="right">
+
+                                    <img src='/web/binary/company_logo' class="img-fluid img-thumbnail"
+                                         style=" max-width:15%;"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="page" align="center">
+                                <strong style="font-size:23px;">ADVANCE PAYMENT RECEIPT</strong>
+                                <br/>
+                                <br/>
+                            </div>
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <span class="px-1"></span>
+                                <div>
+                                    <span class="px-2">Received with Thanks from</span>
+                                    <strong class="px-2" t-field="o.partner_id.name"/>
+                                    <span class="px-2">A sum of Rupees,</span>
+                                    <strong class="px-2" t-field="o.amount"/>
+                                    Only.
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <span class="px-1"></span>
+                                <div>
+                                    <span class="px-2">Payment Reference of</span>
+                                    <strong class="px-2" t-field="o.name"/>
+                                    <span class="px-2">Dated</span>
+                                    <strong class="px-2" t-field="o.date"/>
+                                    <span class="px-2">Advance Payment To</span>
+                                    <strong t-field="res_company.name"/>.
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-6">
+                                    <span class="px-2">Authorized Signature.</span>
+                                </div>
+                                <div class="col-3">
+                                    <span class="px-2">Customer Signature.</span>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <span class="px-1"></span>
+                                <div>
+                                    <strong class="px-2">Note.</strong>
+                                    <span class="px-2">This Should be on your Letter head.</span>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

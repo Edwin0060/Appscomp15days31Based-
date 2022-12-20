@@ -134,7 +134,7 @@
         </record>
 
         <record id="action_boutique_dashboard" model="ir.actions.act_window">
-            <field name="name">Boutique DashBoard</field>
+            <field name="name">DashBoard</field>
             <field name="res_model">boutique.dashboard.design</field>
             <field name="view_mode">form</field>
         </record>

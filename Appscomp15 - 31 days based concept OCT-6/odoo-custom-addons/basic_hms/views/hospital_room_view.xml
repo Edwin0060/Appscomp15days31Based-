@@ -1,0 +1,551 @@
+<odoo>
+    <record id="seq_hospital_room" model="ir.sequence">
+        <field name="name">Hospital Room</field>
+        <field name="code">hospital.room</field>
+        <field name="prefix">R-</field>
+        <field name="padding">3</field>
+    </record>
+    <!--======== Hospital Ward ======== -->
+    <!-- Form view of hospital Ward -->
+    <record id="view_hospital_ward_form" model="ir.ui.view">
+        <field name="name">hospital.ward.form</field>
+        <field name="model">hospital.ward</field>
+        <field name="arch" type="xml">
+            <form string=" Hospital Ward">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="short_code" required="1"/>
+                        <field name="sequence" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of hospital ward-->
+    <record id="view_hospital_ward_tree" model="ir.ui.view">
+        <field name="name">hospital.ward.tree</field>
+        <field name="model">hospital.ward</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name" colspan="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ====== Rooms ====== -->
+    <!-- Form view of hospital room -->
+    <record id="view_hotel_room_form" model="ir.ui.view">
+        <field name="name">hospital.room.form</field>
+        <field name="model">hospital.room</field>
+        <field name="arch" type="xml">
+            <form string="Hospital Room">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+
+                    </div>
+
+                    <field
+                            name="image_1920"
+                            widget="image"
+                            class="oe_avatar"
+                            options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <field name="status" widget="badge"
+                               decoration-danger="status in ('book')"
+                               decoration-success="status in ('available')"
+                               decoration-warning="status in ('occupied')"/>
+                        <h2>
+                        </h2>
+                    </div>
+                    <notebook>
+                        <page string="Room Images">
+                            <section>
+                                <div class="row" style="height:400;width:100%;border:2px solid red;">
+                                    <div class="col-lg-3">
+                                        <field name="image1" widget="image" style="height:100%;"/>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <field name="image2" widget="image" style="height:100%;"/>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <field name="image3" widget="image" style="height:100%;"/>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <field name="image4" widget="image" style="height:100%;"/>
+                                    </div>
+                                    <br/>
+                                </div>
+                            </section>
+
+
+                        </page>
+                        <page name="information_hospital_room" string="Information">
+                            <group colspan="4" col="4">
+<!--                                <field name="short_code"/>-->
+                                <field name="floor_id" string="Ward"/>
+                                <field name="room_categ_id" select="1"/>
+                                <label for="room_no"/>
+                                <div>
+                                    <field name="room_no" required="1"/>
+                                    <span></span>
+<!--                                    <button name="generate_hotel_room_sequence" string="Generate Room No" type="object"-->
+<!--                                            class="oe_highlight"/>-->
+                                </div>
+                                <field
+                                        name="product_manager"
+                                        select="2"
+                                        string="Room Manager"
+                                />
+                                <field name="uom_id" invisible="1"/>
+                                <field
+                                        name="supplier_taxes_id"
+                                        widget="many2many_tags"
+                                        string="Supplier Taxes"
+                                />
+                                <field
+                                        name="taxes_id"
+                                        widget="many2many_tags"
+                                        string="Customer Taxes"
+                                />
+                            </group>
+                        </page>
+                        <page string="Room Amenities">
+                            <separator string=" Room Amenities"/>
+                            <field name="room_amenities_ids" colspan="4" nolabel="1" widget="many2many_tags"/>
+                        </page>
+                        <page string="Procurement">
+                            <group colspan="4" col="4">
+                                <field name="active" select="2"/>
+                                <field name="list_price"/>
+                                <field name="standard_price"/>
+                                <field name="cost_method" string="Cost Method"/>
+                                <newline/>
+                            </group>
+                            <newline/>
+                            <group>
+                                <separator string="Suppliers"/>
+                                <field
+                                        name="seller_ids"
+                                        colspan="4"
+                                        nolabel="1"
+                                        widget="one2many_list"
+                                />
+                            </group>
+                        </page>
+                        <page string="Descriptions">
+                            <separator string="Description"/>
+                            <field name="description" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Search view of hotel room -->
+    <record id="view_hospital_room_search" model="ir.ui.view">
+        <field name="name">hospital.room.search</field>
+        <field name="model">hospital.room</field>
+        <field name="arch" type="xml">
+            <search string="Hospital Room">
+                <field name="name" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="room_categ_id"/>
+                <field name="list_price" string="Room rate"/>
+                <field name="status" string="Status"/>
+                <newline/>
+                <filter
+                        name="available"
+                        string="Available"
+                        domain="[('status','=', 'available')]"
+                />
+                <filter
+                        name="reserved"
+                        string="Reserved"
+                        domain="[('status','=', 'occupied')]"
+                />
+            </search>
+        </field>
+    </record>
+    <!-- Tree view of hospital room -->
+    <record id="view_hospital_room_tree" model="ir.ui.view">
+        <field name="name">hospital.room.tree</field>
+        <field name="model">hospital.room</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="room_categ_id"/>
+                <field name="status" widget="badge"
+                       decoration-danger="status in ('book')"
+                       decoration-success="status in ('available')"
+                       decoration-warning="status in ('occupied')"/>
+                <field name="list_price" string="Room rate"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Graph view of hospital reservation -->
+    <record id="view_hospital_room_graph" model="ir.ui.view">
+        <field name="name">hospital.room.graph</field>
+        <field name="model">hospital.room</field>
+        <field name="arch" type="xml">
+            <graph string="Room" type="pie">
+                <field name="floor_id"/>
+                <field name="status"/>
+                <field name="name"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Kanban view of hospital room -->
+    <record id="view_hospital_room_kanban" model="ir.ui.view">
+        <field name="name">hospital.room.kanban</field>
+        <field name="model">hospital.room</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status">
+                <field name="name"/>
+                <field name="status"/>
+                <field name="color"/>
+                <field name="lst_price"/>
+                <field name="id"/>
+                <field name="code"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div
+                                t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click"
+                        >
+                            <div
+                                    class="o_dropdown_kanban dropdown"
+                                    groups="base.group_user"
+                            >
+                                <a
+                                        role="button"
+                                        class="dropdown-toggle btn"
+                                        data-toggle="dropdown"
+                                        href="#"
+                                >
+                                    <span title="fa_icon" class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul
+                                        class="dropdown-menu"
+                                        role="menu"
+                                        aria-labelledby="dLabel"
+                                >
+                                    <t t-if="widget.editable">
+                                        <li>
+                                            <a type="edit">Edit</a>
+                                        </li>
+                                    </t>
+                                    <t t-if="widget.deletable">
+                                        <li>
+                                            <a type="delete">Delete</a>
+                                        </li>
+                                    </t>
+                                    <li>
+                                        <ul
+                                                class="oe_kanban_colorpicker"
+                                                data-field="color"
+                                        />
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="oe_kanban_details" style='margin-top: -5px;'>
+                                <div class="oe_kanban_content">
+                                    <div class="oe_kanban_project_list">
+                                        <H3>
+                                            <a type="open">
+                                                <img alt="room_image"
+                                                     t-att-src="kanban_image('hotel.room', 'image_1920', record.id.value)"
+                                                     style="height:70px;width:70px"
+                                                     class="oe_avatar oe_kanban_avatar_smallbox"
+                                                />
+                                                <t
+                                                        t-if="record.code.raw_value"
+                                                        style="margin-right: 10px"
+                                                >
+                                                    [
+                                                    <field name="code"/>
+                                                    ]
+                                                </t>
+                                                <field name="name"/>
+                                            </a>
+                                        </H3>
+                                    </div>
+                                    <div name="tags"/>
+                                    <ul>
+                                        <li>
+                                            Status:
+                                            <field name="status"/>
+                                        </li>
+                                        <li>
+                                            Rate:
+                                            <field name="lst_price"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <a
+                                            t-if="record.status.raw_value === 'available'"
+                                            type="object"
+                                            string="Available"
+                                            name="set_room_status_occupied"
+                                            class="oe_kanban_status oe_kanban_status_green "
+                                    >
+                                    </a>
+                                    <a
+                                            t-if="record.status.raw_value === 'occupied'"
+                                            type="object"
+                                            string="occupied"
+                                            name="set_room_status_available"
+                                            class="oe_kanban_status oe_kanban_status_red "
+                                    >
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="oe_clear"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!--======= Room Type ======= -->
+    <!-- Form view of hospitl room type -->
+    <record id="view_hospital_room_type_form" model="ir.ui.view">
+        <field name="name">hospital.room_type.form</field>
+        <field name="model">hospital.room.type</field>
+        <field name="arch" type="xml">
+            <form string=" Hospital Room Type">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="categ_id" select="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view of hospital room type -->
+    <record id="view_hospital_room_type_tree" model="ir.ui.view">
+        <field name="name">hospital.room_type.tree</field>
+        <field name="model">hospital.room.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--==== Amenities Type ==== -->
+    <!-- Form view of hospital room amenities type -->
+    <record id="view_hospital_room_amenities_type_form" model="ir.ui.view">
+        <field name="name">hospital.room_amenities_type_form</field>
+        <field name="model">hospital.room.amenities.type</field>
+        <field name="arch" type="xml">
+            <form string="Hospital Room Amenities Type">
+                <sheet>
+                    <group>
+                        <field name="name" string="Amenity Type"/>
+                        <field name="amenity_id"/>
+                        <field name="child_ids" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of hospital room amenities type -->
+    <record id="view_hospital_room_amenities_type_list" model="ir.ui.view">
+        <field name="name">hospital.room_amenities_type_list</field>
+        <field name="model">hospital.room.amenities.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <!--===== Room Amenities ===== -->
+    <!-- Form view of hospital room amenities -->
+    <record id="view_hospital_room_amenities_form" model="ir.ui.view">
+        <field name="name">hospital.room.amenities.form</field>
+        <field name="model">hospital.room.amenities</field>
+        <field name="arch" type="xml">
+            <form string="Hospital Room Amenities">
+                <sheet>
+                    <label for="name" string="Name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <notebook>
+                        <page string="Information">
+                            <group colspan="4" col="4">
+                                <field name="type" select="2" string="Amenity Type"/>
+                                <field
+                                        name="amenities_categ_id"
+                                        string="Amenities Category"
+                                />
+                                <field
+                                        name="product_manager"
+                                        select="2"
+                                        string="Amenity manager"
+                                />
+                                <field name="uom_id"/>
+                                <field name="default_code"/>
+                                <field name="uom_po_id"/>
+                                <field
+                                        name="supplier_taxes_id"
+                                        widget="many2many_tags"
+                                        string="Supplier Taxes"
+                                />
+                                <field
+                                        name="taxes_id"
+                                        widget="many2many_tags"
+                                        string="Customer Taxes"
+                                />
+                            </group>
+                        </page>
+                        <page string="Procurement">
+                            <group colspan="4" col="4">
+                                <field name="active" select="2"/>
+                                <field name="list_price"/>
+                                <field name="cost_method" string="Cost Method"/>
+                                <field name="sale_ok" select="2"/>
+                                <field name="standard_price"/>
+                            </group>
+                            <newline/>
+                            <group>
+                                <separator string="Suppliers"/>
+                                <field
+                                        name="seller_ids"
+                                        colspan="4"
+                                        nolabel="1"
+                                        widget="one2many_list"
+                                />
+                            </group>
+                        </page>
+                        <page string="Descriptions">
+                            <separator string="Description"/>
+                            <field name="description" colspan="4" nolabel="1"/>
+                            <separator string="Sale Description"/>
+                            <field name="description_sale" colspan="4" nolabel="1"/>
+                            <separator string="Purchase Description"/>
+                            <field
+                                    name="description_purchase"
+                                    colspan="4"
+                                    nolabel="1"
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view of hospital room amenities -->
+    <record id="view_hospital_room_aenities_search" model="ir.ui.view">
+        <field name="name">hospital.room_amenities_search</field>
+        <field name="model">hospital.room.amenities</field>
+        <field name="arch" type="xml">
+            <search string="Hospital Room Amenities">
+                <field name="name"/>
+                <field name="amenities_categ_id" string="Amenities Category"/>
+                <field name="list_price" string="Amenity rate"/>
+            </search>
+        </field>
+    </record>
+    <!-- Tree view of hospital room amenities -->
+    <record id="view_hospital_room_amenities_list" model="ir.ui.view">
+        <field name="name">hospital.room_amenities_list</field>
+        <field name="model">hospital.room.amenities</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="amenities_categ_id" string="Amenities Category"/>
+                <field name="list_price" string="Amenity Rate" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+     <!-- Action for hospital room amenities type -->
+    <record id="action_hospital_room_amenities_type" model="ir.actions.act_window">
+        <field name="name">Amenities Type</field>
+        <field name="res_model">hospital.room.amenities.type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="binding_view_types">tree</field>
+        <field name="context">{}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Action for hospital room amenities -->
+    <record id="action_hospital_room_amenities" model="ir.actions.act_window">
+        <field name="name">Amenities</field>
+        <field name="res_model">hospital.room.amenities</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="binding_view_types">tree</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_iscategid':1}</field>
+        <field name="view_id" ref="view_hospital_room_amenities_list" />
+    </record>
+
+    <!-- Action of hospital ward -->
+    <record id="action_hospital_ward_list_tree" model="ir.actions.act_window">
+        <field name="name">Hospital Ward List</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.ward</field>
+        <field name="binding_view_types">tree</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Action of hospital room -->
+    <record id="action_hospital_rooms_list_tree" model="ir.actions.act_window">
+        <field name="name">Hospital Rooms</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.room</field>
+        <field name="binding_view_types">tree</field>
+        <field name="search_view_id" ref="view_hospital_room_search"/>
+        <field name="view_mode">kanban,tree,form,graph</field>
+    </record>
+
+    <!-- Action of hospital Room Type -->
+    <record id="action_hospital_room_type_list_tree" model="ir.actions.act_window">
+        <field name="name">Hospital Room Type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.room.type</field>
+        <field name="binding_view_types">tree</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_ward" name="Wards"
+              parent="main_menu_configartion"
+              sequence="3"/>
+
+    <menuitem id="menu_rooms" name="Rooms"
+              parent="main_menu_configartion"
+              sequence="4"/>
+
+    <menuitem id="menu_amenities" name="Amenities"
+              parent="main_menu_configartion"
+              sequence="5"/>
+
+    <menuitem name="Ward" id="menu_hospital_new_menu_ward"
+              parent="menu_ward" action="action_hospital_ward_list_tree"/>
+
+    <menuitem name="Rooms" id="menu_hospital_new_menu_rooms"
+              parent="menu_rooms" action="action_hospital_rooms_list_tree" sequence="1"/>
+    <menuitem name="Room Types" id="menu_hospital_new_menu_rooms_type"
+              parent="menu_rooms" action="action_hospital_room_type_list_tree" sequence="2"/>
+
+    <menuitem name="Amenities" id="menu_hospital_new_menu_amenities"
+              parent="menu_amenities" action="action_hospital_room_amenities" sequence="1"/>
+    <menuitem name="Amenities Types" id="menu_hospital_new_menu_amenities_type"
+              parent="menu_amenities" action="action_hospital_room_amenities_type" sequence="2"/>
+
+</odoo>
+
+

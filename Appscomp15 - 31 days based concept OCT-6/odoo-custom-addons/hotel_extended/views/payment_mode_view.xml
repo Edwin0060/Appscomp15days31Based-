@@ -1,0 +1,115 @@
+<odoo>
+    <record id="payment_register_action" model="ir.actions.act_window">
+        <field name="name">Payment Mode</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">payment.mode</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Payment Mode
+            </p>
+        </field>
+    </record>
+    <record id="view_hotel_identity_type_form" model="ir.ui.view">
+        <field name="name">payment.mode.form</field>
+        <field name="model">payment.mode</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group colspan="4" col="4">
+                            <field name="name" required="True"/>
+                            <field name="payment_mode_img"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hotel_identity_type_tree" model="ir.ui.view">
+        <field name="name">payment.mode.tree</field>
+        <field name="model">payment.mode</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="hotel_folio_form" model="ir.ui.view">
+        <field name="name">hotel.folio.form.inherit</field>
+        <field name="model">hotel.folio</field>
+        <field name="inherit_id" ref="hotel.view_hotel_folio_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page" position="after">
+                <page string="Checklist">
+                    <group>
+                        <field name="ref_name"/>
+                    </group>
+                    <field name="cheacklist_line_ids" readonly="1" force_save="1">
+                        <tree editable="bottom" create="0" delete="0">
+                            <field name="name" invisible="1"/>
+                            <field name="product_id" invisible="0"/>
+                            <field name="reservation_checklist_image" widget="image" style="height:50px; width:50px;"/>
+                            <field name="qty"/>
+                            <field name="things_selection"/>
+                            <field name="Checkout_things_selection"/>
+                            <button name="click_yes" type="object"
+                                    icon="fa-check-circle-o"/>
+                            <button name="click_no" type="object"
+                                    icon="fa-times-circle-o"/>
+                            <button name="click_damaged" type="object"
+                                    icon="fa-arrow-right"/>
+                            <field name="remarks"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page" position="after">
+                <page name="force_close_remarks" string='Force Close Remarks'>
+                    <group>
+                        <field name='cancel_remarks' readonly="1" force_save="1"
+                               attrs="{'invisible': [('cancel_remarks', '=', False)]}"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='reservation_id']" position="after">
+                <button name="force_close" string="Short Close" type="object"
+                        states="done" icon="fa-clock-o" class="btn_highlight_red"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hotel_room_chechlist_line" model="ir.ui.view">
+        <field name="name">hotel.room.form.inherit</field>
+        <field name="model">hotel.room</field>
+        <field name="inherit_id" ref="hotel.view_hotel_room_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page[4]" position="after">
+                <page string="Cheacklist">
+                    <field name="cheack_line_ids" readonly="0">
+                        <tree editable="bottom" create="1" delete="1">
+                            <field name="name" invisible="1"/>
+                            <field name="product_id" domain="[('categ_id', '=', 'CheckList')]"/>
+                            <field name="checklist_image" widget="image" style="height:50px; width:50px;"/>
+                            <field name="qty"/>
+                            <field name="things_selection"/>
+                            <field name="remarks"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="payment_mode"
+              name="Payment Mode"
+              parent="hotel.hotel_configuration_menu"
+              sequence="30"/>
+
+    <menuitem id="payment_mode_view"
+              name="Payment Mode"
+              parent="payment_mode"
+              action="payment_register_action"
+              sequence="10"/>
+</odoo>

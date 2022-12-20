@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="sequence_laundry" model="ir.sequence">
+            <field name="name">Laundry Order Code</field>
+            <field name="code">laundry.order</field>
+            <field eval="4" name="padding"/>
+            <field name="prefix">LO</field>
+        </record>
+
+        <record id="laundry_order_form_view" model="ir.ui.view">
+            <field name="name">laundry.order.form</field>
+            <field name="model">laundry.order</field>
+            <field name="arch" type="xml">
+                <form string="Laundry Order" class="o_sale_order">
+                    <header>
+                        <button name="confirm_order" class="oe_highlight" string="Confirm Order" type="object"
+                                states="draft"/>
+<!--                        <button name="done_state" class="oe_highlight" string="Done" type="object"-->
+<!--                                states="done"/>-->
+                        <button name="create_invoice" class="oe_highlight" string="Create Invoice" type="object"
+                                attrs="{'invisible': ['|',('invoice_status', '=', 'invoiced'), ('state', '!=', 'done')]}"/>
+                        <button name="return_dress" string="Return" class="oe_highlight" type="object" states="done"/>
+                        <button name="hotel_landry_cancel" string="Cancel" type="object" states="draft,order"/>
+                        <button name="set_as_draft" class="oe_highlight" string="Sat Draft" type="object"
+                                states="cancel"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,order,done,return,cancel"/>
+                    </header>
+                    <sheet>
+
+                        <div class="oe_button_box" name="buttons">
+                            <button name='action_view_laundry_works' class="oe_stat_button" type="object"
+                                    icon="fa-money" states="order,done,return,process">
+                                <field string="Works" name="work_count" widget="statinfo"/>
+                            </button>
+                            <button name='action_view_invoice' class="oe_stat_button" type="object" icon="fa-money"
+                                    states="done,return">
+                                <field string="Invoice" name="invoice_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group colspan="4" col="4">
+                                <field name="inter_laundry"/>
+                                <newline/>
+                                <field name="laundry_activity_type" widget="radio" options="{'horizontal': True}"
+                                    attrs="{'required': [('inter_laundry', '=', True)],'invisible': [('inter_laundry','=',False)]}"/>
+                            </group>
+                            <group>
+                                <field name="room_num_in_squ" readonly="1" force_save="1"
+                                attrs="{'required': [('inter_laundry', '=', True)],'invisible': [('inter_laundry','=',False)]}"/>
+                                <field name="res_id" attrs="{'required': [('inter_laundry', '=', False)],'invisible': [('inter_laundry','=',True)]}"
+                                       force_save="1"/>
+                                <field name="floor_no" options="{'no_open': True, 'no_create': True}"
+                                   attrs="{'required': [('inter_laundry', '=', True)],'invisible': [('inter_laundry','=',False)]}"/>
+                                <field name="categ" force_save="1" attrs="{'required': [('inter_laundry', '=', True)],'invisible': [('inter_laundry','=',False)]}"/>
+                                <field name="room_number" options="{'no_open': True, 'no_create': True}"
+                                    attrs="{'required': [('inter_laundry', '=', True)],'invisible': [('inter_laundry','=',False)]}"/>
+                                <field name="partner_invoice_id" context="{'default_type':'invoice'}"
+                                       attrs="{'readonly': [('state','in',('done','return','cancel'))]}"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="partner_shipping_id" context="{'default_type':'delivery'}"
+                                       attrs="{'readonly': [('state','in',('done','return','cancel'))]}"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="partner_id" context="{'default_type':'invoice'}"
+                                       attrs="{'readonly': [('state','in',('done','return','cancel'))]}"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                                <field name="order_date" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="currency_id" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="laundry_person"
+                                       attrs="{'readonly': [('state','in',('return', 'cancel'))]}"/>
+                                <field name="invoice_status" invisible="1"/>
+                                <field name="sale_obj" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Order Lines">
+                                <field name="order_lines" attrs="{'readonly': [('state','!=','draft')]}">
+                                    <tree string="Laundry Order Lines" editable="bottom"
+                                          decoration-info="state == 'draft'"
+                                          colors="grey:state == 'done';black:state == 'extra_work';green:state == 'wash';">
+                                        <field name="product_id"/>
+                                        <field name="description"/>
+                                        <field name="qty"/>
+                                        <field name="washing_type"/>
+                                        <field name="extra_work"/>
+                                        <field name="state"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="laundry_total">
+                                    <field name="total_amount" widget='monetary'
+                                           options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <field name="note" class="oe_inline"
+                                       placeholder="Setup default terms and conditions in your company settings."/>
+                                <div class="oe_clear"/>
+                            </page>
+                        </notebook>
+                        <notebook>
+                            <page name="landry_cancel_remarks" string=' Landry Remarks'>
+                                <group>
+                                    <field name='landry_cancel_remarks' readonly="1" force_save="1"
+                                           attrs="{'invisible': [('landry_cancel_remarks', '=', False)]}"/>
+
+                                    <field name='landry_cancel_remarks_2' readonly="1" force_save="1"
+                                           attrs="{'invisible': [('landry_cancel_remarks_2', '=', False)]}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="laundry_order_tree_view" model="ir.ui.view">
+            <field name="name">laundry.order.tree</field>
+            <field name="model">laundry.order</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="order_date"/>
+                    <field name="laundry_person"/>
+                    <field name="total_amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="laundry_order_kanban_view" model="ir.ui.view">
+            <field name="name">laundry.order.kanban</field>
+            <field name="model">laundry.order</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <div t-attf-class="ribbon ribbon-top-right">
+                                        <span t-attf-class="ribbon-{{ record.state.raw_value }}">
+                                            <t t-esc="record.state.raw_value"/>
+                                        </span>
+                                    </div>
+                                    <b>Customer:</b>
+                                    <field name="partner_id"/>
+                                    <br/>
+                                    <b>Order Date:</b>
+                                    <field name="order_date"/>
+                                    <br/>
+                                    <t t-if="record.total_amount">
+                                        <b>Total:</b>
+                                        <span class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-success"
+                                              style="font-size:15px;">
+                                            <field name="total_amount"/>
+                                            <br/>
+                                        </span>
+                                    </t>
+                                    <t t-if="record.state.raw_value">
+                                        <span class="badge badge-pill o_field_badge o_field_widget o_readonly_modifier bg-warning"
+                                              style="font-size:15px;">
+                                            <field name="state"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="laundry_order_graph_view" model="ir.ui.view">
+            <field name="name">laundry_order_graph_view.graph</field>
+            <field name="model">laundry.order</field>
+            <field name="arch" type="xml">
+                <graph string="Laundry" type="pie">
+                    <field name="name"/>
+                    <field name="order_date"/>
+                    <field name="total_amount"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="action_laundry_order" model="ir.actions.act_window">
+            <field name="name">Laundry Management</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">laundry.order</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Order.
+                </p>
+            </field>
+        </record>
+        <record id="hotel_folio_laundry_tab" model="ir.ui.view">
+            <field name="name">hotel.folio.form.inherit</field>
+            <field name="model">hotel.folio</field>
+            <field name="inherit_id" ref="hotel.view_hotel_folio_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page[3]" position="after">
+                    <page string="Laundry Order">
+                        <field name="hotel_laundry_orders" readonly="0">
+                            <tree editable="bottom" create="1" delete="1">
+                                <field name="name"/>
+                                <field name="partner_id"/>
+                                <field name="order_date"/>
+                                <field name="laundry_person"/>
+                                <field name="total_amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="hotel_folio_form" model="ir.ui.view">
+            <field name="name">hotel.room.form.inherit</field>
+            <field name="model">hotel.room</field>
+            <field name="inherit_id" ref="hotel.view_hotel_room_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button name="smart_laundry_button_count"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-list-alt">
+                        <field name="user_laundary_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <!--        <menuitem name="Laundry Management" id="laundry_management_menu"-->
+        <!--                  />-->
+        <menuitem id="laundry_management_sub_menu" name="Laundry Management"
+                  parent="hotel.hotel_management_menu"
+                  sequence="5"/>
+        <menuitem id="laundry_management_order" name="Laundry Order"
+                  parent="laundry_management_sub_menu"
+                  action="action_laundry_order" sequence="1"/>
+
+    </data>
+</odoo>

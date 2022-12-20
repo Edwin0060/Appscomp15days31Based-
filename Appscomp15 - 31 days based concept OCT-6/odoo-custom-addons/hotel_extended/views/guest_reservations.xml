@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="customer_reg_action" model="ir.actions.act_window">
+        <field name="name">Guest Registration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">customer.register</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Guest New Registration
+            </p>
+        </field>
+    </record>
+
+    <record id="keys_view_tree" model="ir.ui.view">
+        <field name="name">customer.register.tree</field>
+        <field name="model">customer.register</field>
+        <field name="arch" type="xml">
+            <tree default_order='name desc'>
+                <field name="name"/>
+                <field name="mobile"/>
+                <field name="email"/>
+                <field name="priority" widget="priority"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="keys_view_form" model="ir.ui.view">
+        <field name="name">customer.register.form</field>
+        <field name="model">customer.register</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="create_res_partner_and_reservation"
+                            type="object"
+                            string="Reserve Now" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,booked,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="get_guest_list"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-user icon">
+                            <field name="user_guest_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Guest Name"/>
+                        <h1>
+                            <field name="name" placeholder="Guest Name" required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="mobile"/>
+                            <field name="email"/>
+                            <field name="valid_proof" required="True"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                        <group>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State"
+                                       options="{&quot;no_open&quot;: True}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country"
+                                       options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                            </div>
+                            <field name="identity_img" filename="proof_attch"/>
+                            <field name="proof_attch" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Internal Notes" name="internal_notes">
+                            <field name="description" placeholder="Add a description..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    <menuitem id="guest_menu" name="Guest Reservations"-->
+    <!--              action="customer_reg_action"-->
+    <!--              sequence="1"-->
+    <!--              parent="hotel_extended.menu_hotel_reservation"/>-->
+
+    <!---->
+    <record id="identity_register_action" model="ir.actions.act_window">
+        <field name="name">Identity Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">identity.register</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Identity Type
+            </p>
+        </field>
+    </record>
+    <record id="view_hotel_identity_type_form" model="ir.ui.view">
+        <field name="name">identity.register.form</field>
+        <field name="model">identity.register</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_hotel_identity_type_tree" model="ir.ui.view">
+        <field name="name">identity.register.tree</field>
+        <field name="model">identity.register</field>
+        <field name="arch" type="xml">
+            <tree default_order='name desc'>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="identity_root"
+              name="Identity"
+              parent="hotel.hotel_configuration_menu"
+              sequence="10"/>
+
+    <menuitem id="identity_reg"
+              name="Identity Types"
+              parent="identity_root"
+              action="identity_register_action"
+              sequence="10"/>
+</odoo>

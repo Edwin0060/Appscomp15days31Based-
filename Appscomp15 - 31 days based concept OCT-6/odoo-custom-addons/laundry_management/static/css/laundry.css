@@ -1,0 +1,144 @@
+.table_header {
+    text-align: center;
+    min-width: 100px;
+    vertical-align: middle;
+    margin: 5px;
+}
+.table_reserved {
+    background-color: #b64855;
+    color: white;
+    text-align: center;
+    min-width: 100px;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 5px solid #fff;
+}
+.table_reserved1 {
+    background-color: #cc9900;
+    color: white;
+    text-align: center;
+    min-width: 100px;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 5px solid #fff;
+}
+.table_free {
+    background-color:#34ae62;
+    color: white;
+    text-align: center;
+    min-width: 100px;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 5px solid #fff;
+}
+.table_free:hover{
+    color:#34ae62;
+    background-color:white;
+    font-size:15px;
+    font-weight:bolder;
+}
+.table_reserved:hover{
+    color:#b64855;
+    background-color:white;
+    font-size:15px;
+    font-weight:bolder;
+}
+.table_header {
+    background-color:#4855b6;
+    font-weight: bold;
+    color: #fff;
+    padding:6px;
+    border: 5px solid #fff;
+}
+.table_room {
+    background-color:#4855b6;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    padding:6px;
+    border: 5px solid #fff;
+}
+.table_floor{
+    width:
+}
+#table_row{
+    border: 5px solid #fff;
+    height:60px;
+}
+.ribbon {
+  width: 100px;
+  height: 200px;
+  overflow: hidden;
+  position: absolute;
+}
+.ribbon::before,
+.ribbon::after {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  display: block;
+  border: 5px solid #2980b9;
+}
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 200px;
+  padding-top: 3px;
+  box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  color: #fff;
+  font: 400 10px/1 'Lato', sans-serif;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-transform: uppercase;
+  text-align: center;
+  height: 19px;
+}
+.ribbon-draft {
+  background-color: #EC7063;
+  font-weight:bold;
+}
+.ribbon-confirm {
+  background-color: #5DADE2;
+}
+.ribbon-order {
+  background-color: #FF9C51;
+}
+.ribbon-process {
+  background-color: #EC7063;
+  font-weight:bold;
+}
+.ribbon-done {
+  background-color: #2ECC71;
+}
+.ribbon-cancel {
+  background-color: #95A5A6;
+}
+
+
+/* top right*/
+.ribbon-top-right {
+  top: 0px;
+  right: 0px;
+  margin-top: 0px;
+}
+.ribbon-top-right::before,
+.ribbon-top-right::after {
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+.ribbon-top-right::before {
+  top: 0;
+  left: 0;
+}
+.ribbon-top-right::after {
+  bottom: 0;
+  right: 0;
+}
+.ribbon-top-right span {
+  left: -20px;
+  top: 20px;
+  font-weight: bolder;
+  font-size: 10px;
+  transform: rotate(45deg);
+  padding: 6px 1px;
+}
+

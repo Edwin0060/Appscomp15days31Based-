@@ -1,0 +1,29 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N806" />
+          <option value="N801" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="tuple.partner_advance_balance_payment_id" />
+          <option value="tuple.journal_related_id" />
+          <option value="tuple.reconcile_amount" />
+          <option value="tuple.refund_reconcile_amount" />
+          <option value="list.write" />
+          <option value="list.total_adv_balance_amount" />
+          <option value="tuple.invoice_id" />
+          <option value="tuple.write" />
+          <option value="tuple.total_adv_balance_amount" />
+          <option value="tuple.payment_name" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

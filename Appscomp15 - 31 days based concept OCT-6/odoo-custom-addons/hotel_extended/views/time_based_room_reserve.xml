@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="room_reservation_summary_view" model="ir.ui.view">
+        <field name="name">choose.summary.form</field>
+        <field name="model">choose.summary</field>
+        <field name="arch" type="xml">
+            <form string="Room Reservation" create="false" duplicate="false" edit="false">
+                <header>
+                    <h2>Room Reservation Summary</h2>
+                </header>
+                <sheet>
+                    <div class="reserve_summary_button">
+                        <group>
+                            <button name="%(action_hotel_reservation_summary)d"
+                                    icon="fa-calendar"
+                                    type="action"
+                                    class="summary_btn">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                Date Based Reservation
+                            </button>
+                            <button name="%(action_hotel_time_based_reservation_summary)d"
+                                    type="action"
+                                    icon="fa-clock-o"
+                                    class="summary_btn">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                Time Based Reservation
+                            </button>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hotel_Choose_reservation_summary" model="ir.actions.act_window">
+        <field name="name">Reservation Summary</field>
+        <field name="res_model">choose.summary</field>
+        <field name="view_mode">form</field>
+    </record>
+
+
+    <record id="room_reservation_time_based_summary_form_view" model="ir.ui.view">
+        <field name="name">time.based.room.reserve.form</field>
+        <field name="model">time.based.room.reserve</field>
+        <field name="arch" type="xml">
+            <form string="Time based Reservation">
+                <header>
+                    <separator string="Room Reservation Summary" colspan="4"/>
+                </header>
+                <sheet>
+                    <group colspan="4" col="4">
+                        <field name="date_today"/>
+                        <field name="time_interval"/>
+                    </group>
+                    <group colspan="4" col="4">
+                        <field name="room_categ_id" widget="many2many_tags"/>
+                        <field name="room_category" widget="many2many_tags"/>
+                    </group>
+                    <notebook>
+                        <page name="room_summary" string="Time Room Summary">
+                            <field name="summary_header" colspan="4" invisible="1"/>
+                            <field
+                                    name="room_summary"
+                                    colspan="4"
+                                    invisible="0"
+                                    widget="Time_Room_Reservation"
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hotel_time_based_reservation_summary" model="ir.actions.act_window">
+        <field name="name">Reservation Time Based Summary</field>
+        <field name="res_model">time.based.room.reserve</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <menuitem id="hotel_reservation_menu" web_icon="hotel,static/src/img/hotel_booking.png"
+              name="Hotel Dashboard" sequence="1"/>
+
+    <menuitem
+            id="menu_action_hotel_reservation_time_based_summary"
+            name="Reservation Summary"
+            action="action_hotel_Choose_reservation_summary"
+            parent="hotel_reservation_menu"
+            sequence="3"/>
+</odoo>

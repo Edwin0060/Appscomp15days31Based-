@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--        Table cancel Wizard-->
+        <record id="hotel_management_landry_cancel_remarks_wizard" model="ir.ui.view">
+            <field name="name">landry.order.cancel.view</field>
+            <field name="model">landry.order.cancel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="remarks" required="1" placeholder="Please enter the Cancellation remarks..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <footer>
+                        <button name="tick_ok" type='object' string="Submit" class="oe_highlight"
+                                icon="fa-check-circle"/>
+                        <button name="tick_cancel" type='object' string="Cancel" class="oe_highlight" special="cancel"
+                                icon="fa-times-circle"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="landry_washing_cancel_remarks_wizard" model="ir.ui.view">
+            <field name="name">washing.order.cancel.view</field>
+            <field name="model">washing.order.cancel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="remarks" required="1" placeholder="Please enter the Cancellation remarks..."/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    <footer>
+                        <button name="washing_tick_ok" type='object' string="Submit" class="oe_highlight"
+                                icon="fa-check-circle"/>
+                        <button name="tick_cancel" type='object' string="Cancel" class="oe_highlight" special="cancel"
+                                icon="fa-times-circle"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
+

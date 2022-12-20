@@ -42,7 +42,7 @@
             <field name="category_id" ref="om_hr_payroll.ALW"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.hra</field>
+            <field name="amount_python_compute">result = contract.house_rent_allowance</field>
             <field name="amount_percentage">30</field>
         </record>
 
@@ -63,7 +63,7 @@
             <field name="category_id" ref="om_hr_payroll.ALW"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.travel_allowance</field>
+            <field name="amount_python_compute">result = contract.travel_incentives</field>
         </record>
 
         <record id="hr_rule_meal" model="hr.salary.rule">

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductList" t-inherit="point_of_sale.ProductList" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('product-list')]" position="replace"> 
+            
+            <t t-set="display_stock_pos" t-value="state.display_stock_pos"/>
+            <div t-if="props.products.length != 0" class="product-list">      
+                <t t-foreach="props.products" t-as="product" t-key="product.id">
+                    <t t-if="display_stock_pos[1]">
+                        <t t-if="product.qty_available >0">         
+                            <ProductItem product="product" bool="display_stock_pos"/> 
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <ProductItem product="product" bool="display_stock_pos"/> 
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="ProductItemNew" t-inherit="point_of_sale.ProductItem" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('price-tag')]" position="after">
+            <t t-if ="props.bool[0]">        
+                <span t-esc="props.product.qty_available" class="sale_margin"/>
+            </t>
+        </xpath>
+    </t>
+    
+</templates>

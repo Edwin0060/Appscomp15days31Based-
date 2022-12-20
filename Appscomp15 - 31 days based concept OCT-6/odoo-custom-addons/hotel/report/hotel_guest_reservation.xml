@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_proforma_guest_report" model="report.paperformat">
+            <field name="name">Paper Format Guest Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">7</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">3</field>
+            <field name="margin_right">3</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">60</field>
+        </record>
+
+        <report
+                id="proforma_guest_hotel_report_menu"
+                model="hotel.folio"
+                string="Guest Report"
+                report_type="qweb-pdf"
+                name="hotel.guest_proforma_hotel_note_template"
+                file="hotel.guest_proforma_hotel_note_template"
+                paperformat="hotel.paperformat_proforma_guest_report"
+                print_report_name='"Guest Report"'
+                menu="True"
+        />
+        <template id="guest_proforma_hotel_note_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.basic_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <br/>
+                            <div class="row">
+                                <div class="col-4" align="left">
+                                    <strong>
+                                        <span t-field="res_company.partner_id.name"/>
+                                    </strong>
+                                    <br/>
+                                    <span t-field="res_company.partner_id.street"/>
+                                    <span t-field="res_company.partner_id.street2"/>,
+                                    <br/>
+                                    <span t-field="res_company.partner_id.city"/>
+                                    <span t-field="res_company.partner_id.state_id.name"/>
+                                    <span t-field="res_company.partner_id.country_id.name"/>
+                                    <br/>
+                                    <span t-field="res_company.partner_id.phone"/>
+                                </div>
+                                <div class="col-8" align="right">
+
+                                    <img src='/web/binary/company_logo' class="img-fluid img-thumbnail"
+                                         style=" max-width:15%;"/>
+
+                                </div>
+                            </div>
+                            <div class="page" align="center"
+                                 style="padding: 10px; background-color: white; color: #454748">
+                                <strong style="font-size:20px;">GUEST RESERVATION REPORT</strong>
+                                <table class="table table-sm table-bordered"
+                                       style="padding: 20px; background-color: white; color: #454748;border-color:rgb(233,232,233);
+                                    border-collapse:separate;border-radius:8pt;border: 2px solid black">
+                                    <tr>
+                                        <td colspan="3" class="text-left">
+                                            <strong>Guest Name</strong>
+                                            <strong class="px-2">:</strong>
+                                            <span t-field="o.partner_id"/>
+                                            <br/>
+                                            <strong>Address</strong>
+                                            <strong class="px-2">:</strong>
+                                            <span t-if="o.partner_id.street" t-field="o.partner_id.street"/>
+                                            <span t-if="o.partner_id.street2" t-field="o.partner_id.street2"/>
+                                            <br/>
+                                            <span t-if="o.partner_id.city" t-field="o.partner_id.city"/>
+                                            <span t-if="o.partner_id.state_id.name"
+                                                  t-field="o.partner_id.state_id.name"/>
+                                            <span t-if="o.partner_id.country_id.name"
+                                                  t-field="o.partner_id.country_id.name"/>
+                                            <br/>
+                                            <span t-if="o.partner_id.phone" t-field="o.partner_id.phone"/>
+                                            <strong>Contact Number</strong>
+                                            <strong class="px-2">:</strong>
+                                            <span t-if="o.partner_id.mobile" t-field="o.partner_id.mobile"/>
+                                            <br/>
+                                        </td>
+                                        <td colspan="3" class="text-left">
+                                            <strong>Room Type</strong>
+                                            <strong class="px-2">:</strong>
+                                            <t t-foreach="o.room_line_ids" t-as="l">
+                                                <span t-field="l.product_id.name"></span>
+                                            </t>
+                                            <br/>
+                                            <strong>Adults</strong>
+                                            <strong class="px-2">:</strong>
+                                            <t t-foreach="o.room_line_ids" t-as="l">
+                                                <span t-field="l.product_uom_qty"></span>
+                                            </t>
+                                            <br/>
+                                            <strong>Identity Type</strong>
+                                            <strong class="px-2">:</strong>
+                                            <span t-field="o.identity_type"></span>
+                                            <br/>
+                                            <strong>Booking Source</strong>
+                                            <strong class="px-2">:</strong>
+                                            <span t-field="o.booking_source"></span>
+                                        </td>
+                                    </tr>
+                                    <td colspan="7" class="text-center">
+                                        <strong style="align:center;">Guest Room Booking Information</strong>
+                                    </td>
+                                    <tr style="background-color:rgb(233,232,233);">
+                                        <th width="3%" class="padding_all tbottom ttop text-center">
+                                            <strong>Sl.No.</strong>
+                                        </th>
+                                        <th width="10%" class=" ttop text-center">
+                                            <strong>Check In</strong>
+                                        </th>
+                                        <th width="10%" class="text-center">
+                                            <strong>Check Out</strong>
+                                        </th>
+                                        <th width="10%" class="text-center">
+                                            <strong>Duration(hrs/min/sec)</strong>
+                                        </th>
+                                        <th width="10%" class="text-center">
+                                            <strong>Rate Per Day</strong>
+                                        </th>
+                                        <th width="10%" class="text-center">
+                                            <strong>Sub Total</strong>
+                                        </th>
+                                    </tr>
+                                    <tbody style="border: 1px solid color;font-size:14px;">
+                                        <tr t-foreach="o.room_line_ids" t-as="l">
+                                            <td width="3%" class="padding_all tbottom ttop text-center">
+                                                <span t-esc="l_index+1"/>
+                                            </td>
+                                            <t>
+                                                <t t-if="l.checkin_date">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-left">
+                                                        <span t-field="l.checkin_date"/>
+                                                    </td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span>-</span>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                            <t>
+                                                <t t-if="l.checkout_date">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-left">
+                                                        <span t-field="l.checkout_date"/>
+                                                    </td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span>-</span>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                            <t>
+                                                <t t-if="l.day">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                        <span t-field="l.day"/>
+                                                    </td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span>-</span>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                            <t>
+                                                <t t-if="l.price_unit">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                        <span t-field="l.price_unit"/>
+                                                    </td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span>-</span>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                            <t>
+                                                <t t-if="l.price_subtotal">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                        <span t-field="l.price_subtotal"/>
+                                                    </td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td width="10%" class="padding_all tleft tbottom ttop text-center">
+                                                        <span>-</span>
+                                                    </td>
+                                                </t>
+                                            </t>
+                                        </tr>
+                                    </tbody>
+                                    <br/>
+                                    <br/>
+                                    <tr>
+                                        <td colspan="4">
+                                            <table class="table table-sm table-bordered">
+                                                <tr>
+                                                    <strong>Guest ID Proof:</strong>
+                                                </tr>
+                                                <tr>
+                                                    <td class="padding_all tleft tbottom ttop text-center">
+                                                        <img t-if="o.add_proof"
+                                                             style="height:40;width:50%;" class="image"
+                                                             t-att-src="image_data_uri(o.add_proof)"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td colspan="3">
+                                            <table class="table table-sm table-bordered">
+                                                <tr>
+                                                    <strong>Payment Details:</strong>
+                                                </tr>
+                                                <br/>
+                                                <tr class="text-right">
+                                                    <td colspan="7" class="text-right">
+                                                        <strong>Untaxed Amount</strong>
+                                                        <strong class="px-2">:</strong>
+                                                        <span t-field="o.amount_untaxed"/>
+                                                        <br/>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <strong>Taxes</strong>
+                                                        <strong class="px-2">:</strong>
+                                                        <span t-field="o.amount_tax"/>
+                                                        <br/>
+                                                        <span>__________________________________________</span>
+                                                        <br/>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <span>&amp;nbsp;&amp;nbsp;</span>
+                                                        <strong>Total</strong>
+                                                        <strong class="px-2">:</strong>
+                                                        <span t-field="o.amount_total"></span>
+                                                        <br/>
+                                                    </td>
+                                                </tr>
+                                                <br/>
+                                                <br/>
+                                            </table>
+                                        </td>
+                                        <br/>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7">
+                                            <strong>Terms and Conditions</strong>
+                                            <strong class="px-2">:</strong>
+                                            <span t-field="o.note"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <div align="left" style="margin-top: 10px; font-size:15px;">
+                                    <div class="row">
+                                        <div class="col-1" align="left">
+                                        </div>
+                                        <div class="col-3" align="left">
+                                            <strong>
+                                                Authorized By
+                                            </strong>
+                                        </div>
+                                        <div class="col-3" align="center">
+                                        </div>
+                                        <div class="col-3" align="right">
+                                            <strong>
+                                                Guest Signature
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

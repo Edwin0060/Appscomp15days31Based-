@@ -99,7 +99,7 @@
                                 <label for="onchange_boutique_id">Click for Order</label>
                                 <button name="onchange_boutique_id" icon="fa-arrow-circle-right"
                                         string="Generate Boutique Order" class="oe_highlight" type="object"
-                                attrs="{'invisible': [('generated_measurement', '=', True)]}"/>
+                                        attrs="{'invisible': [('generated_measurement', '=', True)]}"/>
                                 <field name="generated_measurement" readonly="1" force_save="1"/>
                             </group>
                         </group>
@@ -122,9 +122,23 @@
                                 <field name="boutique_name" readonly="1"/>
                                 <field name="boutique_measurement"/>
                                 <field name="boutique_uom" force_save="1" readonly="1"/>
-                                <field name="remark_notes"/>
+                                <field name="remark_notes" invisible="1"/>
                             </tree>
                         </field>
+                        <field name="attachment" widget="many2many_binary"/>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="remark_notes"></label>
+                                <field name="remark_notes"/>
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-1">
+                                <strong>Signature</strong>
+                            </div>
+                            <div>
+                                <field name="signature" widget="signature"></field>
+                            </div>
+                        </div>
                     </page>
 
                     <page string="Advance Payment Info">
@@ -151,7 +165,7 @@
                     <field name="attached_image_ref" widget="image" style="height:50px; width:50px;"/>
                 </xpath>
                 <xpath expr="//field[@name='tax_totals_json']" position="after">
-                   <field name="advanced_payment" widget="monetary" readonly="1" force_save="1"/>
+                    <field name="advanced_payment" widget="monetary" readonly="1" force_save="1"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']"
                        position="attributes">
@@ -326,7 +340,7 @@
                                         <field name="boutique_name" readonly="1"/>
                                         <field name="boutique_measurement"/>
                                         <field name="boutique_uom" force_save="1" readonly="1"/>
-                                        <field name="remark_notes"/>
+                                        <field name="remark_notes" invisible="1"/>
                                     </tree>
                                 </field>
                                 <group>
@@ -510,31 +524,31 @@
 
         <menuitem
                 id="menu_boutique_dashboard_order"
-                name="Boutique Sales"
+                name="Sales"
                 action="action_boutique_dashboard"
                 parent="main_menu_boutique_bill"
                 sequence="3"/>
         <!--        <menuitem id="menu_boutique_master" action="action_boutique_order" name="Boutique Order"-->
         <!--                  parent="menu_boutique_dashboard_order" sequence="1"/>-->
-        <menuitem id="menu_boutique_quotation" action="sale.action_quotations" name="Boutique Quotations"
+        <menuitem id="menu_boutique_quotation" action="sale.action_quotations" name="Quotations"
                   parent="menu_boutique_dashboard_order" sequence="3"/>
         <!--        <menuitem id="menu_boutique_child" action="action_boutique_order" name="Boutique Order"-->
         <!--                  parent="menu_boutique_master" sequence="1"/>-->
-        <menuitem id="menu_boutique_orders" action="sale.action_orders" name="Boutique Orders"
+        <menuitem id="menu_boutique_orders" action="sale.action_orders" name="Orders"
                   parent="menu_boutique_dashboard_order" sequence="4"/>
         <!--        <menuitem id="menu_boutique_customers" action="account.res_partner_action_customer" name="Boutique Customers"-->
         <!--                  parent="menu_boutique_master" sequence="2"/>-->
-        <menuitem id="menu_boutique_customers" action="stock.product_template_action_product" name="Boutique Products"
+        <menuitem id="menu_boutique_customers" action="stock.product_template_action_product" name="Products"
                   parent="menu_boutique_dashboard_order" sequence="2"/>
-        <menuitem id="menu_boutique_delivery" action="stock.action_picking_tree_ready" name="Boutique Customer Delivery"
+        <menuitem id="menu_boutique_delivery" action="stock.action_picking_tree_ready" name="Customer Delivery"
                   parent="menu_boutique_dashboard_order" sequence="5"/>
         <menuitem id="menu_boutique_invoice" action="account.action_move_out_invoice_type"
-                  name="Boutique Customer Invoice"
+                  name="Customer Invoice"
                   parent="menu_boutique_dashboard_order" sequence="6"/>
-        <menuitem id="menu_boutique_payment" action="account.action_account_payments" name="Boutique Customer Payment"
+        <menuitem id="menu_boutique_payment" action="account.action_account_payments" name="Customer Payment"
                   parent="menu_boutique_dashboard_order" sequence="7"/>
         <menuitem id="menu_boutique_customer" action="account.res_partner_action_customer"
-                  name="Boutique Customers"
+                  name="Customers"
                   parent="menu_boutique_dashboard_order" sequence="1"/>
         <!--        <menuitem id="menu_boutique_measurement_master"-->
         <!--                          name="Boutique Measurement"-->

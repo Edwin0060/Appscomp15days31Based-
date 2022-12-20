@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_employee_waiter_inherited" model="ir.ui.view">
+            <field name="name">hr.employee</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='department_id']" position="after">
+                    <field name="is_a_waiter" readonly='1' force_save="1"
+                    attrs="{'invisible': [('is_a_waiter', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_waiter_selection_config" model="ir.ui.view">
+            <field name="name">pos.config.inherit.form</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='iface_orderline_customer_notes']" position="inside">
+                    <br/>
+                    <div class="o_setting_left_pane">
+                        <field name="waiter_configuration"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="waiter_configuration"/>
+                        <span class=""></span>
+                        <div class="text-muted">
+                             Enable Waiter
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+         <record id="pos_order_waiter_inherited" model="ir.ui.view">
+            <field name="name">pos.order.form.inherit</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position='after'>
+                    <field name="waiter_id" force_save="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr.open_view_employee_list_my" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="domain">[]</field>
+            <field name="domain">[]</field>
+            <field name="context">{'chat_icon': True, 'default_is_a_waiter':False}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="hr.view_employee_filter"/>
+            <field name="help" type="html">
+             <p class="o_view_nocontent_smiling_face">
+               Add a new employee
+             </p><p>
+               With just a quick glance on the Odoo employee screen, you
+               can easily find all the information you need for each person;
+               contact data, job position, availability, etc.
+             </p>
+            </field>
+        </record>
+
+        <record id="open_waiter_view_employee_list_my" model="ir.actions.act_window">
+            <field name="name">POS Waiters</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="domain">[('is_a_waiter' ,'=', True)]</field>
+            <field name="context">{'chat_icon': True, 'default_is_a_waiter':True}</field>
+            <field name="view_id" eval="False"/>
+<!--            <field name="search_view_id" ref="hr.view_employee_filter"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+               Add a new  pos waiter
+             </p><p>
+               With just a quick glance on the Odoo  pos waiter screen, you
+               can easily find all the information you need for each person;
+               contact data, job position, availability, etc.
+             </p>
+            </field>
+        </record>
+        <menuitem id="hr_menu_configuration"
+            name="Waiter"
+            parent="hr.menu_hr_employee_payroll"
+            sequence="2"
+            action="open_waiter_view_employee_list_my"/>
+    </data>
+</odoo>

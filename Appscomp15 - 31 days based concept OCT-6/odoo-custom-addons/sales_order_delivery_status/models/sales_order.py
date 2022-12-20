@@ -12,6 +12,7 @@ class SalesOrder(models.Model):
         ('processing', 'Processing')
     ], string='Delivery Status', compute='_compute_delivery_status', store=True,
         readonly=True, copy=False, default='nothing')
+    payment_status = fields.Selection(related='invoice_id.payment_state')
 
     @api.depends('state', 'order_line.qty_delivered')
     def _compute_delivery_status(self):

@@ -151,7 +151,16 @@
                                         </th>
                                         <th width="10%" valign="middle" align="center"
                                             class="padding_all tbottom ttop text-center">
-                                            <strong>Price</strong>
+                                            <strong>Inv Price</strong>
+                                        </th>
+
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Quot Price</strong>
+                                        </th>
+                                        <th width="10%" valign="middle" align="center"
+                                            class="padding_all tbottom ttop text-center">
+                                            <strong>Difference</strong>
                                         </th>
                                         <th width="10%" valign="middle" align="center"
                                             class="padding_all tbottom ttop text-center">
@@ -177,12 +186,20 @@
                                         <td width="10%" class="padding_all tleft tbottom ttop text-right">
                                             <span t-field="l.price_unit"/>
                                         </td>
+                                        <t t-if="print_with_payments">
+                                            <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                                <span t-field="l.sale_price_unit"/>
+                                            </td>
+                                        </t>
+                                        <td width="10%" class="padding_all tleft tbottom ttop text-right">
+                                            <span t-field="l.diff"/>
+                                        </td>
                                         <td width="10%" class="padding_all tleft tbottom ttop text-right">
                                             <span t-field="l.price_subtotal"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="5"
+                                        <td colspan="7"
                                             class="padding_all table-active tleft tbottom ttop text-right">
                                             <strong>TOTAL</strong>
                                         </td>
@@ -237,7 +254,7 @@
                                             </t>
                                         </td>
 
-                                        <td class="padding_all table-active tleft tbottom ttop text-right">
+                                        <td colspan='3' class="padding_all table-active tleft tbottom ttop text-right">
                                             <strong>Balance</strong>
                                         </td>
                                         <td

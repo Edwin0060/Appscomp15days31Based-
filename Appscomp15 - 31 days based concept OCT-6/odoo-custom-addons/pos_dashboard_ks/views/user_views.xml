@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']" position="after">
+                <page string="POS Kitchen Dashboard" name="kitchen_d" groups="pos_dashboard_ks.group_pos_dashboard">
+                    <group>
+                        <field name="kitchen_category_ids" widget="many2many_tags"/>
+                        <field name="pos_config_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ni_pos_kot_order_report_view_form" model="ir.ui.view">
+        <field name="name">ni.pos.kot.order.report.view.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <button name="action_pos_order_invoice" position="after">
+                <button name="get_kot_order_report" type="object" string="PRINT"/>
+            </button>
+        </field>
+    </record>
+</odoo>

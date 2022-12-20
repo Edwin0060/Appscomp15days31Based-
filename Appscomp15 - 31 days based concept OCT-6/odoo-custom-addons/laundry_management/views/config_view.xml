@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="washing_type_form_view" model="ir.ui.view">
+            <field name="name">washing.type.form</field>
+            <field name="model">washing.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="assigned_person"/>
+                            </group>
+                            <group>
+                                <field name="amount"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="washing_type_tree_view" model="ir.ui.view">
+            <field name="name">washing.type.tree</field>
+            <field name="model">washing.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="assigned_person"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_washing_type" model="ir.actions.act_window">
+            <field name="name">Washing Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">washing.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="washing_work_form_view" model="ir.ui.view">
+            <field name="name">washing.work.form</field>
+            <field name="model">washing.work</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="assigned_person"/>
+                            </group>
+                            <group>
+                                <field name="amount"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="washing_work_tree_view" model="ir.ui.view">
+            <field name="name">washing.work.tree</field>
+            <field name="model">washing.work</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="assigned_person"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_washing_work" model="ir.actions.act_window">
+            <field name="name">Additional Works</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">washing.work</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="laundry_config_menu" name="Configuration" parent="hotel.hotel_management_menu" sequence="4"/>
+<!--        <menuitem id="laundry_customer" name="Guests"-->
+<!--                  parent="hotel_extended.menu_hotel_reservation" action="base.action_partner_customer_form"-->
+<!--                  sequence="2"/>-->
+<!--        <menuitem id="laundry_products" name="Products" parent="hotel_extended.menu_hotel_reservation"-->
+<!--                  action="product.product_normal_action_sell" sequence="3"/>-->
+<!--        <menuitem id="laundry_washing_type" name="Washing Type"-->
+<!--                  action="action_washing_type" sequence="9"-->
+<!--                  parent="hotel.menu_hotel_service"/>-->
+<!--        <menuitem id="laundry_washing_work" name="Additional Works" sequence="10"-->
+<!--                  parent="hotel.menu_hotel_service"-->
+<!--                  action="action_washing_work"/>-->
+
+    </data>
+</odoo>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_patient_card">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="count" t-value="0"/>
+                <div class="page">
+                    <t t-foreach="docs" t-as="o">
+                        <div t-if="count % 18 == 0" style="page-break-after:always;"/>
+                        <div t-if="count % 2 == 0" style="clear:both;"/>
+                        <div style="width: 30%; float: left; height: 180px; margin: 0 10px; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;
+                            font-size:16px;border:2px solid black;border-radius:3pt; margin:5pt;width:345px;height:117px">
+                            <table class="table table-sm table-bordered">
+                                <tr>
+                                    <td class="text-left"
+                                        style="border:1px solid black;font-size: 9px;border-radius:12pt">
+                                        <b>Patient Name :</b>
+                                        <span class="px-1" t-field='o.patient_name'/>
+                                    </td>
+                                    <td class="text-left"
+                                        style="border:1px solid black;font-size: 9px;border-radius:12pt">
+                                        <b>Consulting Doctor :</b>
+                                        <span style="font-size: 8px"
+                                              t-field='o.primary_care_physician_id.partner_id.name'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="text-left" style="border:1px solid black;">
+                                        <span t-field="o.name"
+                                              t-options="{'widget': 'barcode', 'width': 500, 'height': 100, 'img_style': 'width:300px;height:40px;'}"/>
+                                    </td>
+
+                                </tr>
+                                <tr style="border:1px solid black;">
+                                    <td class="text-left"
+                                        style="border:1px solid black;font-size: 9px;border-radius:12pt">
+                                        <b>Age :</b>
+                                        <span class="px-1" t-field='o.age'/>
+                                    </td>
+                                    <td class="text-left"
+                                        style="border:1px solid black;font-size: 9px;border-radius:12pt">
+                                        <b>Registered Date:</b>
+                                        <span t-field='o.registered_date'/>
+                                    </td>
+                                </tr>
+                                <tr style="border:1px solid black;">
+                                    <td colspan="2" class="text-left"
+                                        style="border:1px solid black;font-size: 9px;border-radius:12pt">
+                                        <b>Disease</b>
+                                        <t t-foreach="o.patient_disease_ids" t-as="l">
+                                            <span style="font-size: 9px" t-if="l.pathology_id.name"
+                                                  t-field='l.pathology_id.name'/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <t t-set="count" t-value="count+1"/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,46 @@
+.openerp .oe_kanban_view .oe_kanban_status {
+    position: relative;
+    top: -13px;
+}
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 200px;
+  padding-top: 3px;
+  box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  color: #fff;
+  font: 400 10px/1 'Lato', sans-serif;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-transform: uppercase;
+  text-align: center;
+  height: 19px;
+}
+ribbon-draft {
+  background-color: #5DADE2;
+  font-weight:bold;
+}
+.ribbon-confirm {
+  background-color: #5DADE2;
+}
+.ribbon-inspect {
+  background-color: #EC7063;
+  font-weight:bold;
+}
+.ribbon-dirty {
+  background-color: #5DADE2;
+}
+.ribbon-clean {
+  background-color: #FF9C51;
+}
+.ribbon-done {
+  background-color: #2ECC71;
+}
+.ribbon-cancel {
+  background-color: #EC7063;
+}
+/* top right*/
+.ribbon-top-right {
+  top: 0px;
+  right: 0px;
+  margin-top: 0px;
+}

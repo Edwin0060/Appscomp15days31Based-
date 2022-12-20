@@ -80,7 +80,7 @@
                                         <tr>
                                             <td>
                                                 <strong>Date of Joining:</strong>
-                                                <span t-field="o.employee_id.first_contract_date"/>
+                                                <span t-field="o.contract_id.start_date_doj"/>
                                             </td>
                                             <td>
                                                 <div class="padding_all tleft tbottom ttop text-center row"
@@ -105,7 +105,7 @@
                                                     <span t-field="o.employee_final_present_days"/>
                                                     |
                                                     <strong>LOP Days :</strong>
-                                                    <span t-field="o.employee_loptotal_days"/>
+                                                    <span t-field="o.employee_final_lop_total_days"/>
                                                 </div>
                                             </td>
                                         </tr>
@@ -136,11 +136,11 @@
                                                             <tr>
                                                                 <th valign="middle" align="center"
                                                                     class="padding_all tbottom ttop text-center">
-                                                                    <strong>Name</strong>
+                                                                    <strong>EARNINGS</strong>
                                                                 </th>
                                                                 <th valign="middle" align="center"
                                                                     class="padding_all tleft tbottom ttop text-center">
-                                                                    <strong>Total</strong>
+                                                                    <strong>AMOUNT</strong>
                                                                 </th>
                                                             </tr>
                                                         </thead>
@@ -148,7 +148,7 @@
                                                             <t t-foreach="o.line_ids" t-as="l">
                                                                 <t t-if="l.category_id.name != 'Deduction'
                                                      and l.category_id.name != 'Net' and l.category_id.name != 'Gross'
-                                                     and l.category_id.name != 'TDeduction' and l.category_id.name != 'Company Contribution'">
+                                                     and l.category_id.name != 'TDeduction' and l.category_id.name != 'Company Contribution' and l.category_id.name != 'Employeerdeduction'">
                                                                     <tr>
                                                                         <td class="padding_all tleft tbottom ttop text-left">
                                                                             <span t-esc="l.name"/>
@@ -159,6 +159,19 @@
                                                                     </tr>
                                                                 </t>
                                                             </t>
+                                                            <tr>
+                                                                <td class="padding_all tleft tbottom ttop text-left">
+                                                                    <strong>Gross Earnings</strong>
+                                                                </td>
+                                                                <td align="right">
+                                                                    <t t-foreach="o.line_ids" t-as="l">
+                                                                        <t t-if="l.category_id.name == 'Gross'">
+                                                                            <span t-field="o.company_id.currency_id.symbol"/>
+                                                                            <span t-esc="'%.2f'% l.total"/>
+                                                                        </t>
+                                                                    </t>
+                                                                </td>
+                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </td>
@@ -169,11 +182,11 @@
                                                             <tr>
                                                                 <th valign="middle" align="center"
                                                                     class="padding_all tbottom ttop text-center">
-                                                                    <strong>Name</strong>
+                                                                    <strong>DEDUCTIONS</strong>
                                                                 </th>
                                                                 <th valign="middle" align="center"
                                                                     class="padding_all tleft tbottom ttop text-center">
-                                                                    <strong>Total</strong>
+                                                                    <strong>AMOUNT</strong>
                                                                 </th>
                                                             </tr>
                                                         </thead>
@@ -190,12 +203,21 @@
                                                                     </tr>
                                                                 </t>
                                                             </t>
+                                                            <tr>
+                                                                <td class="padding_all tleft tbottom ttop text-left">
+                                                                    <strong>Total Deductions</strong>
+                                                                </td>
+                                                                <td align="right">
+                                                                    <span t-field="o.company_id.currency_id.symbol"/>
+                                                                    <span t-esc="'%.2f'% o.amount_deduction"/>
+                                                                </td>
+                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="padding_all tleft tbottom ttop text-center">
+                                                <td class="padding_all tleft tbottom ttop text-left">
                                                     <strong>Gross Earnings</strong>
                                                 </td>
                                                 <td align="right">
@@ -208,7 +230,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="padding_all tleft tbottom ttop text-center">
+                                                <td class="padding_all tleft tbottom ttop text-left">
                                                     <strong>Total Deductions</strong>
                                                 </td>
                                                 <td align="right">
@@ -217,8 +239,8 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="padding_all tleft tbottom ttop text-center">
-                                                    <strong>Net Pay</strong>
+                                                <td class="padding_all tleft tbottom ttop text-right">
+                                                    <strong>Total Net Payable</strong>
                                                 </td>
                                                 <td align="right">
                                                     <span t-field="o.company_id.currency_id.symbol"/>
@@ -227,7 +249,7 @@
 
                                             </tr>
                                             <tr>
-                                                <td class="padding_all tleft tbottom ttop text-center">
+                                                <td class="padding_all tleft tbottom ttop text-right">
                                                     <strong>Amount in Words</strong>
                                                 </td>
                                                 <td align="right">

@@ -1,0 +1,10 @@
+.sale_margin {
+    top: 20px;
+    line-height: 13px;
+    right: 2px;
+    color: white;
+    background: #7f82ac;
+    position: absolute;
+    border-radius: 2px;
+    padding: 2px 5px;
+    }

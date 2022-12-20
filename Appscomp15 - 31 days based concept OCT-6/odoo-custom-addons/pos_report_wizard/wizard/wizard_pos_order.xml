@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="product_wizard_report_form">
+            <field name="name">pos.product.report.wizard</field>
+            <field name="model">pos.product.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Product">
+                    <group>
+                        <group colspan="2">
+                            <group>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                            </group>
+                            <group>
+                                <field name="product_selection" widget="radio" options="{'horizontal': True}"/>
+                            </group>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_product_report" string="Print Report"
+                                type="object" default_focus="1" class="oe_highlight" icon="fa-print"/>
+                        <button string="Cancel" class="btn-default" special="cancel" icon="fa-times"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_product_wizard_report" model="ir.actions.act_window">
+            <field name="name">Product Wizard Report</field>
+            <field name="res_model">pos.product.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="menu_product_wizard_wizard" name="Product Report " action="action_product_wizard_report"
+                  parent="point_of_sale.menu_point_rep"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+
+    <!-- Tree view -->
+    <record id="medical_insurance_tree_view" model="ir.ui.view">
+        <field name="name">medical.insurance.tree.view</field>
+        <field name="model">medical.insurance</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <tree string="Insurance List">
+                <field name="number"/>
+                <field name="medical_insurance_partner_id"/>
+                <field name="type"/>
+                <field name="insurance_compnay_id"/>
+                <field name="category"/>
+                <field name="member_since"/>
+                <field name="member_exp"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="medical_insurance_form_view" model="ir.ui.view">
+        <field name="name">medical.insurance.form.view</field>
+        <field name="model">medical.insurance</field>
+        <field name="arch" type="xml">
+            <form string="Insurances">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="number" required="1"/>
+                            <field name="type"/>
+                            <field name="member_since"/>
+                            <field name="category"/>
+
+                        </group>
+                        <group>
+                            <field name="medical_insurance_partner_id"/>
+                            <field name="insurance_compnay_id" required="1"/>
+                            <field name="member_exp"/>
+                            <field name="attachment" widget="many2many_binary" filename="attachment_name"/>
+                            <field name="attachment_name" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                    <group>
+                        <separator colspan="4"
+                                   string="Documents to be Submitted for Insurance Assistant"/>
+                        <group>
+                            <field name="pre_authority_form"/>
+                            <field name="pre_authority_form_attachment" filename="pre_authority_form_attachment_name"
+                                   attrs="{'invisible':[('pre_authority_form','=',False)]}"/>
+                            <field name="pre_authority_form_attachment_name" invisible="1"/>
+
+                            <field name="lab_report"/>
+                            <field name="lab_report_attachment" filename="lab_report_attachment_name"
+                                   attrs="{'invisible':[('lab_report','=',False)]}"/>
+                            <field name="lab_report_attachment_name" invisible="1"/>
+
+                            <field name="patient_photo"/>
+                            <field name="patient_photo_attachment" filename="patient_photo_attachment"
+                                   attrs="{'invisible':[('patient_photo','=',False)]}"/>
+                            <field name="patient_photo_attachment" invisible="1"/>
+
+                            <field name="insurance_id"/>
+                            <field name="insurance_id_attachment" filename="insurance_id_attachment"
+                                   attrs="{'invisible':[('insurance_id','=',False)]}"/>
+                            <field name="insurance_id_attachment" invisible="1"/>
+
+                            <field name="discharge_Summary"/>
+                            <field name="discharge_Summary_attachment" filename="discharge_Summary_attachment"
+                                   attrs="{'invisible':[('discharge_Summary','=',False)]}"/>
+                            <field name="discharge_Summary_attachment" invisible="1"/>
+
+                            <field name="final_bill"/>
+                            <field name="final_bill_attachment" filename="final_bill_attachment"
+                                   attrs="{'invisible':[('final_bill','=',False)]}"/>
+                            <field name="final_bill_attachment" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="post_xray"/>
+                            <field name="post_xray_attachment" filename="post_xray_attachment"
+                                   attrs="{'invisible':[('post_xray','=',False)]}"/>
+                            <field name="post_xray_attachment" invisible="1"/>
+
+                            <field name="post_clinical_picture"/>
+                            <field name="post_clinical_picture_attachment" filename="post_clinical_picture_attachment"
+                                   attrs="{'invisible':[('post_clinical_picture','=',False)]}"/>
+                            <field name="post_clinical_picture_attachment" invisible="1"/>
+
+                            <field name="lab_bills"/>
+                            <field name="lab_bills_attachment" filename="lab_bills_attachment"
+                                   attrs="{'invisible':[('lab_bills','=',False)]}"/>
+                            <field name="lab_bills_attachment" invisible="1"/>
+
+                            <field name="medical_bill"/>
+                            <field name="medical_bill_attachment" filename="medical_bill_attachment"
+                                   attrs="{'invisible':[('medical_bill','=',False)]}"/>
+                            <field name="medical_bill_attachment" invisible="1"/>
+
+                            <field name="progress_notes"/>
+                            <field name="progress_notes_attachment" filename="progress_notes_attachment"
+                                   attrs="{'invisible':[('progress_notes','=',False)]}"/>
+                            <field name="progress_notes_attachment" invisible="1"/>
+
+                            <field name="operation_records"/>
+                            <field name="operation_records_attachment" filename="operation_records_attachment"
+                                   attrs="{'invisible':[('operation_records','=',False)]}"/>
+                            <field name="operation_records_attachment" invisible="1"/>
+
+                            <field name="implant_sticker"/>
+                            <field name="implant_sticker_attachment" filename="implant_sticker_attachment"
+                                   attrs="{'invisible':[('implant_sticker','=',False)]}"/>
+                            <field name="implant_sticker_attachment" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="medical_insurance_search_view" model="ir.ui.view">
+        <field name="name">Insurances</field>
+        <field name="model">medical.insurance</field>
+        <field name="type">search</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <search string="Search Insurances">
+                <separator orientation="vertical"/>
+                <field name="number"/>
+                <field name="insurance_compnay_id"/>
+                <newline/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_medical_insurance">
+        <field name="name">Insurances</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">medical.insurance</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="medical_insurance_search_view"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="menu_sub_insurance"
+              action="action_medical_insurance"
+              sequence="1" parent="menu_insurance"/>
+
+</openerp>

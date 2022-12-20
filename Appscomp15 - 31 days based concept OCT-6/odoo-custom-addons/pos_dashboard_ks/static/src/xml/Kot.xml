@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="Kot_template">
+        <div class="kot_container">
+            <div class="kot_header">
+                <h3> KOT ORDER </h3>
+            </div>
+            <t t-foreach="orders" t-as="order">
+                <div class="row justify-content-center">
+                    <div style="padding:10px;">
+                        <img src='/web/binary/company_logo' style="width:150px;height:50px;"/>
+                    </div>
+                </div>
+                <div class="kot_details">
+                    <div>
+                        <span t-esc="order.company_name"/>
+                    </div>
+                    <div>
+                        Table : <span t-esc="order.table"/>
+                    </div>
+                    <div>
+                        Waiter by : <span t-esc="order.waiter"/>
+                    </div>
+                </div>
+
+                <table class="table" style="width:300px">
+                    <thead class="table_head">
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="order.order" t-as="l">
+                            <tr>
+                                <td>
+                                    <t t-esc="l.product"/>
+                                </td>
+
+                                <td>
+                                    <t t-esc="l.qty"/>
+                                </td>
+                            </tr>
+                        </t>
+                  </tbody>
+                </table>
+
+                <div class="kot_details_footer">
+                    <t t-esc="order.ref_num"/>
+                    <br/>
+                    <t t-esc="order.date"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

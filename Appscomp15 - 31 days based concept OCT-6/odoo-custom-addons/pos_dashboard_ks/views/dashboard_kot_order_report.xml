@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="dashboard_kot_order_report" model="ir.actions.report">
+        <field name="name">Kot Order</field>
+        <field name="model">pos.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_file">pos_dashboard_ks.dashboard_kot_template</field>
+        <field name="report_name">pos_dashboard_ks.dashboard_kot_template</field>
+    </record>
+
+    <!--Template for Hotel Reservation -->
+    <template id="dashboard_kot_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <br />
+                    <br />
+                   <span>Hello World</span>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
+
+

@@ -48,7 +48,7 @@
                                     <span t-field="o.company_id.state_id"/>
                                     <span t-field="o.company_id.country_id"/>
                                     <br/>
-<!--                                    <span t-field="o.company_id.phone"/>-->
+                                    <!--                                    <span t-field="o.company_id.phone"/>-->
                                 </div>
                                 <div class="col-7" align="right">
                                     <img src='/web/binary/company_logo' class="img-fluid img-thumbnail"
@@ -103,9 +103,9 @@
                                             <span t-field="o.partner_id.country_id"/>,
                                         </t>
                                         <br/>
-<!--                                        <t t-if="o.customer_phone_number">-->
-<!--                                            <span t-field="o.customer_phone_number"/>,-->
-<!--                                        </t>-->
+                                        <!--                                        <t t-if="o.customer_phone_number">-->
+                                        <!--                                            <span t-field="o.customer_phone_number"/>,-->
+                                        <!--                                        </t>-->
                                     </td>
                                     <td class="padding_all tbottom ttop text-left" width="50%">
                                         <strong>Received Date:</strong>
@@ -159,10 +159,10 @@
                                         class="padding_all tbottom ttop text-center">
                                         <strong>UOM</strong>
                                     </th>
-                                    <th width="10%" valign="middle" align="center"
-                                        class="padding_all tbottom ttop text-center">
-                                        <strong>Patterns</strong>
-                                    </th>
+                                    <!--                                    <th width="10%" valign="middle" align="center"-->
+                                    <!--                                        class="padding_all tbottom ttop text-center">-->
+                                    <!--                                        <strong>Notes</strong>-->
+                                    <!--                                    </th>-->
                                 </tr>
                                 <tbody style="border: 1px solid color;">
                                     <tr t-foreach="o.boutique_ids" t-as="l">
@@ -170,7 +170,7 @@
                                             <t t-if="l.name">
                                                 <td width="10%" colspan="5"
                                                     class="padding_all table-active tleft tbottom ttop text-left">
-                                                        <span t-field="l.name"/>
+                                                    <span t-field="l.name"/>
                                                 </td>
                                             </t>
                                             <t t-else="">
@@ -187,26 +187,40 @@
                                                     <td width="10%" class="padding_all tleft tbottom ttop text-left">
                                                         <span t-field="l.boutique_uom"/>
                                                     </td>
-                                                    <td width="10%" class="padding_all tleft tbottom ttop text-left">
-                                                        <span t-field="l.remark_notes"/>
-                                                    </td>
+                                                    <!--                                                    <td width="10%" class="padding_all tleft tbottom ttop text-left">-->
+                                                    <!--                                                        <span t-field="l.remark_notes"/>-->
+                                                    <!--                                                    </td>-->
                                                 </t>
                                             </t>
                                         </t>
                                     </tr>
                                     <tr>
                                         <td colspan="5">
-                                            <strong>Notes:</strong>
-                                            <span t-field="o.note"/>
+                                            <strong>Add Notes:</strong>
+                                            <span t-field="o.remark_notes"/>
                                         </td>
                                     </tr>
+<!--                                    <tr>-->
+<!--                                        <td colspan="5">-->
+<!--                                            <strong>Notes:</strong>-->
+<!--                                            <span t-field="o.note"/>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
                                 </tbody>
                             </table>
                             <br/>
                             <br/>
+                            <div align="left" style="page-break-inside: avoid">
+                                <strong>Measurement Attachment:</strong>
+                                <br/>
+                                <t t-foreach="o.attachment" t-as="attachment">
+                                    <img t-att-src="attachment.image_src" style=" max-width:25%;"
+                                         class="img-fluid img-thumbnail"/>
+                                </t>
+                            </div>
                             <br/>
                             <br/>
-                            <div class="row">
+                            <div class="row" style="page-break-inside: avoid">
                                 <div class="col-1">
                                     <span></span>
                                 </div>
@@ -218,6 +232,23 @@
                                 </div>
                                 <div class="col-3">
                                     <strong>Signature</strong>
+                                </div>
+                            </div>
+                            <div class="footer" align="right" style="margin-top: 10px;">
+                                <div class="col-xs-6 text-center" align="center">
+                                    Page
+                                    <span class="page"/>
+                                    of
+                                    <span class="topage"/>
+                                    <span>&amp;nbsp;</span>
+                                    <span>&amp;nbsp;</span>
+                                    Print Date
+                                    &amp;nbsp;
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>
+                                    <span>&amp;nbsp;</span>
+                                    Print Time
+                                    &amp;nbsp;
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M:%S')"/>
                                 </div>
                             </div>
                         </t>

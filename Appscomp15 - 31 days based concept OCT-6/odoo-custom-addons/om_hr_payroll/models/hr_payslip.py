@@ -93,6 +93,12 @@ class HrPayslip(models.Model):
     number_of_leave = fields.Float(string="Public Leave's and Sunday's ")
     total_days_of_month = fields.Float(string="Total Days in Month ")
     employee_final_lop_total_days = fields.Integer(string="Employee Final LOP Days")
+    allowance_amount_total = fields.Float(string="Allowance Amount")
+    allowance_amount_deduction = fields.Float(string="Allowance Deduction")
+    weekly_incentive = fields.Float(string="Weekly Incentive")
+    monthly_incentive = fields.Float(string="Monthly Incentive")
+    special_incentive = fields.Float(string="Special Incentive")
+    gross_amount = fields.Float(string="Gross Amount")
 
     @api.onchange('employee_id', 'date_from', 'date_to')
     def compute_days(self):
@@ -144,7 +150,7 @@ class HrPayslip(models.Model):
                               "SO, Please, Approve the Config and generate it.") % (
                                 record.date_months, record.date_year))
                 if month:
-                    print('#####################################', type(line.select_month),
+                    print(type(line.select_month),
                           type(record.date_from.month))
                 else:
                     raise ValidationError(
@@ -203,22 +209,36 @@ class HrPayslip(models.Model):
         num_days = 0
         paid_leave_num_days = 0
         profitpercentday = 0
+        onedayamount = 0
+        lop_days_amount = 0
         total_wage = 0
         employee_leave_paid_time = self.env['hr.leave'].search(
             [('employee_id', '=', self.employee_id.id), ('holiday_status_id.name', '!=', 'Unpaid')])
         if self.employee_id:
             import calendar
             import datetime
-            total_wage_contract = self.contract_id.wage / self.total_days_of_month
-            self.employee_one_day_salary = round(total_wage_contract)
-            total_unpaid_amount = (self.employee_balance_days + self.employee_loptotal_days) * total_wage_contract
-            self.employee_final_lop_total_days = self.employee_balance_days + self.employee_loptotal_days
-            try:
-                profitpercentday = (employee_contract.wage / self.total_days_of_month)
-            except ZeroDivisionError:
-                self.employee_one_day_salary = profitpercentday
-            self.write({'employee_one_day_salary': round(total_wage_contract),
-                        'unpaid_deduction': round(total_unpaid_amount)})
+            for rec in self.line_ids:
+                if rec.category_id.name == 'Gross':
+                    onedayamount = rec.amount
+                    # total_wage_contract = onedayamount / 30
+                    total_wage_contract = self.contract_id.ctc / 30
+                    lop_days_amount = total_wage_contract * self.employee_final_lop_total_days
+                    self.employee_one_day_salary = round(total_wage_contract)
+                    total_unpaid_amount = (self.employee_balance_days + self.employee_loptotal_days) * total_wage_contract
+                    self.employee_final_lop_total_days = self.employee_balance_days + self.employee_loptotal_days
+                    try:
+                        # profitpercentday = (employee_contract.wage / self.total_days_of_month)
+                        # profitpercentday = (employee_contract.wage / 30)
+                        profitpercentday = (employee_contract.ctc / 30)
+                    except ZeroDivisionError:
+                        self.employee_one_day_salary = profitpercentday
+                        self.write({'employee_one_day_salary': round(total_wage_contract),
+                                    'unpaid_deduction': round(total_unpaid_amount)})
+                    self.allowance_amount_deduction = abs(lop_days_amount)
+                    for netsalary in self.line_ids:
+                        if netsalary.code == 'UPA':
+                            netsalary.write({
+                                'amount': abs(lop_days_amount)})
 
         for aa in employee_leave_aa:
             # employee_leave = self.env['hr.leave'].search_count(
@@ -282,6 +302,10 @@ class HrPayslip(models.Model):
             emp_check_in = []
             emp_check_out = []
             count = 0.00
+            allowance_amount = 0.00
+            basic_aomunt = 0.00
+            ctc_amount = 0.00
+            total_amount_basic = 0.00
             present_amount = 0.00
             for attend in employee_attendance:
                 if self.date_from and self.date_to and self.employee_id.department_id.name != 'Call Center Team':
@@ -300,31 +324,47 @@ class HrPayslip(models.Model):
             self.write({
                 'employee_present_days': count,
                 'employee_final_present_days': count})
-            if self.employee_present_days > 0:
-                for works in self.worked_days_line_ids:
-                    if works.code == 'WORK100':
-                        works.write({
-                            'number_of_days': self.employee_present_days})
-                    elif works.code == 'Unpaid':
-                        works.write({
-                            'number_of_days': self.number_working_of_days})
-                self.write({'amount_net_total': present_amount})
+            for record in self.line_ids:
+                if record.category_id.code == 'ALW':
+                    allowance_amount += record.amount
+            self.allowance_amount_total = allowance_amount
+            for record in self.line_ids:
+                if record.category_id.code == 'BASIC':
+                    basic_aomunt = record.amount
+                    total_amount_basic = basic_aomunt + allowance_amount
 
-                for netsalary in self.line_ids:
-                    if netsalary.category_id.name != 'Deduction' and netsalary.category_id.name != 'Company Contribution':
-                        self.employee_final_present_days = self.leave_paid_timeoff + self.employee_present_days + self.number_of_leave
-                        try:
-                            profitpercent = (netsalary.amount / self.total_days_of_month)
-                            profitpercentage = profitpercent * self.employee_final_present_days
-                        except ZeroDivisionError:
-                            profitpercent = 0
-                            profitpercentage = profitpercent * self.employee_final_present_days
-                        netsalary.update({
-                            'amount': profitpercentage})
-            else:
-                raise ValidationError(
-                    _("Alert!,The selected Employee of %s, Doesn't have Attendence.SO, Payslip can't genrerate it.") % (
-                        self.employee_id.name))
+
+        if self.employee_present_days > 0:
+            for works in self.worked_days_line_ids:
+                if works.code == 'WORK100':
+                    works.write({
+                        'number_of_days': self.employee_present_days})
+                elif works.code == 'Unpaid':
+                    works.write({
+                        'number_of_days': self.number_working_of_days})
+            self.write({'amount_net_total': present_amount})
+            for netsalary in self.line_ids:
+                # if netsalary.category_id.name != 'Deduction' and netsalary.category_id.name != 'Company Contribution':
+                if self.employee_final_present_days < 30:
+                    self.employee_final_present_days = self.leave_paid_timeoff + self.employee_present_days + self.number_of_leave
+                elif self.employee_final_present_days > 30:
+                    self.employee_final_present_days = 30
+                try:
+                    profitpercent = (total_amount_basic / 30)
+                    profitpercentage = profitpercent * self.employee_final_present_days
+                except ZeroDivisionError:
+                    profitpercent = 0
+                    profitpercentage = profitpercent * self.employee_final_present_days
+                allowance_sub = round(total_amount_basic - profitpercentage)
+                # allowance_sub = round(self.employee_final_lop_total_days  * self.employee_one_day_salary)
+                # self.allowance_amount_deduction = abs(allowance_sub)
+                # if netsalary.code == 'UPA':
+                #     netsalary.write({
+                #         'amount': abs(allowance_sub)})
+        else:
+            raise ValidationError(
+                _("Alert!,The selected Employee of %s, Doesn't have Attendence.SO, Payslip can't genrerate it.") % (
+                    self.employee_id.name))
 
     def advance_salary(self):
         advance_salary_amount = self.env['salary.advance'].search([('employee_id', '=', self.employee_id.id)])
@@ -382,10 +422,15 @@ class HrPayslip(models.Model):
     def _payslip_calculation(self):
         # self.employee_balance_days = self.total_days_of_month - (
         #         self.employee_final_present_days + self.employee_loptotal_days + self.number_of_leave)
-        self.employee_balance_days = self.total_days_of_month - (
+        # self.employee_balance_days = self.total_days_of_month - (
+        #         self.employee_final_present_days + self.employee_loptotal_days)
+        self.employee_balance_days = 30 - (
                 self.employee_final_present_days + self.employee_loptotal_days)
         allowance = 0.00
         deduction = 0.00
+        Compensations = 0.00
+        Employerdeduction = 0.00
+        grossamount = 0.00
         flight = 0.00
         birthday = 0.00
         loans = 0.00
@@ -422,10 +467,10 @@ class HrPayslip(models.Model):
         #                     'amount': net})
         if self.employee_id:
             for line in self.line_ids:
-                try:
-                    profitpercentdays = (self.contract_id.wage / self.total_days_of_month)
-                except ZeroDivisionError:
-                    self.employee_one_day_salary = profitpercentdays
+                # try:
+                #     profitpercentdays = (self.contract_id.wage / 30)
+                # except ZeroDivisionError:
+                    # self.employee_one_day_salary = profitpercentdays
                 # self.employee_one_day_salary = self.contract_id.wage / self.total_days_of_month
                 if line.category_id.name == 'Deduction' and line.category_id.name != 'Unpaid':
                     if line.name != 'Unpaid':
@@ -435,9 +480,16 @@ class HrPayslip(models.Model):
                     basic += round(line.amount)
                 if line.category_id.name == 'Allowance':
                     allowance += round(line.amount)
+                if line.category_id.name == 'Compensation':
+                    Compensations += round(line.amount)
+                if line.category_id.name == 'Employeerdeduction':
+                    Employerdeduction += round(line.amount)
                 if line.category_id.name == 'Gross':
                     line.write({
-                        'amount': allowance + basic})
+                        'amount': (allowance + basic + Compensations) - Employerdeduction})
+                if line.category_id.name == 'Gross':
+                    grossamount += round(line.amount)
+                    self.gross_amount = round(line.amount)
                 if line.name == 'Unpaid':
                     # up += line.amount
                     up = self.employee_balance_days * self.employee_one_day_salary
@@ -445,7 +497,7 @@ class HrPayslip(models.Model):
                         'amount': up})
                 if line.category_id.name == 'Net':
                     if deduction > 0:
-                        net = (allowance + basic) - (deduction)
+                        net = self.total_amount
                         line.write({
                             'amount': net})
                     else:
@@ -586,8 +638,8 @@ class HrPayslip(models.Model):
                     raise ValidationError(_("Alert!, Payslip cannot generate for the Employee of Mr.%s, \n"
                                             "The Contract Salary Allocation is Not Matching with CTC - %s. "
                                             "and The Payment Difference is %s.") % (
-                                          rec.employee_id.name, employee_contract_valdiate.ctc,
-                                          employee_contract_valdiate.amount_settlment_diff))
+                                              rec.employee_id.name, employee_contract_valdiate.ctc,
+                                              employee_contract_valdiate.amount_settlment_diff))
 
     def unlink(self):
         if any(self.filtered(lambda payslip: payslip.state not in ('draft', 'cancel'))):
@@ -629,6 +681,7 @@ class HrPayslip(models.Model):
             payslip.write({'line_ids': lines, 'number': number})
             payslip.current_employee_attendance()
             payslip._payslip_calculation()
+            payslip.compute_total_deduction()
             # payslip.payslip_validation_error()
             payslip.employee_contract_validate_to_generate()
             payslip.payslip_employee_contract_validate_to_generate()

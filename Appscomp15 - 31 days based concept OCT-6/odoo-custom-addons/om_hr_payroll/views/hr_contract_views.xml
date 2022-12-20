@@ -54,8 +54,7 @@
                     <group name="ctc_salary">
                         <label for="manual_ctc"/>
                         <div class="o_row no-gutters d-flex" name="manual_ctc">
-                            <field name="manual_ctc" class="oe_inline" nolabel="1" force_save="1"
-                            attrs="{'readonly': [('salary_hike_enabled', '!=', False)]}"/>
+                            <field name="manual_ctc" class="oe_inline" nolabel="1" force_save="1"/>
                             <span>/ month</span>
                         </div>
                         <field name="salary_hike_enabled" invisible="1"/>
@@ -120,7 +119,9 @@
             <xpath expr="//group[@name='salary_info']" position="after">
                 <group>
                     <group name="deduction_salary" string="Deductions">
-                        <field name="advance_salary" readonly="1"/>
+                        <field name="health_insurance_deduction"/>
+                        <field name="other_deduction"/>
+                        <field name="advance_salary"/>
                         <field name="loan_deduction" readonly="1"/>
                         <field name="unpaid_leave_amount_deduction" readonly="1" invisible="1"/>
                         <field name="tds" readonly="0"/>
@@ -129,10 +130,11 @@
                         <!--                    <field name="pf_amount"/>-->
                         <field name="compute_contract_valdiate" invisible="1"/>
                     </group>
-                    <group name="salary_incentive" string="Incentive">
-                        <field name="weekly_incentive" readonly="0"/>
-                        <field name="monthly_incentive" readonly="0"/>
-                        <field name="special_incentive" readonly="0"/>
+
+                    <group>
+                        <field name="weekly_incentive" readonly="0" invisible="1"/>
+                        <field name="monthly_incentive" readonly="0" invisible="1"/>
+                        <field name="special_incentive" readonly="0" invisible="1"/>
                     </group>
                 </group>
                 <group>

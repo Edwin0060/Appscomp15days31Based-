@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="dashboard_template">
+		<div class="o_action ">
+			<div class="o_content background_dashboard">
+                <div class="kitchen_container row">
+					<div class="kitchen_grid pending col-lg-4 col-12">
+						<div class="heading_grid">
+                            <h3 class="title">Waiting - 1 Hour</h3>
+						</div>
+                        <div class="pending_content"></div>
+					</div>
+                    <div class="kitchen_grid prepare col-lg-4 col-12">
+						<div class="heading_grid">
+                            <h3 class="title">Waiting - 2 Hour</h3>
+						</div>
+                        <div class="preparing_content"></div>
+					</div>
+
+                    <div class="kitchen_grid done col-lg-4 col-12">
+						<div class="heading_grid">
+                            <h3 class="title">Waiting - 3 Hour</h3>
+						</div>
+                        <div class="done_content"></div>
+					</div>
+                    <hr/>
+				</div>
+			</div>
+		</div>
+	</t>
+    <t t-name="dashboard_data">
+		<div class="row">
+			<t t-if="orders">
+				<t t-foreach="orders" t-as="order">
+					<div class="kitchen_order">
+						<div class="title_wrapper">
+							<div class="title_wrapper_cont">
+								<div class="content_head order_name order_ref">
+									<span class="badge badge-light"><t t-esc="order.name"/></span>
+								</div>
+								<div class="content_head order_name order_ref">
+									<span class="badge badge-light-white">Token No</span>
+								</div>
+							</div>
+						</div>
+                        <div class="row">
+							<div class="col">
+								<div class="content order_name">
+									<span>Patient:<t t-esc="order.patient_id"/></span>
+								</div>
+                                <div class="content order_name">
+									<span>Mobile:<t t-esc="order.mobile_number"/></span>
+								</div>
+								<div class="content order_name">
+									<span class="badge badge-light-blue"><t t-esc="order.primary_care_physician_id"/></span>
+								</div>
+							</div>
+                            <div class="col">
+								<t t-if="order.time == '1'">
+									<div class="">
+										<span class="token_number_green"><t t-esc="order.token"/></span>
+									</div>
+								</t>
+								<t t-if="order.time == '2'">
+									<div class="">
+										<span class="token_number_orange"><t t-esc="order.token"/></span>
+									</div>
+								</t>
+								<t t-if="order.time == '3'">
+									<div class="">
+										<span class="token_number_red"><t t-esc="order.token"/></span>
+									</div>
+								</t>
+							</div>
+						</div>
+					</div>
+				</t>
+			</t>
+		</div>
+	</t>
+
+</templates>

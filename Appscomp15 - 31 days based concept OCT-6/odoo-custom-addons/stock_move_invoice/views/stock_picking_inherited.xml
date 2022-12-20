@@ -17,9 +17,9 @@
                         <field name="invoice_count" widget="statinfo"/>
                     </button>
                 </xpath>
-                <xpath expr="//field[@name='move_ids_without_package']/tree//field[@name='quantity_done']" position="after">
-                    <field name="price_unit"/>
-                </xpath>
+<!--                <xpath expr="//field[@name='move_ids_without_package']/tree//field[@name='quantity_done']" position="after">-->
+<!--                    <field name="price_unit"/>-->
+<!--                </xpath>-->
                 <xpath expr="//button[@name='action_toggle_is_locked']" position="after">
                     <button name="create_invoice" class="oe_highlight"
                             string="Create Invoice" type="object"

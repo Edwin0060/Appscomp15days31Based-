@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- From View of Delete Records Upto -->
+    <record id="delete_records_upto_wizard_form" model="ir.ui.view">
+        <field name="name">delete.records.upto.form.view</field>
+        <field name="model">delete.records.upto</field>
+        <field name="arch" type="xml">
+            <form string="Delete Records Upto">
+                <p class="oe_grey">
+                    Delete the Records which were created before the date entered.
+                </p>
+                <group>
+                    <field name="date"/>
+                </group>
+                <footer>
+                    <button string='Delete Records' name="delete_records_upto_date" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View of Delete Records Upto -->
+    <record id="delete_records_upto_wizard_action" model="ir.actions.act_window">
+        <field name="name">Delete Records Upto</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">delete.records.upto</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+        <field name="binding_model_id" ref="deleted_records_info.model_deleted_records" />
+    </record>
+</odoo>

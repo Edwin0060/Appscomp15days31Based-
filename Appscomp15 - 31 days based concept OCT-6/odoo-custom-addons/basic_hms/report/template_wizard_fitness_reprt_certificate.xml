@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="report_fitness_report_action" model="ir.actions.report">
+        <field name="name">Patient Fitness Certificate Report</field>
+        <field name="model">patient.fitness.certificate.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">basic_hms.report_fitness_report_qweb_report</field>
+        <field name="report_file">basic_hms.report_fitness_report_qweb_report</field>
+        <!--            <field name="paperformat_id" ref="paperformat_product_report"/>-->
+    </record>
+
+
+    <template id="report_fitness_report_qweb_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <br/>
+                    <br/>
+                    <br/>
+                    <u>
+                        <center>
+                            <strong>
+                                <h2>
+                                    TO WHOM SO EVER IT MAY CONCERN
+                                </h2>
+                            </strong>
+                        </center>
+                    </u>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <div style="font-size:18px;font-weight:bold">
+                    <span t-esc="final_remark"/>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <div style="font-size:18px;font-weight:bold">
+                    <strong class="px-2">PLACE:</strong>
+                    <span t-esc="patient_place"/>
+                </div>
+                <br/>
+                <br/>
+
+                <div class="row" style="font-size:18px;font-weight:bold">
+                    <div class="col-7">
+                        <strong class="px-2">Date:</strong>
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M:%S')"/>
+                    </div>
+                    <div class="col-6">
+                        <strong>
+                            <span t-esc="patient_doctor"/>
+                        </strong>
+                    </div>
+                </div>
+
+
+                <!--                    <div class="footer" align="right" style="margin-top: 10px;font-size:14px">-->
+                <!--                        <div class="text-center" align="center">-->
+                <!--                            <br/>-->
+                <!--                            <br/>-->
+                <!--                            <br/>-->
+                <!--                            <div class="row">-->
+                <!--                                <div class="col-3">-->
+                <!--                                    <strong>Prepared By</strong>-->
+                <!--                                </div>-->
+                <!--                                <div class="col-4">-->
+                <!--                                    <strong>Authorized By</strong>-->
+                <!--                                </div>-->
+                <!--                                <div class="col-4">-->
+                <!--                                    <strong>Approved By</strong>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                            <br/>-->
+                <!--                            Page-->
+                <!--                            <span class="page"/>-->
+                <!--                            of-->
+                <!--                            <span class="topage"/>-->
+                <!--                            Print Date-->
+                <!--                            <strong class="px-2">:</strong>-->
+                <!--                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>-->
+                <!--                            <strong class="px-2">:</strong>-->
+                <!--                            Print Time-->
+                <!--                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M:%S')"/>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+
+            </t>
+        </t>
+    </template>
+</odoo>

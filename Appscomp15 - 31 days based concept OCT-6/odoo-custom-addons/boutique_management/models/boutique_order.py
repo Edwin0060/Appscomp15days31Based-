@@ -387,6 +387,10 @@ class SaleOrder(models.Model):
     embroidery_boolean = fields.Boolean(string='IS Quotation Embroidery Required')
     advanced_payment_date = fields.Datetime(string="Advanced Payment Date")
     generated_measurement = fields.Boolean(string="Product Measurement Generated")
+    attachment = fields.Many2many('ir.attachment', String="Attachments")
+    remark_notes = fields.Text(string='Add Notes ')
+    signature = fields.Binary(string=" Signature")
+
 
     @api.depends('balance_payment', 'paid_invoice_payment')
     def get_received_amount(self):
@@ -545,7 +549,7 @@ class BoutiqueOrderLine(models.Model):
     boutique_uom = fields.Many2one('uom.uom', string='Boutique UOM')
     boutique_measurement = fields.Float(string='Boutique Measurement')
     boutique_name = fields.Char(string='Boutique name')
-    remark_notes = fields.Text(string='Patterns')
+    remark_notes = fields.Text(string='Add Notes')
     product_id = fields.Many2one('product.product', string='Product')
     name = fields.Char(string="Name", invisible=True)
     sequence = fields.Integer(default=10)

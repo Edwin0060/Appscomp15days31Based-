@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_patient_discharge_report" model="report.paperformat">
+            <field name="name">Patient Discharge Form Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">40</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+                id="action_patient_discharge_report"
+                model="patient.discharge"
+                string="Patient Discharge Form Report"
+                report_type="qweb-pdf"
+                name="basic_hms.patient_discharge_report_template"
+                file="basic_hms.patient_discharge_report_template"
+                paperformat="basic_hms.paperformat_patient_discharge_report"
+                print_report_name='"Patient Discharge Form Report"'
+                menu="True"
+        />
+
+        <template id="patient_discharge_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="rec">
+                    <t t-call="web.basic_layout">
+                        <t t-foreach="docs" t-as="o">
+                            <div class="header">
+                                <div class="row">
+                                    <div align="left">
+                                        <img src='/web/binary/company_logo' class="img-fluid img-thumbnail"
+                                             style="height:60pt;width:100pt;"/>
+                                    </div>
+                                    <div align="center" class="px-3">
+                                        <strong style="font-size: 25px" t-esc="res_company.name"/>
+                                        <br/>
+                                        <strong style="font-size: 17px" t-esc="res_company.street"/>
+                                        <strong style="font-size: 17px" t-esc="res_company.street2"/>
+                                        <br/>
+                                        <strong style="font-size: 17px" t-esc="res_company.city"/>
+                                        <strong style="font-size: 17px" t-esc="res_company.state_id.name"/>
+                                        <strong style="font-size: 17px" t-esc="res_company.country_id.name"/>
+                                        <strong style="font-size: 17px" t-esc="res_company.phone"/>
+                                        <br/>
+                                        <strong style="font-size: 17px" t-esc="res_company.email"/>
+                                        <strong style="font-size: 17px" t-esc="res_company.website"/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <hr style="color:blue; border-top:2px solid black; margin-top:1px"/>
+                            </div>
+
+                            <div class="text-center">
+                                <strong>
+                                    <u>
+                                        <h3>Patient Discharge Form</h3>
+                                    </u>
+                                </strong>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div class="text-left">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong class="px-1" style="text-align:center;font-size:15px;">Patient’s
+                                            Name
+                                        </strong>
+                                        <strong class="px-2" style="text-align:center;font-size:15px;">:</strong>
+                                        <span t-esc="o.partner_id.name"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong class="px-1" style="text-align:center;font-size:15px;">Date Admitted
+                                        </strong>
+                                        <strong class="px-2" style="text-align:center;font-size:15px;">:</strong>
+                                        <span t-esc="o.admitted_date"></span>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong class="px-1" style="text-align:center;font-size:15px;">Phone Number
+                                        </strong>
+                                        <strong class="px-2" style="text-align:center;font-size:15px;">:</strong>
+                                        <span t-esc="o.partner_id.phone"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong class="px-1" style="text-align:center;font-size:15px;">Patient’s Address
+                                        </strong>
+                                        <strong class="px-2" style="text-align:center;font-size:15px;">:</strong>
+                                        <span class="px-2" t-esc="o.partner_id.street"></span>
+                                        <span t-esc="o.partner_id.street2"></span>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong class="px-1" style="text-align:center;font-size:15px;">Email Address
+                                        </strong>
+                                        <strong class="px-2" style="text-align:center;font-size:15px;">:</strong>
+                                        <span t-esc="o.partner_id.email"></span>
+                                    </div>
+                                    <div class="col-7">
+                                        <strong class="px-1" style="text-align:center;font-size:15px;">City, State, ZIP
+                                            Code
+                                        </strong>
+                                        <strong class="px-2" style="text-align:center;font-size:15px;">:</strong>
+                                        <span class="px-2" t-esc="o.partner_id.city"></span>
+                                        <span class="px-2" t-esc="o.partner_id.state_id.name"></span>
+                                        <span t-esc="o.partner_id.country_id.name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div>
+                                <strong style="font-size:15px;">Reason for admittance:</strong>
+                                <span t-field="o.reason_admittance"/>
+                            </div>
+                            <br/>
+                            <div>
+                                <strong style="font-size:15px;">Diagnosis at admittance:</strong>
+                                <span t-field="o.diagnosis_admittance"></span>
+                            </div>
+                            <br/>
+                            <div>
+                                <strong style="font-size:15px;">Treatment summary:</strong>
+                                <span t-field="o.treatment_summary"></span>
+                            </div>
+                            <br/>
+                            <div>
+                                <strong style="font-size:15px;">Date discharged:</strong>
+                                <span t-field="o.date_discharged"></span>
+                            </div>
+                            <br/>
+                            <div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong style="font-size:15px;">Physician approved ?</strong>
+                                        <input type="checkbox"
+                                               t-att-checked="'checked' if o.physician_approved else None"/>
+                                        <span t-field="o.physician_approved"></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong class="px-2" style="font-size:15px;">Reason for discharge:</strong>
+                                        <input type="checkbox"
+                                               t-att-checked="'checked' if o.reason_discharge else None"/>
+                                        <span t-field="o.reason_discharge"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div>
+                                <strong style="font-size:15px;">Diagnosis at discharge:</strong>
+                                <span t-field="o.diagnosis_discharge"></span>
+                            </div>
+                            <br/>
+                            <div>
+                                <strong style="font-size:15px;">Further treatment plan:</strong>
+                                <span t-field="o.further_treatment_plan"></span>
+                            </div>
+                            <br/>
+                            <div>
+                                <strong class="px-2" style="font-size:15px;">Client consent/Approval ?</strong>
+                                <input type="checkbox"
+                                       t-att-checked="'checked' if o.next_checkup_date else None"/>
+                                <span>&amp;nbsp;</span>
+                                <span t-field="o.client_consent"/>
+
+                            </div>
+                            <br/>
+                            <div>
+                                <strong class="px-2" style="font-size:15px;">Next checkup date:</strong>
+                                <span t-field="o.next_checkup_date"></span>
+                            </div>
+                            <br/>
+                            <div>
+                                <div class="row">
+                                    <div class="col-5"></div>
+                                    <div class="col-5">
+                                        <span class="text-center" style="text-align:center;font-size:19px;">
+                                            Medication Prescribed
+                                        </span>
+                                    </div>
+                                </div>
+                                <table class="table table-sm table-bordered" width="100%"
+                                       style="border:1px solid black;font-size:14px;border-spacing: 1em 0.5em; padding: 0 2em 1em 0; border: 1px solid black;border-radius:2px;text-align: center;">
+                                    <th class="text-center bg-secondary text-white"
+                                        style="width: 10%;font-weight:bold">
+                                        Medication
+                                    </th>
+                                    <th class="text-center bg-secondary text-white"
+                                        style="width: 10%;font-weight:bold">
+                                        Dosage
+                                    </th>
+                                    <th class="text-center bg-secondary text-white"
+                                        style="width: 8%;font-weight:bold">
+                                        Amount
+                                    </th>
+                                    <th class="text-center bg-secondary text-white"
+                                        style="width: 8%;font-weight:bold">
+                                        Frequency
+                                    </th>
+                                    <th class="text-center bg-secondary text-white"
+                                        style="width: 8%;font-weight:bold">
+                                        End Date
+                                    </th>
+                                    <tbody>
+                                        <t t-foreach="o.patient_discharge_line_ids" t-as="l">
+                                            <tr>
+                                                <t>
+                                                    <t t-if="l.product_id">
+                                                        <td style="width:25px; height:25px;">
+                                                            <span t-field="l.product_id"/>
+                                                        </td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td class="center" style="width:25px; height:25px;">
+                                                            <span>-</span>
+                                                        </td>
+                                                    </t>
+                                                </t>
+                                                <t>
+                                                    <t t-if="l.dosage_quantity">
+                                                        <td style="width:25px; height:25px;">
+                                                            <span t-field="l.dosage_quantity"/>
+                                                        </td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td class="center" style="width:25px; height:25px;">
+                                                            <span>-</span>
+                                                        </td>
+                                                    </t>
+                                                </t>
+                                                <t>
+                                                    <t t-if="l.amount">
+                                                        <td style="width:25px; height:25px;">
+                                                            <span t-field="l.amount"/>
+                                                        </td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td class="center" style="width:25px; height:25px;">
+                                                            <span>-</span>
+                                                        </td>
+                                                    </t>
+                                                </t>
+                                                <t>
+                                                    <t t-if="l.frequency">
+                                                        <td style="width:25px; height:25px;">
+                                                            <span t-field="l.frequency"/>
+                                                        </td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td class="center" style="width:25px; height:25px;">
+                                                            <span>-</span>
+                                                        </td>
+                                                    </t>
+                                                </t>
+                                                <t>
+                                                    <t t-if="l.end_date">
+                                                        <td style="width:25px; height:25px;">
+                                                            <span t-field="l.end_date"/>
+                                                        </td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td class="center" style="width:25px; height:25px;">
+                                                            <span>-</span>
+                                                        </td>
+                                                    </t>
+                                                </t>
+
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br/>
+
+                            <div>
+                                <strong style="font-size:15px;">Notes :</strong>
+                                <span t-field="o.notes"/>
+                            </div>
+
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-5">
+                                    <span class="px-3">Date:</span>
+                                    <span class="px-2"
+                                          t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%H:%M:%S')"/>
+                                </div>
+                                <div class="col-6">
+                                    <span>Signature:_____________________________________</span>
+                                </div>
+                            </div>
+
+
+                            <!--                            <div style="page-break-before:always;">-->
+                            <!--                            </div>-->
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

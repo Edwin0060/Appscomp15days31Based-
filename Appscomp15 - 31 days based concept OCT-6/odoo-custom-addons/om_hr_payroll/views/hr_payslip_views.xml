@@ -193,14 +193,25 @@
                                 <field name="leave_paid_timeoff" readonly="1" force_save="1"/>
                                 <field name="employee_balance_days" invisible="0" readonly="1" force_save="1"/>
                                 <field name="employee_final_present_days" force_save="1" readonly="1"/>
+                                <field name="allowance_amount_total" force_save="1" readonly="1" invisible="1"/>
+                                <field name="allowance_amount_deduction" force_save="1" readonly="1"/>
                             </group>
                             <group string="Working Days Info">
                                 <field name="employee_loptotal_days" invisible="0" readonly="1" force_save="1"/>
                                 <field name="employee_final_lop_total_days" invisible="0" readonly="1" force_save="1"/>
                                 <field name="employee_one_day_salary" readonly="1" force_save="1" invisible="0"/>
-                                <field name="unpaid_deduction" readonly="1" force_save="1" invisible="0"/>
+                                <field name="unpaid_deduction" readonly="1" force_save="1" invisible="1"/>
                                 <field name="number_working_of_days" readonly="1" force_save="1"/>
-                                <field name="total_days_of_month" readonly="1" force_save="1"/>
+                                <field name="total_days_of_month" readonly="1" force_save="1" invisible="1"/>
+                            </group>
+                            <group>
+
+                            </group>
+                            <group string="Incentives">
+                                <field name="weekly_incentive" force_save="1"/>
+                                <field name="monthly_incentive" force_save="1"/>
+                                <field name="special_incentive" force_save="1"/>
+                                <field name="gross_amount" force_save="1" invisible="1"/>
                             </group>
                         </group>
                         <notebook>

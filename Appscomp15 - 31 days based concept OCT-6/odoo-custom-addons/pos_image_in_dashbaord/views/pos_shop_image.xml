@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="pos_shop_image_inherited" model="ir.ui.view">
+        <field name="name">Pos Shop Image</field>
+        <field name="model">pos.config</field>
+        <field name="priority" eval="8"/>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="image" widget="image"
+                       class="oe_avatar"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_config_kanban_inherited" model="ir.ui.view">
+        <field name="name">pos.config.kanban.view.inherited</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[1]" position="before">
+                <field name="image" widget="image"
+                       class="oe_avatar" style="padding-left:0;"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -15,16 +15,19 @@ from datetime import time as datetime_time
 from dateutil.relativedelta import relativedelta
 from odoo.tools import float_compare, float_is_zero
 import num2words
+from num2words import num2words
+
 
 
 class HrPayslip(models.Model):
     # ~ _name = 'hr.payslip'
     _inherit = 'hr.payslip'
 
-    total_amount = fields.Float(string='Total Amount', compute='compute_total_amount', store=True)
+    # total_amount = fields.Float(string='Total Amount', compute='compute_total_amount', store=True)
+    total_amount = fields.Float(string='Total Amount')
     amount_words = fields.Char(string='Amount in Words', compute='_compute_num2words')
     amount_net_total = fields.Float(string='Total Amount')
-    amount_deduction = fields.Float(string='Total Deduction', compute='compute_total_deduction')
+    amount_deduction = fields.Float(string='Total Deduction' , compute='compute_total_deduction')
     contract_amount_sub = fields.Float(string='Allowance Deducted Amount')
 
     @api.onchange('line_ids', 'contract_amount_sub')
@@ -48,8 +51,12 @@ class HrPayslip(models.Model):
             total_deduction_new = 0.0
             for line in slip.line_ids:
                 if line.category_id.name == 'Deduction' and line.name != 'Unpaid':
-                    total_deduction_new += line.total
+                    total_deduction_new += line.amount
+            total_net_new = self.gross_amount - total_deduction_new
+            slip.total_amount = total_net_new
             slip.amount_deduction = total_deduction_new
+            # slip.total_amount = round(total_net_new)
+            # slip.amount_deduction = round(total_deduction_new)
 
     @api.depends('line_ids')
     @api.onchange('line_ids')
@@ -59,7 +66,10 @@ class HrPayslip(models.Model):
             for line in slip.line_ids:
                 if line.salary_rule_id.code == 'NET':
                     total_amount_new += line.total
-            slip.total_amount = round(total_amount_new)
+            # slip.total_amount = round(total_amount_new)
+
 
     def _compute_num2words(self):
-        self.amount_words = (num2words.num2words(self.total_amount, lang='en')).capitalize()
+        # self.amount_words = (num2words.num2words(self.total_amount, lang='en')).capitalize()
+        self.amount_words = str.title(num2words(round(self.total_amount))) + ' ' + 'Only'
+
