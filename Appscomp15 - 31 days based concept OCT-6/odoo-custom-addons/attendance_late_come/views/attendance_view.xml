@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_hr_attendance_inherit_custom_field_tree">
+            <field name="name">hr.attendance.inherit.tree.custom</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">office_hours &gt;= worked_hours</attribute>
+                    <attribute name="decoration-success">office_hours &lt; worked_hours</attribute>
+                    <attribute name="decoration-info">office_hours == 0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='worked_hours']" position="after">
+                    <field name="office_hours" widget="float_time"/>
+                    <field name="different_hours" widget="float_time" invisible="1"/>
+                    <field name="late_comers" force_save="1"/>
+                    <field name="early_go" force_save="1"/>
+                </xpath>
+                <xpath expr="//field[@name='worked_hours']" position="attributes">
+                    <attribute name="string">Employee Work Hours</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="resource_calendar_type_attendance_view_tree" model="ir.ui.view">
+            <field name="name">resource.calendar.attendance.tree.inherit.hr.work.entry</field>
+            <field name="model">resource.calendar.attendance</field>
+            <field name="inherit_id" ref="resource.view_resource_calendar_attendance_tree"/>
+            <field name="arch" type="xml">
+                <field name="hour_to" position="after">
+                    <field name="worked_hours" force_save="1"/>
+                </field>
+            </field>
+        </record>
+
+
+        <!--        <record id="open_view_employee_list_my" model="ir.actions.act_window">-->
+        <!--            <field name="name">Employees</field>-->
+        <!--            <field name="res_model">hr.attendance.report</field>-->
+        <!--            <field name="view_mode">kanban,tree,form,activity</field>-->
+        <!--            <field name="domain">[]</field>-->
+        <!--            <field name="domain">[]</field>-->
+        <!--            <field name="context">{'search_default_employee_id':True}</field>-->
+        <!--            <field name="view_id" eval="False"/>-->
+        <!--            <field name="search_view_id" ref="hr_attendance.hr_attendance_report_action_filtered"/>-->
+        <!--            <field name="help" type="html">-->
+        <!--                <p class="o_view_nocontent_smiling_face">-->
+        <!--                    Add a new employee-->
+        <!--                </p>-->
+        <!--                <p>-->
+        <!--                    With just a quick glance on the Odoo employee screen, you-->
+        <!--                    can easily find all the information you need for each person;-->
+        <!--                    contact data, job position, availability, etc.-->
+        <!--                </p>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+           <record id="hr_attendance.hr_attendance_report_action" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">hr.attendance.report</field>
+<!--            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>-->
+            <field name="context">{'search_default_groupby_employee':1}</field>
+            <field name="view_id" ref="hr_attendance.hr_attendance_report_view_search"/>
+        </record>
+
+<!--        <record id="hr_attendance.hr_attendance_report_action" model="ir.actions.act_window">-->
+<!--            <field name="name">Attendance Analysis</field>-->
+<!--            <field name="res_model">hr.attendance.report</field>-->
+<!--            <field name="view_mode">graph,pivot</field>-->
+<!--            <field name="search_view_id" ref="hr_attendance.hr_attendance_report_view_search"/>-->
+<!--            &lt;!&ndash;            <field name="domain">[('resource_id', '=', False)]</field>&ndash;&gt;-->
+<!--            <field name="context">{'default_groupby_employee':True}</field>-->
+
+<!--            &lt;!&ndash;            <field name="context">[('search_default_groupby_employee' ,'=', 1), ('search_default_groupby_check_in' ,'=', 1)]</field>&ndash;&gt;-->
+<!--        </record>-->
+    </data>
+</odoo>
